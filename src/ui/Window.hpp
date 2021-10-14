@@ -4,7 +4,7 @@
 #include "../tstring.hpp"
 
 class Window {
-	static const LPCTSTR DEFAULT_CLASS;
+	static const TCHAR* DEFAULT_CLASS; //using TCHAR* because LPCTSTR provoque warning C26495 in VS 17 preview 5.
 	static const SIZE DEFAULT_SIZE;
 	HWND hwnd;
 	bool destroyed;

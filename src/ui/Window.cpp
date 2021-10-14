@@ -1,7 +1,7 @@
 #include "Window.hpp"
 #include <cassert>
 
-const LPCTSTR Window::DEFAULT_CLASS = TEXT("WindowDefaultClass");
+const TCHAR* Window::DEFAULT_CLASS = TEXT("WindowDefaultClass");
 const SIZE Window::DEFAULT_SIZE{320, LONG(320 / (16 / 9.0))};
 
 LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
@@ -72,7 +72,6 @@ Window::Window(Args args) noexcept
 		if(args.hwnd_parent == HWND_DESKTOP)
 			args.style = WS_POPUP;
 	} else {
-		//args.style = (args.style ? args.style : WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX) | WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 		args.style = args.style ? args.style : WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX;
 
 		if(args.client_size.cx && args.client_size.cy) {
