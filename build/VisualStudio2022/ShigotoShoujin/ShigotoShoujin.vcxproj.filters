@@ -6,38 +6,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\ui\DialogWindow.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\ui\EditControl.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\ui\Window.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\ui\Control.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\ui\ButtonControl.cpp">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\ui\DialogWindow.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\ui\EditControl.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\ui\Window.hpp">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\ui\Control.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\tstring.hpp" />
-    <ClInclude Include="..\..\..\src\ui\ButtonControl.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

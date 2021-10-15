@@ -1,8 +1,12 @@
 #include "Window.hpp"
 #include <cassert>
 
+constexpr LONG DEFAULT_WIDTH = 384;
+constexpr SIZE GetDefaultSize(const int size) { return {size, LONG(size / (16 / 9.0))}; }
+
 const TCHAR* Window::DEFAULT_CLASS = TEXT("WindowDefaultClass");
-const SIZE Window::DEFAULT_SIZE{320, LONG(320 / (16 / 9.0))};
+const SIZE Window::DEFAULT_SIZE{GetDefaultSize(DEFAULT_WIDTH)};
+const DWORD Window::DEFAULT_STYLE = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX;
 
 LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 {
@@ -33,12 +37,12 @@ LRESULT Window::WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-Window::Window(Args args) noexcept
+Window::Window(WindowCreateInfo wci) noexcept
 {
 	HINSTANCE hinstance = GetModuleHandle(NULL);
 	WNDCLASSEX wc;
 
-	if(!GetClassInfoEx(hinstance, args.classname, &wc)) {
+	if(!GetClassInfoEx(hinstance, wci.classname, &wc)) {
 		wc.cbSize = sizeof(wc);
 		wc.style = CS_OWNDC;
 		wc.lpfnWndProc = WndProcStatic;
@@ -49,44 +53,42 @@ Window::Window(Args args) noexcept
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
 		wc.lpszMenuName = NULL;
-		wc.lpszClassName = args.classname;
+		wc.lpszClassName = wci.classname;
 		wc.hIconSm = NULL;
 
 		RegisterClassEx(&wc);
 	}
 
 	SIZE parent_size;
-	if(args.hwnd_parent != HWND_DESKTOP) {
+	if(wci.hwnd_parent != HWND_DESKTOP) {
 		RECT rect;
-		GetClientRect(args.hwnd_parent, &rect);
+		GetClientRect(wci.hwnd_parent, &rect);
 		parent_size = RectToSize(rect);
-		args.style |= WS_CHILD;
+		wci.style |= WS_CHILD;
 	} else
 		parent_size = {GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)};
 
-	if(args.mode == Mode::FullScreen) {
-		args.position.x = 0;
-		args.position.y = 0;
-		args.client_size = parent_size;
-		args.window_size = parent_size;
-		if(args.hwnd_parent == HWND_DESKTOP)
-			args.style = WS_POPUP;
+	if(wci.layout == Layout::FillParent) {
+		wci.position.x = 0;
+		wci.position.y = 0;
+		wci.client_size = parent_size;
+		wci.window_size = parent_size;
+		if(wci.hwnd_parent == HWND_DESKTOP)
+			wci.style = WS_POPUP;
 	} else {
-		args.style = args.style ? args.style : WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX;
-
-		if(args.client_size.cx && args.client_size.cy) {
-			RECT rect{0, 0, args.client_size.cx, args.client_size.cy};
-			AdjustWindowRectEx(&rect, args.style, args.hwnd_menu != 0, args.ex_style);
-			args.window_size = RectToSize(rect);
+		if(wci.client_size.cx && wci.client_size.cy) {
+			RECT rect{0, 0, wci.client_size.cx, wci.client_size.cy};
+			AdjustWindowRectEx(&rect, wci.style, wci.hwnd_menu != 0, wci.ex_style);
+			wci.window_size = RectToSize(rect);
 		}
 
-		if(args.mode == Mode::CenterParent) {
-			args.position.x = (parent_size.cx - args.window_size.cx) >> 1;
-			args.position.y = (parent_size.cy - args.window_size.cy) >> 1;
+		if(wci.layout == Layout::CenterParent) {
+			wci.position.x = (parent_size.cx - wci.window_size.cx) >> 1;
+			wci.position.y = (parent_size.cy - wci.window_size.cy) >> 1;
 		}
 	}
 
-	hwnd = CreateWindowEx(args.ex_style, args.classname, args.text, args.style, args.position.x, args.position.y, args.window_size.cx, args.window_size.cy, args.hwnd_parent, args.hwnd_menu, hinstance, args.param);
+	hwnd = CreateWindowEx(wci.ex_style, wci.classname, wci.text, wci.style, wci.position.x, wci.position.y, wci.window_size.cx, wci.window_size.cy, wci.hwnd_parent, wci.hwnd_menu, hinstance, NULL);
 	assert(hwnd);
 	destroyed = false;
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)(this));
@@ -179,7 +181,7 @@ tstring Window::GetText() const noexcept
 {
 	assert(!destroyed);
 
-	int max_count = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
+	size_t max_count = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
 	TCHAR* buffer = new TCHAR[max_count + 1];
 	SendMessage(hwnd, WM_GETTEXT, max_count + 1, (LPARAM)buffer);
 

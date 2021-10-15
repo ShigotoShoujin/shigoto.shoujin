@@ -4,62 +4,69 @@
 #include <Windows.h>
 
 #include <ui/Window.hpp>
-#include <ui/DialogWindow.hpp>
-#include <ui/ButtonControl.hpp>
-#include <ui/EditControl.hpp>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-TEST_CLASS(UI) {
+TEST_CLASS(UITests) {
+	SIZE screen{};
+
 public:
-	TEST_METHOD(DialogCycleTab) {
-		const int BUTTON_OK_ID = 1;
+	TEST_METHOD_INITIALIZE(TestInitialize)
+	{
+		screen.cx = GetSystemMetrics(SM_CXSCREEN);
+		screen.cy = GetSystemMetrics(SM_CYSCREEN);
+	}
 
-		struct DialogTest : public DialogWindow {
-			DialogTest() :
-				DialogWindow{{.text = TEXT("Caption"), .client_size = {640, 480}}}
-			{
-				EditControl::Args edit_args = {{.hwnd_parent = GetHandle(), .text = TEXT("Hello Edit"), .position{10, 10}, .size{120, 20}}};
+	TEST_METHOD(WindowTestCustomLayout) {
+		Window w({.text = TEXT("WindowTestCustomLayout"), .position{screen.cx / 5, screen.cy / 5}});
+		w.Show();
+		w.MessageLoop();
+	}
 
-				for(int i = 0; i < 5; ++i) {
-					AddOwnedControl(new EditControl(edit_args));
-					edit_args.position.y += 30;
-				}
+	TEST_METHOD(WindowTestCenterDesktop) {
+		Window w({.text = TEXT("WindowTestCenterDesktop"), .layout = Window::Layout::CenterParent});
+		w.Show();
+		w.MessageLoop();
+	}
 
-				edit_args.position.x += 130;
-				edit_args.position.y = 10;
+	TEST_METHOD(WindowTestFillDesktop) {
+		Window w({.text = TEXT("WindowTestFillDesktop"), .layout = Window::Layout::FillParent});
+		w.Show();
+		w.MessageLoop();
+	}
 
-				for(int i = 0; i < 5; ++i) {
-					AddOwnedControl(new EditControl(edit_args));
-					edit_args.position.y += 30;
-				}
+	TEST_METHOD(WindowTestChildWindows) {
+		Window::WindowCreateInfo wci_root{
+			.text = TEXT("WindowTestChildWindows"),
+			.layout = Window::Layout::CenterParent,
+			.client_size{screen.cx / 3, screen.cy / 3},
+			.style{WS_VISIBLE | Window::DEFAULT_STYLE}};
 
-				edit_args.size = {256, 64};
-				edit_args.position = {374, 10};
-				edit_args.style = ES_MULTILINE | ES_READONLY;
-				edit_args.text = TEXT("Try using TAB and SHIFT TAB to move between these controls.\r\nOK or Escape to close.");
-				AddOwnedControl(new EditControl(edit_args));
+		Window root_wnd(wci_root);
 
-				ButtonControl::Args button_args = {{.id = BUTTON_OK_ID, .hwnd_parent = GetHandle(), .text = TEXT("OK"), .position{534, 446}, .size{96, 24}}};
-				AddOwnedControl(new ButtonControl(button_args));
-			}
+		Window::WindowCreateInfo wci_fill{
+			.hwnd_parent = root_wnd.GetHandle(),
+			.text = TEXT("fill"),
+			.layout = Window::Layout::FillParent,
+			.style{WS_VISIBLE},
+			.ex_style = WS_EX_CLIENTEDGE};
 
-			LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept override
-			{
-				switch(msg) {
-					case WM_COMMAND:
-						switch(LOWORD(wparam)) {
-							case BUTTON_OK_ID:
-								this->Destroy();
-								return 0;
-						}
-				}
+		Window fill_wnd(wci_fill);
 
-				return Window::WndProc(msg, wparam, lparam);
-			}
-		} dlg;
+		Window::WindowCreateInfo wci_center{
+			.hwnd_parent = fill_wnd.GetHandle(),
+			.text = TEXT("fill"),
+			.layout = Window::Layout::CenterParent,
+			.window_size = {screen.cx / 5, screen.cy / 5},
+			.style{WS_VISIBLE},
+			.ex_style = WS_EX_CLIENTEDGE};
 
-		dlg.Show();
-		dlg.MessageLoop();
+		Window center_wnd(wci_center);
+		root_wnd.Show();
+
+		while(root_wnd.MessageUpdate()) {
+			fill_wnd.MessageUpdate();
+			center_wnd.MessageUpdate();
+		}
 	}
 };

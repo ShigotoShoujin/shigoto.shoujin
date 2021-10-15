@@ -143,18 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\ui\ButtonControl.cpp" />
-    <ClCompile Include="..\..\..\src\ui\Control.cpp" />
-    <ClCompile Include="..\..\..\src\ui\DialogWindow.cpp" />
-    <ClCompile Include="..\..\..\src\ui\EditControl.cpp" />
     <ClCompile Include="..\..\..\src\ui\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\tstring.hpp" />
-    <ClInclude Include="..\..\..\src\ui\ButtonControl.hpp" />
-    <ClInclude Include="..\..\..\src\ui\Control.hpp" />
-    <ClInclude Include="..\..\..\src\ui\DialogWindow.hpp" />
-    <ClInclude Include="..\..\..\src\ui\EditControl.hpp" />
     <ClInclude Include="..\..\..\src\ui\Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

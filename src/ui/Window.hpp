@@ -4,8 +4,9 @@
 #include "../tstring.hpp"
 
 class Window {
-	static const TCHAR* DEFAULT_CLASS; //using TCHAR* because LPCTSTR provoque warning C26495 in VS 17 preview 5.
+	static const TCHAR* DEFAULT_CLASS; //Using TCHAR* because LPCTSTR provoke warning C26495 in VS 17 preview 5.
 	static const SIZE DEFAULT_SIZE;
+
 	HWND hwnd;
 	bool destroyed;
 
@@ -15,27 +16,28 @@ protected:
 	virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
 
 public:
-	enum class Mode {
-		Default,
+	static const DWORD DEFAULT_STYLE;
+
+	enum class Layout {
+		Custom,
 		CenterParent,
-		FullScreen
+		FillParent
 	};
 
-	struct Args {
+	struct WindowCreateInfo {
 		HWND hwnd_parent{};
 		LPCTSTR classname{DEFAULT_CLASS};
 		LPCTSTR text{};
-		Mode mode{Mode::CenterParent};
+		Layout layout{};
 		POINT position{CW_USEDEFAULT, CW_USEDEFAULT};
 		SIZE client_size{};
 		SIZE window_size{DEFAULT_SIZE};
-		DWORD style{};
+		DWORD style{DEFAULT_STYLE};
 		DWORD ex_style{};
 		HMENU hwnd_menu{};
-		LPVOID param{};
 	};
 
-	Window(Args args) noexcept;
+	Window(WindowCreateInfo wci) noexcept;
 
 	[[nodiscard]] bool IsDestroyed() const noexcept { return destroyed; }
 
