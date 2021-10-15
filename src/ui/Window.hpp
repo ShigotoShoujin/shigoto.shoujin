@@ -4,16 +4,8 @@
 #include "../tstring.hpp"
 
 class Window {
-	static const TCHAR* DEFAULT_CLASS; //Using TCHAR* because LPCTSTR provoke warning C26495 in VS 17 preview 5.
-	static const SIZE DEFAULT_SIZE;
-
 	HWND hwnd;
 	bool destroyed;
-
-	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
-
-protected:
-	virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
 
 public:
 	static const DWORD DEFAULT_STYLE;
@@ -26,20 +18,19 @@ public:
 
 	struct WindowCreateInfo {
 		HWND hwnd_parent{};
-		LPCTSTR classname{DEFAULT_CLASS};
+		LPCTSTR class_name{};
 		LPCTSTR text{};
 		Layout layout{};
-		POINT position{CW_USEDEFAULT, CW_USEDEFAULT};
+		POINT position{};
 		SIZE client_size{};
-		SIZE window_size{DEFAULT_SIZE};
-		DWORD style{DEFAULT_STYLE};
+		SIZE window_size{};
+		DWORD style{};
 		DWORD ex_style{};
 		HMENU hwnd_menu{};
 	};
 
-	Window(WindowCreateInfo wci) noexcept;
-
-	[[nodiscard]] bool IsDestroyed() const noexcept { return destroyed; }
+	Window(const WindowCreateInfo& wci) noexcept;
+	virtual ~Window() noexcept;
 
 	virtual void Show() noexcept;
 	virtual void Hide() noexcept;
@@ -51,15 +42,19 @@ public:
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept;
 	virtual bool OnKeyDown(WPARAM wparam) noexcept;
 
-	virtual ~Window() noexcept;
-
+	[[nodiscard]] bool IsDestroyed() const noexcept { return destroyed; }
 	[[nodiscard]] virtual HWND GetHandle() const noexcept { return hwnd; }
 	[[nodiscard]] virtual SIZE GetWindowSize() const noexcept;
 	[[nodiscard]] virtual SIZE GetClientSize() const noexcept;
 	[[nodiscard]] virtual tstring GetText() const noexcept;
 
+protected:
+	virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
+
 private:
+	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
+	void PrepareWndClass(HINSTANCE hinstance, LPCTSTR class_name) const noexcept;
 	void ProcessMessage(const MSG& msg) noexcept;
 };
 
-extern inline SIZE RectToSize(const RECT& rect);
+inline SIZE RectToSize(const RECT& rect) noexcept;

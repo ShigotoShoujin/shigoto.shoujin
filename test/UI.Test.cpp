@@ -1,9 +1,5 @@
-#include "CppUnitTest.h"
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
 #include <ui/Window.hpp>
+#include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -62,7 +58,6 @@ public:
 			.ex_style = WS_EX_CLIENTEDGE};
 
 		Window center_wnd(wci_center);
-		root_wnd.Show();
 
 		while(root_wnd.MessageUpdate()) {
 			fill_wnd.MessageUpdate();

@@ -4,94 +4,70 @@
 constexpr LONG DEFAULT_WIDTH = 384;
 constexpr SIZE GetDefaultSize(const int size) { return {size, LONG(size / (16 / 9.0))}; }
 
-const TCHAR* Window::DEFAULT_CLASS = TEXT("WindowDefaultClass");
-const SIZE Window::DEFAULT_SIZE{GetDefaultSize(DEFAULT_WIDTH)};
+static LPCTSTR DEFAULT_CLASS_NAME = TEXT("ShigotoShoujinWndClass");
 const DWORD Window::DEFAULT_STYLE = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX;
 
-LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
-{
-	Window* self;
+static SIZE GetParentSize(HWND hwnd_parent) noexcept;
+static SIZE AdjustWindowSize(SIZE client_size, DWORD style, DWORD ex_style) noexcept;
+static POINT CenterWindow(SIZE parent_size, SIZE window_size) noexcept;
 
-	if(msg != WM_NCCREATE && (self = (Window*)(GetWindowLongPtr(hwnd, GWLP_USERDATA))))
-		return self->WndProc(msg, wparam, lparam);
-
-	return DefWindowProc(hwnd, msg, wparam, lparam);
-}
-
-LRESULT Window::WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept
-{
-	switch(msg) {
-		case WM_LBUTTONDOWN:
-			if(OnMouseClick(wparam, LOWORD(lparam), HIWORD(lparam)))
-				return 0;
-			break;
-		case WM_KEYDOWN:
-			if(OnKeyDown(wparam))
-				return 0;
-			break;
-		case WM_DESTROY:
-			Destroy();
-			return 0;
-	}
-
-	return DefWindowProc(hwnd, msg, wparam, lparam);
-}
-
-Window::Window(WindowCreateInfo wci) noexcept
+Window::Window(const WindowCreateInfo& wci) noexcept
 {
 	HINSTANCE hinstance = GetModuleHandle(NULL);
-	WNDCLASSEX wc;
+	DWORD style = wci.style;
+	POINT position = wci.position;
+	SIZE window_size = wci.window_size;
+	LPCTSTR class_name = wci.class_name ? wci.class_name : DEFAULT_CLASS_NAME;
 
-	if(!GetClassInfoEx(hinstance, wci.classname, &wc)) {
-		wc.cbSize = sizeof(wc);
-		wc.style = CS_OWNDC;
-		wc.lpfnWndProc = WndProcStatic;
-		wc.cbClsExtra = 0;
-		wc.cbWndExtra = 0;
-		wc.hInstance = hinstance;
-		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
-		wc.lpszMenuName = NULL;
-		wc.lpszClassName = wci.classname;
-		wc.hIconSm = NULL;
+	if(!style)
+		style = DEFAULT_STYLE;
 
-		RegisterClassEx(&wc);
+	if(wci.hwnd_parent != HWND_DESKTOP)
+		style |= WS_CHILD;
+
+	PrepareWndClass(hinstance, class_name);
+
+	switch(wci.layout) {
+		case Layout::Custom:
+		case Layout::CenterParent:
+			if(wci.client_size.cx && wci.client_size.cy)
+				window_size = AdjustWindowSize(wci.client_size, style, wci.ex_style);
+			else if(!window_size.cx || !window_size.cy)
+				window_size = GetDefaultSize(DEFAULT_WIDTH);
+
+			if(wci.layout == Layout::CenterParent)
+				position = CenterWindow(GetParentSize(wci.hwnd_parent), window_size);
+
+			break;
+		case Layout::FillParent:
+			if(!wci.style && wci.hwnd_parent == HWND_DESKTOP)
+				style = WS_POPUP;
+			position = {};
+			window_size = GetParentSize(wci.hwnd_parent);
 	}
 
-	SIZE parent_size;
-	if(wci.hwnd_parent != HWND_DESKTOP) {
-		RECT rect;
-		GetClientRect(wci.hwnd_parent, &rect);
-		parent_size = RectToSize(rect);
-		wci.style |= WS_CHILD;
-	} else
-		parent_size = {GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)};
+	hwnd = CreateWindowEx(
+		wci.ex_style,
+		class_name,
+		wci.text,
+		style,
+		position.x,
+		position.y,
+		window_size.cx,
+		window_size.cy,
+		wci.hwnd_parent,
+		wci.hwnd_menu,
+		hinstance,
+		NULL);
 
-	if(wci.layout == Layout::FillParent) {
-		wci.position.x = 0;
-		wci.position.y = 0;
-		wci.client_size = parent_size;
-		wci.window_size = parent_size;
-		if(wci.hwnd_parent == HWND_DESKTOP)
-			wci.style = WS_POPUP;
-	} else {
-		if(wci.client_size.cx && wci.client_size.cy) {
-			RECT rect{0, 0, wci.client_size.cx, wci.client_size.cy};
-			AdjustWindowRectEx(&rect, wci.style, wci.hwnd_menu != 0, wci.ex_style);
-			wci.window_size = RectToSize(rect);
-		}
-
-		if(wci.layout == Layout::CenterParent) {
-			wci.position.x = (parent_size.cx - wci.window_size.cx) >> 1;
-			wci.position.y = (parent_size.cy - wci.window_size.cy) >> 1;
-		}
-	}
-
-	hwnd = CreateWindowEx(wci.ex_style, wci.classname, wci.text, wci.style, wci.position.x, wci.position.y, wci.window_size.cx, wci.window_size.cy, wci.hwnd_parent, wci.hwnd_menu, hinstance, NULL);
 	assert(hwnd);
 	destroyed = false;
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)(this));
+}
+
+Window::~Window() noexcept
+{
+	Destroy();
 }
 
 void Window::Show() noexcept
@@ -154,11 +130,6 @@ bool Window::OnKeyDown(WPARAM wparam) noexcept
 	return false;
 }
 
-Window::~Window() noexcept
-{
-	Destroy();
-}
-
 SIZE Window::GetWindowSize() const noexcept
 {
 	assert(!destroyed);
@@ -191,6 +162,57 @@ tstring Window::GetText() const noexcept
 	return text;
 }
 
+LRESULT Window::WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept
+{
+	switch(msg) {
+		case WM_LBUTTONDOWN:
+			if(OnMouseClick(wparam, LOWORD(lparam), HIWORD(lparam)))
+				return 0;
+			break;
+		case WM_KEYDOWN:
+			if(OnKeyDown(wparam))
+				return 0;
+			break;
+		case WM_DESTROY:
+			Destroy();
+			return 0;
+	}
+
+	return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
+{
+	Window* self;
+
+	if(msg != WM_NCCREATE && (self = (Window*)(GetWindowLongPtr(hwnd, GWLP_USERDATA))))
+		return self->WndProc(msg, wparam, lparam);
+
+	return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+void Window::PrepareWndClass(HINSTANCE hinstance, LPCTSTR class_name) const noexcept
+{
+	WNDCLASSEX wc;
+
+	if(!GetClassInfoEx(hinstance, class_name, &wc)) {
+		wc.cbSize = sizeof(wc);
+		wc.style = CS_OWNDC;
+		wc.lpfnWndProc = Window::WndProcStatic;
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.hInstance = hinstance;
+		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = class_name;
+		wc.hIconSm = NULL;
+
+		RegisterClassEx(&wc);
+	}
+}
+
 void Window::ProcessMessage(const MSG& msg) noexcept
 {
 	TranslateMessage(&msg);
@@ -202,7 +224,31 @@ void Window::ProcessMessage(const MSG& msg) noexcept
 	DispatchMessage(&msg);
 }
 
-inline SIZE RectToSize(const RECT& rect)
+inline SIZE RectToSize(const RECT& rect) noexcept
 {
 	return {rect.right - rect.left, rect.bottom - rect.top};
+}
+
+static SIZE GetParentSize(HWND hwnd_parent) noexcept
+{
+	if(hwnd_parent != HWND_DESKTOP) {
+		RECT rect;
+		GetClientRect(hwnd_parent, &rect);
+		return RectToSize(rect);
+	} else
+		return {GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)};
+}
+
+static SIZE AdjustWindowSize(SIZE client_size, DWORD style, DWORD ex_style) noexcept
+{
+	RECT rect{0, 0, client_size.cx, client_size.cy};
+	AdjustWindowRectEx(&rect, style, 0, ex_style);
+	return RectToSize(rect);
+}
+
+static POINT CenterWindow(SIZE parent_size, SIZE window_size) noexcept
+{
+	return {
+		(parent_size.cx - window_size.cx) >> 1,
+		(parent_size.cy - window_size.cy) >> 1};
 }
