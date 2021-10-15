@@ -143,11 +143,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\ui\Control.cpp" />
+    <ClCompile Include="..\..\..\src\ui\EditControl.cpp" />
     <ClCompile Include="..\..\..\src\ui\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\src\class_macro.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
+    <ClInclude Include="..\..\..\src\ui\Control.hpp" />
+    <ClInclude Include="..\..\..\src\ui\EditControl.hpp" />
+    <ClInclude Include="..\..\..\src\ui\ui.hpp" />
     <ClInclude Include="..\..\..\src\ui\Window.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\.clang-format" />
+    <None Include="..\..\..\.gitignore" />
+    <None Include="..\..\..\LICENSE" />
+    <None Include="..\..\..\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

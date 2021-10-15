@@ -11,15 +11,34 @@ static SIZE GetParentSize(HWND hwnd_parent) noexcept;
 static SIZE AdjustWindowSize(SIZE client_size, DWORD style, DWORD ex_style) noexcept;
 static POINT CenterWindow(SIZE parent_size, SIZE window_size) noexcept;
 
+Window& Window::_move(Window& other) noexcept
+{
+	hwnd = other.hwnd;
+	window_size = other.window_size;
+	style = other.style;
+	active = other.active;
+
+	other.hwnd = {};
+	other.window_size = {};
+	other.style = {};
+	other.active = {};
+
+	return *this;
+}
+
 Window::Window(const WindowCreateInfo& wci) noexcept
 {
 	HINSTANCE hinstance = GetModuleHandle(NULL);
-	DWORD style = wci.style;
 	POINT position = wci.position;
-	SIZE window_size = wci.window_size;
 	LPCTSTR class_name = wci.class_name ? wci.class_name : DEFAULT_CLASS_NAME;
 
-	if(!style)
+	style = wci.style;
+	window_size = wci.window_size;
+
+	bool is_child = wci.style & WS_CHILD;
+	assert((is_child && wci.hwnd_parent) || (!is_child && !wci.hwnd_parent));
+
+	if(!style && !wci.class_name)
 		style = DEFAULT_STYLE;
 
 	if(wci.hwnd_parent != HWND_DESKTOP)
@@ -61,7 +80,8 @@ Window::Window(const WindowCreateInfo& wci) noexcept
 		NULL);
 
 	assert(hwnd);
-	destroyed = false;
+
+	active = true;
 	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)(this));
 }
 
@@ -72,44 +92,44 @@ Window::~Window() noexcept
 
 void Window::Show() noexcept
 {
-	assert(!destroyed);
+	assert(active);
 	ShowWindow(hwnd, SW_SHOW);
 }
 
 void Window::Hide() noexcept
 {
-	assert(!destroyed);
+	assert(active);
 	ShowWindow(hwnd, SW_HIDE);
 }
 
 bool Window::MessageUpdate() noexcept
 {
-	assert(!destroyed);
+	assert(active);
 
 	MSG msg;
 
-	while(!destroyed && PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
+	while(!active && PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
 		ProcessMessage(msg);
 
-	return !destroyed;
+	return !active;
 }
 
 bool Window::MessageLoop() noexcept
 {
-	assert(!destroyed);
+	assert(active);
 
 	MSG msg;
 
-	while(!destroyed && GetMessage(&msg, hwnd, 0, 0))
+	while(active && GetMessage(&msg, hwnd, 0, 0))
 		ProcessMessage(msg);
 
-	return !destroyed;
+	return active;
 }
 
 void Window::Destroy() noexcept
 {
-	if(hwnd && !destroyed) {
-		destroyed = true;
+	if(hwnd && active) {
+		active = false;
 		DestroyWindow(hwnd);
 		hwnd = 0;
 	}
@@ -132,7 +152,7 @@ bool Window::OnKeyDown(WPARAM wparam) noexcept
 
 SIZE Window::GetWindowSize() const noexcept
 {
-	assert(!destroyed);
+	assert(active);
 
 	RECT rect;
 	GetWindowRect(hwnd, &rect);
@@ -141,7 +161,7 @@ SIZE Window::GetWindowSize() const noexcept
 
 SIZE Window::GetClientSize() const noexcept
 {
-	assert(!destroyed);
+	assert(active);
 
 	RECT rect;
 	GetClientRect(hwnd, &rect);
@@ -150,7 +170,7 @@ SIZE Window::GetClientSize() const noexcept
 
 tstring Window::GetText() const noexcept
 {
-	assert(!destroyed);
+	assert(active);
 
 	size_t max_count = SendMessage(hwnd, WM_GETTEXTLENGTH, 0, 0);
 	TCHAR* buffer = new TCHAR[max_count + 1];

@@ -1,13 +1,24 @@
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include "../class_macro.hpp"
 #include "../tstring.hpp"
 
 class Window {
+protected:
 	HWND hwnd;
-	bool destroyed;
+	SIZE window_size;
+	DWORD style;
+	bool active;
+
+	Window& _move(Window& other) noexcept;
 
 public:
+	DISABLE_COPY(Window)
+
+	Window(Window&& other) noexcept { _move(other); }
+	Window& operator=(Window&& other) noexcept { return _move(other); }
+
 	static const DWORD DEFAULT_STYLE;
 
 	enum class Layout {
@@ -17,16 +28,16 @@ public:
 	};
 
 	struct WindowCreateInfo {
-		HWND hwnd_parent{};
 		LPCTSTR class_name{};
-		LPCTSTR text{};
-		Layout layout{};
-		POINT position{};
 		SIZE client_size{};
-		SIZE window_size{};
-		DWORD style{};
 		DWORD ex_style{};
 		HMENU hwnd_menu{};
+		HWND hwnd_parent{};
+		Layout layout{};
+		POINT position{};
+		DWORD style{};
+		LPCTSTR text{};
+		SIZE window_size{};
 	};
 
 	Window(const WindowCreateInfo& wci) noexcept;
@@ -42,7 +53,7 @@ public:
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept;
 	virtual bool OnKeyDown(WPARAM wparam) noexcept;
 
-	[[nodiscard]] bool IsDestroyed() const noexcept { return destroyed; }
+	[[nodiscard]] bool IsDestroyed() const noexcept { return !active; }
 	[[nodiscard]] virtual HWND GetHandle() const noexcept { return hwnd; }
 	[[nodiscard]] virtual SIZE GetWindowSize() const noexcept;
 	[[nodiscard]] virtual SIZE GetClientSize() const noexcept;

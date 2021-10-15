@@ -31,7 +31,6 @@ BraceWrapping:
   SplitEmptyFunction: true
   SplitEmptyRecord: false
   SplitEmptyNamespace: true
-BreakAfterJavaFieldAnnotations: false
 BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Custom
 BreakBeforeInheritanceComma: false

@@ -4,9 +4,18 @@
     <Filter Include="ui">
       <UniqueIdentifier>{265e9a3c-ab7a-4ad5-a3fd-36d60522419f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="root">
+      <UniqueIdentifier>{7e002c34-d0ec-4622-b5f1-97a1b54a1675}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\ui\Window.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ui\Control.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ui\EditControl.cpp">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -15,5 +24,29 @@
       <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\tstring.hpp" />
+    <ClInclude Include="..\..\..\src\ui\Control.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\class_macro.hpp" />
+    <ClInclude Include="..\..\..\src\ui\EditControl.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\ui.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\.clang-format">
+      <Filter>root</Filter>
+    </None>
+    <None Include="..\..\..\.gitignore">
+      <Filter>root</Filter>
+    </None>
+    <None Include="..\..\..\LICENSE">
+      <Filter>root</Filter>
+    </None>
+    <None Include="..\..\..\README.md">
+      <Filter>root</Filter>
+    </None>
   </ItemGroup>
 </Project>

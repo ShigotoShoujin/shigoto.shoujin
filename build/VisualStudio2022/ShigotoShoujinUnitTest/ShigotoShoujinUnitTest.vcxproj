@@ -19,12 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\test\UI.Test.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ShigotoShoujin\ShigotoShoujin.vcxproj">
       <Project>{6c28db54-8607-461f-bdf8-090518e3ad4d}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\test\ui\Control.Test.cpp" />
+    <ClCompile Include="..\..\..\test\ui\Window.Test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
