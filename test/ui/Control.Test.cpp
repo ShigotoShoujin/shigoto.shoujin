@@ -27,17 +27,17 @@ public:
 			.layout = Window::Layout::CenterParent,
 			.text = TEXT("ControlTest_Test")};
 
-		Control wnd(wci);
+		Control control(wci);
 
 		int y = 10;
 
-		wnd.AddChild(EditControl{{10, y}, {200, 20}, TEXT("New Edit Control")});
-		wnd.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
-		wnd.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
-		wnd.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
-		wnd.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
+		control.AddChild(EditControl{{10, y}, {200, 20}, TEXT("New Edit Control")});
+		control.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
+		control.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
+		control.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
+		control.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
 
-		wnd.Show();
-		wnd.MessageLoop();
+		control.Show();
+		control.MessageLoop();
 	}
 };

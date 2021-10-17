@@ -8,6 +8,7 @@ EditControl& EditControl::operator=(EditControl&& other) noexcept
 	if(this == &other)
 		return *this;
 
+	this->~EditControl();
 	Control::operator=(std::move(other));
 	return *this;
 }

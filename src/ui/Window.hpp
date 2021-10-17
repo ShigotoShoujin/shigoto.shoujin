@@ -5,13 +5,13 @@
 #include "../tstring.hpp"
 
 class Window {
+	Window& _move(Window& other) noexcept;
+
 protected:
 	HWND hwnd;
 	SIZE window_size;
 	DWORD style;
 	bool active;
-
-	Window& _move(Window& other) noexcept;
 
 public:
 	DISABLE_COPY(Window)

@@ -18,6 +18,9 @@
     <ClCompile Include="..\..\..\src\ui\EditControl.cpp">
       <Filter>ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ui\ControlGroup.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\ui\Window.hpp">
@@ -32,6 +35,9 @@
       <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ui\ui.hpp">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\ControlGroup.hpp">
       <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>

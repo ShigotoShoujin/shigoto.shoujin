@@ -15,5 +15,8 @@
     <ClCompile Include="..\..\..\test\ui\EditControl.Test.cpp">
       <Filter>ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\ui\ControlGroup.Test.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
