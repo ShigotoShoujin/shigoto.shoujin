@@ -15,9 +15,7 @@ protected:
 
 public:
 	DISABLE_COPY(Window)
-
-	Window(Window&& other) noexcept { _move(other); }
-	Window& operator=(Window&& other) noexcept { return _move(other); }
+	ENABLE_MOVE(Window);
 
 	static const DWORD DEFAULT_STYLE;
 

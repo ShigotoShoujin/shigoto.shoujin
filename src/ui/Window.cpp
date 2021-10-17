@@ -26,6 +26,20 @@ Window& Window::_move(Window& other) noexcept
 	return *this;
 }
 
+Window::Window(Window&& other) noexcept
+{
+	_move(other);
+}
+
+Window& Window::operator=(Window&& other) noexcept
+{
+	if(this == &other)
+		return *this;
+
+	Destroy();
+	return _move(other);
+}
+
 Window::Window(const WindowCreateInfo& wci) noexcept
 {
 	HINSTANCE hinstance = GetModuleHandle(NULL);
@@ -108,10 +122,10 @@ bool Window::MessageUpdate() noexcept
 
 	MSG msg;
 
-	while(!active && PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
+	while(active && PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
 		ProcessMessage(msg);
 
-	return !active;
+	return active;
 }
 
 bool Window::MessageLoop() noexcept

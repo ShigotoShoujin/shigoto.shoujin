@@ -9,16 +9,7 @@ class Control : public Window {
 	int child_map_last_id{};
 
 public:
-	DISABLE_COPY(Control)
-
-	Control(Control&& other) noexcept :
-		Window{std::move(other)} {}
-
-	Control& operator=(Control&& other) noexcept
-	{
-		Window::_move(other);
-		return *this;
-	}
+	ENABLE_MOVE(Control);
 
 	Control(const Window::WindowCreateInfo& wci) noexcept;
 	virtual ~Control() noexcept;

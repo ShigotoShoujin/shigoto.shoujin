@@ -1,5 +1,17 @@
 #include "Control.hpp"
 
+Control::Control(Control&& other) noexcept :
+	Window{std::move(other)} {}
+
+Control& Control::operator=(Control&& other) noexcept
+{
+	if(this == &other)
+		return *this;
+
+	Window::operator=(std::move(other));
+	return *this;
+}
+
 Control::Control(const Window::WindowCreateInfo& wci) noexcept :
 	Window{wci} {}
 

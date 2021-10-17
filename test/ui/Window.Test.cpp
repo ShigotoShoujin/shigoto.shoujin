@@ -13,6 +13,22 @@ public:
 		screen.cy = GetSystemMetrics(SM_CYSCREEN);
 	}
 
+	TEST_METHOD(WindowTest_IsNotCopyConstructible) {
+		Assert::IsFalse(std::is_copy_constructible_v<Window>);
+	}
+
+	TEST_METHOD(WindowTest_IsNotCopyAssignable) {
+		Assert::IsFalse(std::is_copy_assignable_v<Window>);
+	}
+
+	TEST_METHOD(WindowTest_IsMoveConstructible) {
+		Assert::IsTrue(std::is_move_constructible_v<Window>);
+	}
+
+	TEST_METHOD(WindowTest_IsMoveAssignable) {
+		Assert::IsTrue(std::is_move_assignable_v<Window>);
+	}
+
 	TEST_METHOD(WindowTestCustomLayout) {
 		Window w({.position{screen.cx / 5, screen.cy / 5}, .text = TEXT("WindowTestCustomLayout")});
 		w.Show();
@@ -44,7 +60,7 @@ public:
 			.ex_style = WS_EX_CLIENTEDGE,
 			.hwnd_parent = root_wnd.GetHandle(),
 			.layout = Window::Layout::FillParent,
-			.style{WS_VISIBLE},
+			.style{WS_CHILD | WS_VISIBLE},
 			.text = TEXT("fill")};
 
 		Window fill_wnd(wci_fill);
@@ -53,7 +69,7 @@ public:
 			.ex_style = WS_EX_CLIENTEDGE,
 			.hwnd_parent = fill_wnd.GetHandle(),
 			.layout = Window::Layout::CenterParent,
-			.style{WS_VISIBLE},
+			.style{WS_CHILD | WS_VISIBLE},
 			.text = TEXT("fill"),
 			.window_size = {screen.cx / 5, screen.cy / 5}};
 

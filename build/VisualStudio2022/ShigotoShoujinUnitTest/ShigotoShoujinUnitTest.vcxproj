@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\test\ui\Control.Test.cpp" />
+    <ClCompile Include="..\..\..\test\ui\EditControl.Test.cpp" />
     <ClCompile Include="..\..\..\test\ui\Window.Test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
