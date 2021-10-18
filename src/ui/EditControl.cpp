@@ -3,15 +3,9 @@
 EditControl::EditControl(EditControl&& other) noexcept :
 	Control{std::move(other)} {}
 
-EditControl& EditControl::operator=(EditControl&& other) noexcept
-{
-	if(this == &other)
-		return *this;
-
-	this->~EditControl();
-	Control::operator=(std::move(other));
-	return *this;
-}
+EditControl::EditControl(const UserControlCreateInfo& ucci) noexcept :
+	Control{ucci, TEXT("EDIT"), 0, WS_EX_STATICEDGE}
+{}
 
 EditControl::EditControl(POINT position, SIZE size, LPCTSTR text) noexcept :
 	Control{{.class_name = TEXT("EDIT"),

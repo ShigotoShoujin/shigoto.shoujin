@@ -18,24 +18,30 @@ public:
 	}
 
 	TEST_METHOD(ControlTest_IsMoveAssignable) {
-		Assert::IsTrue(std::is_move_assignable_v<Control>);
+		Assert::IsFalse(std::is_move_assignable_v<Control>);
 	}
 
 	TEST_METHOD(ControlTest_Test) {
-		Window::WindowCreateInfo wci{
+		Control::ControlCreateInfo cci{
 			.client_size = {640, 480},
 			.layout = Window::Layout::CenterParent,
 			.text = TEXT("ControlTest_Test")};
 
-		Control control(wci);
+		Control control(cci);
 
-		int y = 10;
+		UserControlCreateInfo ucci{
+			.position{10, 10},
+			.text{TEXT("New Edit Control")},
+			.window_size{200, 20},
+		};
 
-		control.AddChild(EditControl{{10, y}, {200, 20}, TEXT("New Edit Control")});
-		control.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
-		control.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
-		control.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
-		control.AddChild(EditControl{{10, y += 30}, {200, 20}, TEXT("New Edit Control")});
+		auto add = [&]() {
+			control.AddChild(EditControl{ucci});
+			ucci.position.y += 30;
+		};
+
+		for(auto i = 0; i < 5; ++i)
+			add();
 
 		control.Show();
 		control.MessageLoop();

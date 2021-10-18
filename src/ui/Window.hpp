@@ -5,8 +5,6 @@
 #include "../tstring.hpp"
 
 class Window {
-	Window& _move(Window& other) noexcept;
-
 protected:
 	HWND hwnd;
 	SIZE window_size;
@@ -15,7 +13,7 @@ protected:
 
 public:
 	DISABLE_COPY(Window)
-	ENABLE_MOVE(Window);
+	ENABLE_MOVE_CONSTRUCTOR(Window)
 
 	static const DWORD DEFAULT_STYLE;
 

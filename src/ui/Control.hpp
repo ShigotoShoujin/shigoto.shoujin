@@ -5,21 +5,51 @@
 
 class ControlGroup;
 
+struct UserControlCreateInfo {
+	SIZE client_size{};
+	int control_id{};
+	Window::Layout layout{};
+	POINT position{};
+	int taborder{};
+	bool tabstop{true};
+	LPCTSTR text{};
+	SIZE window_size{};
+};
+
 class Control : public Window {
-	Control& _move(Control& other) noexcept;
 	ControlGroup* control_group;
 
 	friend ControlGroup;
 
 protected:
-	int control_id{};
-	int taborder{0};
-	bool tabstop{true};
+	int control_id;
+	int taborder;
+	bool tabstop;
 
 public:
-	ENABLE_MOVE(Control)
+	ENABLE_MOVE_CONSTRUCTOR(Control)
 
-	Control(const Window::WindowCreateInfo& wci) noexcept;
+	struct ControlCreateInfo {
+		LPCTSTR class_name{};
+		SIZE client_size{};
+		int control_id{};
+		DWORD ex_style{};
+		HWND hwnd_parent{};
+		Layout layout{};
+		POINT position{};
+		DWORD style{};
+		int taborder{};
+		bool tabstop{true};
+		LPCTSTR text{};
+		SIZE window_size{};
+	};
+
+	Control(const ControlCreateInfo& cci) noexcept;
+
+protected:
+	Control(const UserControlCreateInfo& cci, LPCTSTR class_name, DWORD style = {}, DWORD ex_style = {}) noexcept;
+
+public:
 	virtual ~Control() noexcept;
 
 	virtual void SetFocus() noexcept;

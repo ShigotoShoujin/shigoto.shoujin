@@ -1,39 +1,49 @@
 #include "Control.hpp"
 #include "ControlGroup.hpp"
 
-Control& Control::_move(Control& other) noexcept
-{
-	control_group = other.control_group;
-	control_id = other.control_id;
-	taborder = other.taborder;
-	tabstop = other.tabstop;
-
-	other.control_group = {};
-	other.control_id = {};
-	other.taborder = {};
-	other.tabstop = {};
-
-	return *this;
-}
-
 Control::Control(Control&& other) noexcept :
-	Window{std::move(other)}
+	Window{std::move(other)},
+	control_group{other.control_group},
+	control_id{other.control_id},
+	taborder{other.taborder},
+	tabstop{other.tabstop}
 {
-	_move(other);
+	other.control_group = nullptr;
 }
 
-Control& Control::operator=(Control&& other) noexcept
-{
-	if(this == &other)
-		return *this;
+Control::Control(const ControlCreateInfo& cci) noexcept :
+	Window{{
+		.class_name = cci.class_name,
+		.client_size = cci.client_size,
+		.ex_style = cci.ex_style,
+		.hwnd_parent = cci.hwnd_parent,
+		.layout = cci.layout,
+		.position = cci.position,
+		.style = cci.style,
+		.text = cci.text,
+		.window_size = cci.window_size,
+	}},
+	control_group{new ControlGroup(this)},
+	control_id{cci.control_id},
+	taborder{cci.taborder},
+	tabstop{cci.tabstop}
+{}
 
-	this->~Control();
-	Window::operator=(std::move(other));
-	return _move(other);
-}
-
-Control::Control(const Window::WindowCreateInfo& wci) noexcept :
-	Window{wci}, control_group{new ControlGroup(this)}
+Control::Control(const UserControlCreateInfo& cci, LPCTSTR class_name, DWORD style, DWORD ex_style) noexcept :
+	Window{{
+		.class_name = class_name,
+		.client_size = cci.client_size,
+		.ex_style = ex_style,
+		.layout = cci.layout,
+		.position = cci.position,
+		.style = style,
+		.text = cci.text,
+		.window_size = cci.window_size,
+	}},
+	control_group{new ControlGroup(this)},
+	control_id{cci.control_id},
+	taborder{cci.taborder},
+	tabstop{cci.tabstop}
 {}
 
 Control::~Control() noexcept

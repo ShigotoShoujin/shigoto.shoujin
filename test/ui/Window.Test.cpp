@@ -26,7 +26,7 @@ public:
 	}
 
 	TEST_METHOD(WindowTest_IsMoveAssignable) {
-		Assert::IsTrue(std::is_move_assignable_v<Window>);
+		Assert::IsFalse(std::is_move_assignable_v<Window>);
 	}
 
 	TEST_METHOD(WindowTestCustomLayout) {

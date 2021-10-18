@@ -6,7 +6,6 @@ class ControlGroup {
 	const Control* parent_control;
 	std::map<HWND, Control> control_map;
 	std::multimap<int, Control*> tab_map;
-	int child_lastindex{};
 
 public:
 	DISABLE_COPY_AND_MOVE(ControlGroup)

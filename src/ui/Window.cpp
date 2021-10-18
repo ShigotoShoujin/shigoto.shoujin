@@ -11,33 +11,14 @@ static SIZE GetParentSize(HWND hwnd_parent) noexcept;
 static SIZE AdjustWindowSize(SIZE client_size, DWORD style, DWORD ex_style) noexcept;
 static POINT CenterWindow(SIZE parent_size, SIZE window_size) noexcept;
 
-Window& Window::_move(Window& other) noexcept
+Window::Window(Window&& other) noexcept :
+	hwnd{other.hwnd},
+	window_size{other.window_size},
+	style{other.style},
+	active{other.active}
 {
-	hwnd = other.hwnd;
-	window_size = other.window_size;
-	style = other.style;
-	active = other.active;
-
 	other.hwnd = {};
-	other.window_size = {};
-	other.style = {};
-	other.active = {};
-
-	return *this;
-}
-
-Window::Window(Window&& other) noexcept
-{
-	_move(other);
-}
-
-Window& Window::operator=(Window&& other) noexcept
-{
-	if(this == &other)
-		return *this;
-
-	Destroy();
-	return _move(other);
+	other.active = false;
 }
 
 Window::Window(const WindowCreateInfo& wci) noexcept
@@ -79,20 +60,7 @@ Window::Window(const WindowCreateInfo& wci) noexcept
 			window_size = GetParentSize(wci.hwnd_parent);
 	}
 
-	hwnd = CreateWindowEx(
-		wci.ex_style,
-		class_name,
-		wci.text,
-		style,
-		position.x,
-		position.y,
-		window_size.cx,
-		window_size.cy,
-		wci.hwnd_parent,
-		wci.hwnd_menu,
-		hinstance,
-		NULL);
-
+	hwnd = CreateWindowEx(wci.ex_style, class_name, wci.text, style, position.x, position.y, window_size.cx, window_size.cy, wci.hwnd_parent, wci.hwnd_menu, hinstance, NULL);
 	assert(hwnd);
 
 	active = true;

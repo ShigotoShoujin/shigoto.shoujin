@@ -13,7 +13,6 @@ void ControlGroup::AddControl(Control&& control) noexcept
 	if(control.tabstop)
 		control.taborder = GetMaxTabOrder() + 1;
 
-	control.control_id = ++child_lastindex;
 	control.SetParent(*parent_control);
 
 	HWND hwnd = control.hwnd;

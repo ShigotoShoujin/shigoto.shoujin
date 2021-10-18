@@ -18,6 +18,6 @@ public:
 	}
 
 	TEST_METHOD(EditControlTest_IsMoveAssignable) {
-		Assert::IsTrue(std::is_move_assignable_v<EditControl>);
+		Assert::IsFalse(std::is_move_assignable_v<EditControl>);
 	}
 };
