@@ -49,11 +49,11 @@ public:
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept;
 	virtual bool OnKeyDown(WPARAM wparam) noexcept;
 
-	[[nodiscard]] bool IsDestroyed() const noexcept { return !active; }
-	[[nodiscard]] virtual HWND GetHandle() const noexcept { return hwnd; }
-	[[nodiscard]] virtual SIZE GetWindowSize() const noexcept;
-	[[nodiscard]] virtual SIZE GetClientSize() const noexcept;
-	[[nodiscard]] virtual tstring GetText() const noexcept;
+	[[nodiscard]] inline bool IsDestroyed() const noexcept { return !active; }
+	[[nodiscard]] inline virtual HWND GetHandle() const noexcept { return hwnd; }
+	[[nodiscard]] inline virtual SIZE GetWindowSize() const noexcept;
+	[[nodiscard]] inline virtual SIZE GetClientSize() const noexcept;
+	[[nodiscard]] inline virtual tstring GetText() const noexcept;
 
 protected:
 	virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept;

@@ -1,5 +1,6 @@
 #include "Control.hpp"
 #include "ControlGroup.hpp"
+#include "Debug.hpp"
 
 Control::Control(Control&& other) noexcept :
 	Window{std::move(other)},
@@ -64,10 +65,28 @@ void Control::AddChild(Control&& control) noexcept
 	control_group->AddControl(std::move(control));
 }
 
+void Control::DrawTabOrder() noexcept
+{
+	for(auto& c : *control_group)
+		c.second.DrawTabOrder();
+
+	HWND hwnd = GetHandle();
+	HDC hdc = GetDC(hwnd);
+	RECT rect;
+	GetWindowRect(hwnd, &rect);
+	Debug::DrawDebugTabOrder(0, rect, taborder);
+	ReleaseDC(hwnd, hdc);
+
+	InvalidateRect(hwnd, &rect, FALSE);
+}
+
 bool Control::BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept
 {
+	TextOut(GetDC(hwnd), 0, 0, TEXT("BELLLLLSDFHJJHLKSDJFLKSDJFLKSDJFDSLKFJL:KDJF"), 40);
+
 	switch(wparam) {
 		case VK_TAB: {
+			DrawTabOrder();
 			bool cycle_up = GetAsyncKeyState(VK_SHIFT);
 			control_group->CycleTab(cycle_up);
 			return true;

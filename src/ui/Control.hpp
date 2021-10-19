@@ -53,7 +53,8 @@ public:
 	virtual ~Control() noexcept;
 
 	virtual void SetFocus() noexcept;
-	void AddChild(Control&& control) noexcept;
+	virtual void AddChild(Control&& control) noexcept;
+	virtual void DrawTabOrder() noexcept;
 
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept override;
 
