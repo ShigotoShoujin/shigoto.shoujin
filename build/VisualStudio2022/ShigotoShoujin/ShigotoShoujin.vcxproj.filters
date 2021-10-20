@@ -7,38 +7,50 @@
     <Filter Include="root">
       <UniqueIdentifier>{7e002c34-d0ec-4622-b5f1-97a1b54a1675}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui\core">
+      <UniqueIdentifier>{b889ce27-5ee3-4692-a524-d230cc479fa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ui\controls">
+      <UniqueIdentifier>{aae993b2-c38f-4c30-8373-6831621f5b83}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\ui\Window.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\ui\Control.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\ui\EditControl.cpp">
-      <Filter>ui</Filter>
+      <Filter>ui\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\ui\ControlGroup.cpp">
-      <Filter>ui</Filter>
+      <Filter>ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ui\Window.cpp">
+      <Filter>ui\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ui\EditControl.cpp">
+      <Filter>ui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ui\ButtonControl.cpp">
+      <Filter>ui\controls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\ui\Window.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\tstring.hpp" />
-    <ClInclude Include="..\..\..\src\ui\Control.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\class_macro.hpp" />
-    <ClInclude Include="..\..\..\src\ui\EditControl.hpp">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\ui\ui.hpp">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\Control.hpp">
+      <Filter>ui\core</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\src\ui\ControlGroup.hpp">
-      <Filter>ui</Filter>
+      <Filter>ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\Window.hpp">
+      <Filter>ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\EditControl.hpp">
+      <Filter>ui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\ButtonControl.hpp">
+      <Filter>ui\controls</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
