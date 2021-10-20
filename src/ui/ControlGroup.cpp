@@ -15,11 +15,9 @@ void ControlGroup::AddControl(Control&& control) noexcept
 
 	control.SetParent(*parent_control);
 
-	HWND hwnd = control.hwnd;
-	control_map.emplace(control.hwnd, std::move(control));
-
-	Control* c = &control_map.at(hwnd);
-	tab_map.emplace(c->taborder, c);
+	auto pair = control_map.emplace(control.hwnd, std::move(control));
+	auto& ctrl = pair.first->second;
+	tab_map.emplace(ctrl.taborder, &ctrl);
 }
 
 void ControlGroup::CycleTab(bool cycle_up) noexcept
