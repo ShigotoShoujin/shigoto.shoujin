@@ -13,7 +13,10 @@ public:
 	ControlGroup(const Control* parent_control) noexcept;
 	~ControlGroup() noexcept;
 
-	void AddControl(Control&& control) noexcept;
+	//[[nodiscard]] inline ControlGroup* begin() noexcept { auto a = control_map.emplace};
+	//[[nodiscard]] inline ControlGroup* end() noexcept { return control_group->end(); };
+
+	Control* AddControl(Control&& control) noexcept;
 	void CycleTab(bool cycle_up) noexcept;
 
 private:

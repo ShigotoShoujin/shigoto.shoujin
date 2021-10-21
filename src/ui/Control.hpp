@@ -52,8 +52,11 @@ protected:
 public:
 	virtual ~Control() noexcept;
 
+	//[[nodiscard]] inline Control* begin() noexcept { return control_group->begin(); };
+	//[[nodiscard]] inline Control* end() noexcept { return control_group->end(); };
+
 	virtual void SetFocus() noexcept;
-	void AddChild(Control&& control) noexcept;
+	Control* AddChild(Control&& control) noexcept;
 
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept override;
 

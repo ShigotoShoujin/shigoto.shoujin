@@ -6,10 +6,10 @@
 
 class Window {
 protected:
+	bool active;
 	HWND hwnd;
 	SIZE window_size;
 	DWORD style;
-	bool active;
 
 public:
 	DISABLE_COPY(Window)

@@ -60,11 +60,10 @@ Window::Window(const WindowCreateInfo& wci) noexcept
 			window_size = GetParentSize(wci.hwnd_parent);
 	}
 
-	hwnd = CreateWindowEx(wci.ex_style, class_name, wci.text, style, position.x, position.y, window_size.cx, window_size.cy, wci.hwnd_parent, wci.hwnd_menu, hinstance, NULL);
+	//Win32 common controls use their own WndProc
+	hwnd = CreateWindowEx(wci.ex_style, class_name, wci.text, style, position.x, position.y, window_size.cx, window_size.cy, wci.hwnd_parent, wci.hwnd_menu, hinstance, this);
 	assert(hwnd);
-
 	active = true;
-	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)(this));
 }
 
 Window::~Window() noexcept
@@ -187,10 +186,21 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 {
 	Window* self;
 
-	if(msg != WM_NCCREATE && (self = (Window*)(GetWindowLongPtr(hwnd, GWLP_USERDATA))))
-		return self->WndProc(msg, wparam, lparam);
+	if(msg == WM_NCCREATE) {
+		CREATESTRUCT& cs = *(LPCREATESTRUCT)lparam;
+		self = (Window*)cs.lpCreateParams;
+		assert(self);
 
-	return DefWindowProc(hwnd, msg, wparam, lparam);
+		self->active = true;
+		self->hwnd = hwnd;
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)self);
+	} else
+		self = (Window*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+	if(self)
+		return self->WndProc(msg, wparam, lparam);
+	else
+		return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 void Window::PrepareWndClass(HINSTANCE hinstance, LPCTSTR class_name) const noexcept

@@ -70,7 +70,7 @@ public:
 			.hwnd_parent = fill_wnd.GetHandle(),
 			.layout = Window::Layout::CenterParent,
 			.style{WS_CHILD | WS_VISIBLE},
-			.text = TEXT("fill"),
+			.text = TEXT("center"),
 			.window_size = {screen.cx / 5, screen.cy / 5}};
 
 		Window center_wnd(wci_center);

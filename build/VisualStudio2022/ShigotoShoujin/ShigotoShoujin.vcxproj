@@ -144,6 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\ui\ButtonControl.cpp" />
+    <ClCompile Include="..\..\..\src\ui\ColorControl.cpp" />
     <ClCompile Include="..\..\..\src\ui\Control.cpp" />
     <ClCompile Include="..\..\..\src\ui\ControlGroup.cpp" />
     <ClCompile Include="..\..\..\src\ui\EditControl.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="..\..\..\src\class_macro.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
     <ClInclude Include="..\..\..\src\ui\ButtonControl.hpp" />
+    <ClInclude Include="..\..\..\src\ui\ColorControl.hpp" />
     <ClInclude Include="..\..\..\src\ui\Control.hpp" />
     <ClInclude Include="..\..\..\src\ui\ControlGroup.hpp" />
     <ClInclude Include="..\..\..\src\ui\EditControl.hpp" />

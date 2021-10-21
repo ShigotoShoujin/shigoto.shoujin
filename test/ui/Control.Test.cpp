@@ -21,7 +21,7 @@ public:
 		Assert::IsFalse(std::is_move_assignable_v<Control>);
 	}
 
-	TEST_METHOD(ControlTest_Test) {
+	TEST_METHOD(ControlTest_WithSubControls_TabOrderWorks) {
 		const int WCX = 640;
 		const int WCY = 480;
 		const int SPACE = 10;

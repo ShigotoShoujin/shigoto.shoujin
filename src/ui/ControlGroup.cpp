@@ -8,7 +8,7 @@ ControlGroup::~ControlGroup() noexcept
 	parent_control = nullptr;
 }
 
-void ControlGroup::AddControl(Control&& control) noexcept
+Control* ControlGroup::AddControl(Control&& control) noexcept
 {
 	if(control.tabstop)
 		control.taborder = GetMaxTabOrder() + 1;
@@ -16,8 +16,10 @@ void ControlGroup::AddControl(Control&& control) noexcept
 	control.SetParent(*parent_control);
 
 	auto pair = control_map.emplace(control.hwnd, std::move(control));
-	auto& ctrl = pair.first->second;
-	tab_map.emplace(ctrl.taborder, &ctrl);
+	auto ctrl = &pair.first->second;
+	tab_map.emplace(ctrl->taborder, ctrl);
+
+	return ctrl;
 }
 
 void ControlGroup::CycleTab(bool cycle_up) noexcept
