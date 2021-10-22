@@ -1,7 +1,7 @@
 #pragma once
-#include "../class_macro.hpp"
 #include "Window.hpp"
 #include <cassert>
+#include <memory>
 
 class ControlGroup;
 
@@ -17,7 +17,7 @@ struct UserControlCreateInfo {
 };
 
 class Control : public Window {
-	ControlGroup* control_group;
+	std::unique_ptr<ControlGroup> control_group;
 
 	friend ControlGroup;
 
@@ -27,7 +27,7 @@ protected:
 	bool tabstop;
 
 public:
-	ENABLE_MOVE_CONSTRUCTOR(Control)
+	Control(Control&&) noexcept;
 
 	struct ControlCreateInfo {
 		LPCTSTR class_name{};
@@ -51,9 +51,6 @@ protected:
 
 public:
 	virtual ~Control() noexcept;
-
-	//[[nodiscard]] inline Control* begin() noexcept { return control_group->begin(); };
-	//[[nodiscard]] inline Control* end() noexcept { return control_group->end(); };
 
 	virtual void SetFocus() noexcept;
 	Control* AddChild(Control&& control) noexcept;

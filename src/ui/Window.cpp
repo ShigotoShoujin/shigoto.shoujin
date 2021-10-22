@@ -7,6 +7,7 @@ constexpr SIZE GetDefaultSize(const int size) { return {size, LONG(size / (16 / 
 static LPCTSTR DEFAULT_CLASS_NAME = TEXT("ShigotoShoujinWndClass");
 const DWORD Window::DEFAULT_STYLE = WS_SYSMENU | WS_CAPTION | WS_MINIMIZEBOX;
 
+static void PrepareWndClass(HINSTANCE hinstance, LPCTSTR class_name, WNDPROC wnd_proc) noexcept;
 static SIZE GetParentSize(HWND hwnd_parent) noexcept;
 static SIZE AdjustWindowSize(SIZE client_size, DWORD style, DWORD ex_style) noexcept;
 static POINT CenterWindow(SIZE parent_size, SIZE window_size) noexcept;
@@ -39,7 +40,7 @@ Window::Window(const WindowCreateInfo& wci) noexcept
 	if(wci.hwnd_parent != HWND_DESKTOP)
 		style |= WS_CHILD;
 
-	PrepareWndClass(hinstance, class_name);
+	PrepareWndClass(hinstance, class_name, Window::WndProcStatic);
 
 	switch(wci.layout) {
 		case Layout::Custom:
@@ -60,7 +61,7 @@ Window::Window(const WindowCreateInfo& wci) noexcept
 			window_size = GetParentSize(wci.hwnd_parent);
 	}
 
-	//Win32 common controls use their own WndProc
+	//Win32 common controls use their own WndProc so hwnd and active must be assigned here as well
 	hwnd = CreateWindowEx(wci.ex_style, class_name, wci.text, style, position.x, position.y, window_size.cx, window_size.cy, wci.hwnd_parent, wci.hwnd_menu, hinstance, this);
 	assert(hwnd);
 	active = true;
@@ -203,28 +204,6 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 		return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void Window::PrepareWndClass(HINSTANCE hinstance, LPCTSTR class_name) const noexcept
-{
-	WNDCLASSEX wc;
-
-	if(!GetClassInfoEx(hinstance, class_name, &wc)) {
-		wc.cbSize = sizeof(wc);
-		wc.style = CS_OWNDC;
-		wc.lpfnWndProc = Window::WndProcStatic;
-		wc.cbClsExtra = 0;
-		wc.cbWndExtra = 0;
-		wc.hInstance = hinstance;
-		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
-		wc.lpszMenuName = NULL;
-		wc.lpszClassName = class_name;
-		wc.hIconSm = NULL;
-
-		RegisterClassEx(&wc);
-	}
-}
-
 void Window::ProcessMessage(const MSG& msg) noexcept
 {
 	TranslateMessage(&msg);
@@ -239,6 +218,28 @@ void Window::ProcessMessage(const MSG& msg) noexcept
 inline SIZE RectToSize(const RECT& rect) noexcept
 {
 	return {rect.right - rect.left, rect.bottom - rect.top};
+}
+
+static void PrepareWndClass(HINSTANCE hinstance, LPCTSTR class_name, WNDPROC wnd_proc) noexcept
+{
+	WNDCLASSEX wc;
+
+	if(!GetClassInfoEx(hinstance, class_name, &wc)) {
+		wc.cbSize = sizeof(wc);
+		wc.style = CS_OWNDC;
+		wc.lpfnWndProc = wnd_proc;
+		wc.cbClsExtra = 0;
+		wc.cbWndExtra = 0;
+		wc.hInstance = hinstance;
+		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
+		wc.lpszMenuName = NULL;
+		wc.lpszClassName = class_name;
+		wc.hIconSm = NULL;
+
+		RegisterClassEx(&wc);
+	}
 }
 
 static SIZE GetParentSize(HWND hwnd_parent) noexcept

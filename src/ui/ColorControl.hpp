@@ -4,7 +4,7 @@
 class ColorControl : public Control {
 
 public:
-	ENABLE_MOVE_CONSTRUCTOR(ColorControl)
+	ColorControl(ColorControl&&) noexcept;
 
 	ColorControl(const UserControlCreateInfo& ucci) noexcept;
 	virtual ~ColorControl() noexcept {}

@@ -1,7 +1,6 @@
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include "../class_macro.hpp"
 #include "../tstring.hpp"
 
 class Window {
@@ -12,8 +11,8 @@ protected:
 	DWORD style;
 
 public:
-	DISABLE_COPY(Window)
-	ENABLE_MOVE_CONSTRUCTOR(Window)
+	Window(const Window&) = delete;
+	Window(Window&&) noexcept;
 
 	static const DWORD DEFAULT_STYLE;
 
@@ -60,7 +59,6 @@ protected:
 
 private:
 	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
-	void PrepareWndClass(HINSTANCE hinstance, LPCTSTR class_name) const noexcept;
 	void ProcessMessage(const MSG& msg) noexcept;
 };
 

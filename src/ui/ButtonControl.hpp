@@ -4,7 +4,7 @@
 class ButtonControl : public Control {
 
 public:
-	ENABLE_MOVE_CONSTRUCTOR(ButtonControl)
+	ButtonControl(ButtonControl&&) noexcept;
 
 	ButtonControl(const UserControlCreateInfo& ucci) noexcept;
 	virtual ~ButtonControl() noexcept {}

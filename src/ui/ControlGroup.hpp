@@ -8,13 +8,13 @@ class ControlGroup {
 	std::multimap<int, Control*> tab_map;
 
 public:
-	DISABLE_COPY_AND_MOVE(ControlGroup)
+	ControlGroup(const ControlGroup&) noexcept = delete;
+	ControlGroup& operator=(const ControlGroup&) noexcept = delete;
+	ControlGroup(ControlGroup&&) noexcept = delete;
+	ControlGroup& operator=(ControlGroup&&) noexcept = delete;
 
 	ControlGroup(const Control* parent_control) noexcept;
 	~ControlGroup() noexcept;
-
-	//[[nodiscard]] inline ControlGroup* begin() noexcept { auto a = control_map.emplace};
-	//[[nodiscard]] inline ControlGroup* end() noexcept { return control_group->end(); };
 
 	Control* AddControl(Control&& control) noexcept;
 	void CycleTab(bool cycle_up) noexcept;

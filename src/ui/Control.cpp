@@ -3,13 +3,11 @@
 
 Control::Control(Control&& other) noexcept :
 	Window{std::move(other)},
-	control_group{other.control_group},
+	control_group{std::move(other.control_group)},
 	control_id{other.control_id},
 	taborder{other.taborder},
 	tabstop{other.tabstop}
-{
-	other.control_group = nullptr;
-}
+{}
 
 Control::Control(const ControlCreateInfo& cci) noexcept :
 	Window{{
@@ -46,13 +44,7 @@ Control::Control(const UserControlCreateInfo& cci, LPCTSTR class_name, DWORD sty
 	tabstop{cci.tabstop}
 {}
 
-Control::~Control() noexcept
-{
-	if(control_group) {
-		delete control_group;
-		control_group = nullptr;
-	}
-}
+Control::~Control() noexcept {}
 
 void Control::SetFocus() noexcept
 {

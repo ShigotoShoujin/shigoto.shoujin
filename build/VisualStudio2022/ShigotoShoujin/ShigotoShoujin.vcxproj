@@ -151,7 +151,6 @@
     <ClCompile Include="..\..\..\src\ui\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\class_macro.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
     <ClInclude Include="..\..\..\src\ui\ButtonControl.hpp" />
     <ClInclude Include="..\..\..\src\ui\ColorControl.hpp" />

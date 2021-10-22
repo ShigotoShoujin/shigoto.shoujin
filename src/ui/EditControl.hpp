@@ -4,7 +4,7 @@
 class EditControl : public Control {
 
 public:
-	ENABLE_MOVE_CONSTRUCTOR(EditControl)
+	EditControl(EditControl&&) noexcept;
 
 	EditControl(const UserControlCreateInfo& ucci) noexcept;
 	virtual ~EditControl() noexcept {}

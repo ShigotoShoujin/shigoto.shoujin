@@ -36,7 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\tstring.hpp" />
-    <ClInclude Include="..\..\..\src\class_macro.hpp" />
     <ClInclude Include="..\..\..\src\ui\ui.hpp">
       <Filter>ui</Filter>
     </ClInclude>
