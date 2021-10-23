@@ -74,8 +74,13 @@ bool Control::BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept
 
 void Control::SetParent(const Window& parent_window) noexcept
 {
-	SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CHILD);
-	::SetParent(hwnd, parent_window.GetHandle());
-	SetWindowPos(hwnd, 0, 0, 0, window_size.cx, window_size.cy, SWP_NOZORDER | SWP_NOMOVE);
+	DestroyWindow(hwnd);
+	initial_wci.style |= WS_CHILD;
+	initial_wci.hwnd_parent = parent_window.GetHandle();
+	CreateHandle(initial_wci);
 	Show();
+	//SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CHILD);
+	//::SetParent(hwnd, parent_window.GetHandle());
+	//SetWindowPos(hwnd, 0, position.x, position.y, window_size.cx, window_size.cy, SWP_NOZORDER);
+	//Show();
 }

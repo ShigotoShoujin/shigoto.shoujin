@@ -13,23 +13,24 @@ static SIZE AdjustWindowSize(SIZE client_size, DWORD style, DWORD ex_style) noex
 static POINT CenterWindow(SIZE parent_size, SIZE window_size) noexcept;
 
 Window::Window(Window&& other) noexcept :
+	active{other.active},
 	hwnd{other.hwnd},
+	position{other.position},
 	window_size{other.window_size},
-	style{other.style},
-	active{other.active}
+	style{other.style}
 {
 	other.hwnd = {};
 	other.active = false;
 }
 
-Window::Window(const WindowCreateInfo& wci) noexcept
+void Window::CreateHandle(const WindowCreateInfo& wci) noexcept
 {
 	HINSTANCE hinstance = GetModuleHandle(NULL);
-	POINT position = wci.position;
 	LPCTSTR class_name = wci.class_name ? wci.class_name : DEFAULT_CLASS_NAME;
 
-	style = wci.style;
+	position = wci.position;
 	window_size = wci.window_size;
+	style = wci.style;
 
 	bool is_child = wci.style & WS_CHILD;
 	assert((is_child && wci.hwnd_parent) || (!is_child && !wci.hwnd_parent));
@@ -66,6 +67,13 @@ Window::Window(const WindowCreateInfo& wci) noexcept
 	assert(hwnd);
 	active = true;
 }
+
+Window::Window(const WindowCreateInfo& wci) noexcept
+{
+	initial_wci = wci;
+	CreateHandle(wci);
+}
+
 
 Window::~Window() noexcept
 {

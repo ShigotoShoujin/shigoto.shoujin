@@ -45,35 +45,18 @@ public:
 
 		ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
 
-		//ucci.position.x = WCX - ucci.window_size.cx - SPACE;
-		//ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
+		ucci.position.x = WCX - ucci.window_size.cx - SPACE;
+		ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
 
-		//ucci.position.x = SPACE;
-		//ucci.position.y = WCY - ucci.window_size.cy - SPACE;
-		//ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
+		ucci.position.x = SPACE;
+		ucci.position.y = WCY - ucci.window_size.cy - SPACE;
+		ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
 
-		//ucci.position.x = WCX - ucci.window_size.cx - SPACE;
-		//ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
-
-		Window::WindowCreateInfo wci_center
-		{
-			.ex_style = WS_EX_CLIENTEDGE,
-			.position{ 50, 350},
-			.window_size = {WCX / 5, WCY / 5}};
-
-		//SetParent needs to redo CenterParent with new window, same for Fill, just recreate it instead, well just create it first time in set parent instead of in ctor ffs
-
-		Window center_wnd(wci_center);
-
-		HWND hwnd = center_wnd.GetHandle();
-		SetWindowLongPtr(hwnd, GWL_STYLE, WS_CHILD);
-		::SetParent(hwnd, parent.GetHandle());
-		SetWindowPos(hwnd, 0, 0, 0, wci_center.window_size.cx, wci_center.window_size.cy, SWP_NOZORDER | SWP_NOMOVE);
-		center_wnd.Show();
+		ucci.position.x = WCX - ucci.window_size.cx - SPACE;
+		ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
 
 		parent.Show();
 		while(parent.MessageUpdate()) {
-			center_wnd.MessageUpdate();
 			for(auto c : ctrlv)
 				c->MessageUpdate();
 		}

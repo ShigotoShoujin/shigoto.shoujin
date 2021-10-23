@@ -5,5 +5,4 @@ ColorControl::ColorControl(ColorControl&& other) noexcept :
 
 ColorControl::ColorControl(const UserControlCreateInfo& ucci) noexcept :
 	Control{ucci, 0, WS_BORDER, WS_EX_CLIENTEDGE}
-	//Control{ucci, TEXT("EDIT"), 0, WS_EX_CLIENTEDGE}
 {}
