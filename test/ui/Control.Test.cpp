@@ -17,7 +17,7 @@ public:
 		Assert::IsTrue(std::is_move_constructible_v<Control>);
 	}
 
-	TEST_METHOD(ControlTest_IsMoveAssignable) {
+	TEST_METHOD(ControlTest_IsNotMoveAssignable) {
 		Assert::IsFalse(std::is_move_assignable_v<Control>);
 	}
 
@@ -29,6 +29,7 @@ public:
 		Control::ControlCreateInfo cci{
 			.client_size = {WCX, WCY},
 			.layout = Window::Layout::CenterParent,
+			.style = Window::DEFAULT_STYLE,
 			.text = TEXT("ControlTest_Test")};
 
 		Control control(cci);

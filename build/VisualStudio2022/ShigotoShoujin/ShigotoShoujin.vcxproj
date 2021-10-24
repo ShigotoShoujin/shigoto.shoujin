@@ -143,6 +143,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\ui\Bitmap.cpp" />
+    <ClCompile Include="..\..\..\src\ui\BitmapControl.cpp" />
     <ClCompile Include="..\..\..\src\ui\ButtonControl.cpp" />
     <ClCompile Include="..\..\..\src\ui\ColorControl.cpp" />
     <ClCompile Include="..\..\..\src\ui\Control.cpp" />
@@ -152,11 +154,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\tstring.hpp" />
+    <ClInclude Include="..\..\..\src\ui\Bitmap.hpp" />
+    <ClInclude Include="..\..\..\src\ui\BitmapControl.hpp" />
     <ClInclude Include="..\..\..\src\ui\ButtonControl.hpp" />
     <ClInclude Include="..\..\..\src\ui\ColorControl.hpp" />
     <ClInclude Include="..\..\..\src\ui\Control.hpp" />
     <ClInclude Include="..\..\..\src\ui\ControlGroup.hpp" />
     <ClInclude Include="..\..\..\src\ui\EditControl.hpp" />
+    <ClInclude Include="..\..\..\src\ui\global_operators.hpp" />
     <ClInclude Include="..\..\..\src\ui\ui.hpp" />
     <ClInclude Include="..\..\..\src\ui\Window.hpp" />
   </ItemGroup>

@@ -33,6 +33,12 @@
     <ClCompile Include="..\..\..\src\ui\ColorControl.cpp">
       <Filter>ui\controls</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ui\BitmapControl.cpp">
+      <Filter>ui\controls</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ui\Bitmap.cpp">
+      <Filter>ui\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\src\tstring.hpp" />
@@ -56,6 +62,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\ui\ColorControl.hpp">
       <Filter>ui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\BitmapControl.hpp">
+      <Filter>ui\controls</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\Bitmap.hpp">
+      <Filter>ui\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\ui\global_operators.hpp">
+      <Filter>ui\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

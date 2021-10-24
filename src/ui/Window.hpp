@@ -45,12 +45,13 @@ public:
 	virtual bool MessageLoop() noexcept;
 	virtual void Destroy() noexcept;
 
-	virtual bool OnMouseClick(WPARAM wparam, int x, int y) noexcept;
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept;
 	virtual bool OnKeyDown(WPARAM wparam) noexcept;
+	virtual bool OnMouseClick(WPARAM wparam, int x, int y) noexcept;
+	virtual bool OnPaint() noexcept;
 
-	[[nodiscard]] bool IsDestroyed() const noexcept { return !active; }
-	[[nodiscard]] virtual HWND GetHandle() const noexcept { return hwnd; }
+	[[nodiscard]] inline bool IsDestroyed() const noexcept { return !active; }
+	[[nodiscard]] inline virtual HWND GetHandle() const noexcept { return hwnd; }
 	[[nodiscard]] virtual SIZE GetWindowSize() const noexcept;
 	[[nodiscard]] virtual SIZE GetClientSize() const noexcept;
 	[[nodiscard]] virtual tstring GetText() const noexcept;

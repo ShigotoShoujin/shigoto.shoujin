@@ -18,7 +18,7 @@ public:
 		Assert::IsTrue(std::is_move_constructible_v<ColorControl>);
 	}
 
-	TEST_METHOD(ColorControlTest_IsMoveAssignable) {
+	TEST_METHOD(ColorControlTest_IsNotMoveAssignable) {
 		Assert::IsFalse(std::is_move_assignable_v<ColorControl>);
 	}
 
@@ -30,6 +30,7 @@ public:
 		Control::ControlCreateInfo cci{
 			.client_size = {WCX, WCY},
 			.layout = Window::Layout::CenterParent,
+			.style = Window::DEFAULT_STYLE,
 			.text = TEXT("ColorControlTest_ShowFourTogether")};
 
 		Control parent(cci);

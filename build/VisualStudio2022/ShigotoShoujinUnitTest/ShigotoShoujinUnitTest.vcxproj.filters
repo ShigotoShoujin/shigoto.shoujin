@@ -21,5 +21,11 @@
     <ClCompile Include="..\..\..\test\ui\Window.Test.cpp">
       <Filter>ui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\ui\BitmapControl.Test.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\ui\Bitmap.Test.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

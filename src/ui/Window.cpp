@@ -37,9 +37,6 @@ Window::Window(const WindowCreateInfo& wci) noexcept
 	bool is_child = wci.style & WS_CHILD;
 	assert((is_child && wci.hwnd_parent) || (!is_child && !wci.hwnd_parent));
 
-	if(!style && !wci.class_name)
-		style = DEFAULT_STYLE;
-
 	if(wci.hwnd_parent != HWND_DESKTOP)
 		style |= WS_CHILD;
 
@@ -121,17 +118,22 @@ void Window::Destroy() noexcept
 	}
 }
 
-bool Window::OnMouseClick(WPARAM wparam, int x, int y) noexcept
-{
-	return false;
-}
-
 bool Window::BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept
 {
 	return false;
 }
 
 bool Window::OnKeyDown(WPARAM wparam) noexcept
+{
+	return false;
+}
+
+bool Window::OnMouseClick(WPARAM wparam, int x, int y) noexcept
+{
+	return false;
+}
+
+bool Window::OnPaint() noexcept
 {
 	return false;
 }
