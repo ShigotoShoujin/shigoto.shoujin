@@ -10,15 +10,19 @@ ControlGroup::~ControlGroup() noexcept
 		delete c.second;
 }
 
-Control* ControlGroup::AddControl(Control* control) noexcept
+Control* ControlGroup::AddControl(Control&& control)
 {
-	if(control->tabstop)
-		control->taborder = GetMaxTabOrder() + 1;
+	Control* ctrl = new Control(std::move(control));
 
-	control->SetParent(*parent_control);
+	if(ctrl->tabstop)
+		ctrl->taborder = GetMaxTabOrder() + 1;
 
-	auto pair = control_map.emplace(control->hwnd, control);
-	auto ctrl = pair.first->second;
+	ctrl->WndProc(0, 0, 0);
+
+	ctrl->SetParent(*parent_control);
+
+	auto new_insertion = control_map.emplace(ctrl->hwnd, ctrl).second;
+	assert(new_insertion);
 	tab_map.emplace(ctrl->taborder, ctrl);
 
 	return ctrl;
@@ -41,6 +45,11 @@ void ControlGroup::CycleTab(bool cycle_up) noexcept
 	control = FindNextControlInTabOrder(control, cycle_up);
 	if(control)
 		control->SetFocus();
+}
+
+void ControlGroup::SetParentControl(Control* parent_control) noexcept
+{
+	this->parent_control = parent_control;
 }
 
 int ControlGroup::GetMaxTabOrder() const noexcept

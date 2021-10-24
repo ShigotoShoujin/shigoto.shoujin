@@ -51,9 +51,9 @@ void Control::SetFocus() noexcept
 	::SetFocus(hwnd);
 }
 
-Control* Control::AddChild(Control* control) noexcept
+Control* Control::AddChild(Control&& control)
 {
-	return control_group->AddControl(control);
+	return control_group->AddControl(std::move(control));
 }
 
 bool Control::BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept

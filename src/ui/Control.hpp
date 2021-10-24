@@ -53,7 +53,7 @@ public:
 	virtual ~Control() noexcept;
 
 	virtual void SetFocus() noexcept;
-	Control* AddChild(Control* control) noexcept;
+	Control* AddChild(Control&& control);
 
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept override;
 
