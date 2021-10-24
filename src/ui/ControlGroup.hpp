@@ -4,7 +4,7 @@
 
 class ControlGroup {
 	const Control* parent_control;
-	std::map<HWND, Control> control_map;
+	std::map<HWND, Control*> control_map;
 	std::multimap<int, Control*> tab_map;
 
 public:
@@ -16,7 +16,7 @@ public:
 	ControlGroup(const Control* parent_control) noexcept;
 	~ControlGroup() noexcept;
 
-	Control* AddControl(Control&& control) noexcept;
+	Control* AddControl(Control* control) noexcept;
 	void CycleTab(bool cycle_up) noexcept;
 
 private:

@@ -6,17 +6,19 @@ ControlGroup::ControlGroup(const Control* parent_control) noexcept :
 ControlGroup::~ControlGroup() noexcept
 {
 	parent_control = nullptr;
+	for(auto& c : control_map)
+		delete c.second;
 }
 
-Control* ControlGroup::AddControl(Control&& control) noexcept
+Control* ControlGroup::AddControl(Control* control) noexcept
 {
-	if(control.tabstop)
-		control.taborder = GetMaxTabOrder() + 1;
+	if(control->tabstop)
+		control->taborder = GetMaxTabOrder() + 1;
 
-	control.SetParent(*parent_control);
+	control->SetParent(*parent_control);
 
-	auto pair = control_map.emplace(control.hwnd, std::move(control));
-	auto ctrl = &pair.first->second;
+	auto pair = control_map.emplace(control->hwnd, control);
+	auto ctrl = pair.first->second;
 	tab_map.emplace(ctrl->taborder, ctrl);
 
 	return ctrl;
@@ -55,7 +57,7 @@ Control* ControlGroup::FindControlByHandle(HWND control) noexcept
 	if(it == control_map.end())
 		return nullptr;
 
-	return &it->second;
+	return it->second;
 }
 
 Control* ControlGroup::FindNextControlInTabOrder(Control* control, bool cycle_up) noexcept

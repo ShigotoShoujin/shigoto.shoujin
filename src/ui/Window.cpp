@@ -23,7 +23,7 @@ Window::Window(Window&& other) noexcept :
 	other.active = false;
 }
 
-void Window::CreateHandle(const WindowCreateInfo& wci) noexcept
+Window::Window(const WindowCreateInfo& wci) noexcept
 {
 	HINSTANCE hinstance = GetModuleHandle(NULL);
 	LPCTSTR class_name = wci.class_name ? wci.class_name : DEFAULT_CLASS_NAME;
@@ -66,12 +66,6 @@ void Window::CreateHandle(const WindowCreateInfo& wci) noexcept
 	hwnd = CreateWindowEx(wci.ex_style, class_name, wci.text, style, position.x, position.y, window_size.cx, window_size.cy, wci.hwnd_parent, wci.hwnd_menu, hinstance, this);
 	assert(hwnd);
 	active = true;
-}
-
-Window::Window(const WindowCreateInfo& wci) noexcept
-{
-	initial_wci = wci;
-	CreateHandle(wci);
 }
 
 

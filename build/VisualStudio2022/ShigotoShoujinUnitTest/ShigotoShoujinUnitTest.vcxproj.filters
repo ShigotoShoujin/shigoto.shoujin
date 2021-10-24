@@ -6,7 +6,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\test\ui\Window.Test.cpp">
+    <ClCompile Include="..\..\..\test\ui\ColorControl.Test.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\ui\Control.Test.cpp">
       <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\ui\ControlGroup.Test.cpp">
@@ -15,10 +18,7 @@
     <ClCompile Include="..\..\..\test\ui\EditControl.Test.cpp">
       <Filter>ui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\ui\Control.Test.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\ui\ColorControl.Test.cpp">
+    <ClCompile Include="..\..\..\test\ui\Window.Test.cpp">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>

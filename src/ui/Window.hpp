@@ -36,11 +36,6 @@ public:
 		SIZE window_size{};
 	};
 
-protected:
-	WindowCreateInfo initial_wci;
-
-public:
-	void CreateHandle(const WindowCreateInfo& wci) noexcept;
 	Window(const WindowCreateInfo& wci) noexcept;
 	virtual ~Window() noexcept;
 
