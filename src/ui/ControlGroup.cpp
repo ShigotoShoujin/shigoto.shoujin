@@ -1,11 +1,10 @@
 #include "ControlGroup.hpp"
+#include "Control.hpp"
 
-ControlGroup::ControlGroup(const Control* parent_control) noexcept :
-	parent_control{parent_control} {}
+ControlGroup::ControlGroup() noexcept {}
 
 ControlGroup::~ControlGroup() noexcept
 {
-	parent_control = nullptr;
 	for(auto& c : control_map)
 		delete c.second;
 }
@@ -19,6 +18,7 @@ Control* ControlGroup::AddControl(Control&& control)
 
 	ctrl->WndProc(0, 0, 0);
 
+	Control* parent_control = static_cast<Control*>(this);
 	ctrl->SetParent(*parent_control);
 
 	auto new_insertion = control_map.emplace(ctrl->hwnd, ctrl).second;
@@ -45,11 +45,6 @@ void ControlGroup::CycleTab(bool cycle_up) noexcept
 	control = FindNextControlInTabOrder(control, cycle_up);
 	if(control)
 		control->SetFocus();
-}
-
-void ControlGroup::SetParentControl(Control* parent_control) noexcept
-{
-	this->parent_control = parent_control;
 }
 
 int ControlGroup::GetMaxTabOrder() const noexcept

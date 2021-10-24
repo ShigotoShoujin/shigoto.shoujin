@@ -1,9 +1,8 @@
 #pragma once
+#include "ControlGroup.hpp"
 #include "Window.hpp"
 #include <cassert>
 #include <memory>
-
-class ControlGroup;
 
 struct UserControlCreateInfo {
 	SIZE client_size{};
@@ -16,9 +15,7 @@ struct UserControlCreateInfo {
 	SIZE window_size{};
 };
 
-class Control : public Window {
-	std::unique_ptr<ControlGroup> control_group;
-
+class Control : public Window, private ControlGroup {
 	friend ControlGroup;
 
 protected:

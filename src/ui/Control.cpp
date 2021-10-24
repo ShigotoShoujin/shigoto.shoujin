@@ -3,13 +3,10 @@
 
 Control::Control(Control&& other) noexcept :
 	Window{std::move(other)},
-	control_group{std::move(other.control_group)},
 	control_id{other.control_id},
 	taborder{other.taborder},
 	tabstop{other.tabstop}
-{
-	control_group->SetParentControl(this);
-}
+{}
 
 Control::Control(const ControlCreateInfo& cci) noexcept :
 	Window{{
@@ -23,7 +20,6 @@ Control::Control(const ControlCreateInfo& cci) noexcept :
 		.text = cci.text,
 		.window_size = cci.window_size,
 	}},
-	control_group{new ControlGroup(this)},
 	control_id{cci.control_id},
 	taborder{cci.taborder},
 	tabstop{cci.tabstop}
@@ -40,7 +36,6 @@ Control::Control(const UserControlCreateInfo& cci, LPCTSTR class_name, DWORD sty
 		.text = cci.text,
 		.window_size = cci.window_size,
 	}},
-	control_group{new ControlGroup(this)},
 	control_id{cci.control_id},
 	taborder{cci.taborder},
 	tabstop{cci.tabstop}
@@ -55,7 +50,7 @@ void Control::SetFocus() noexcept
 
 Control* Control::AddChild(Control&& control)
 {
-	return control_group->AddControl(std::move(control));
+	return ControlGroup::AddControl(std::move(control));
 }
 
 bool Control::BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept
@@ -63,7 +58,7 @@ bool Control::BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept
 	switch(wparam) {
 		case VK_TAB: {
 			bool cycle_up = GetAsyncKeyState(VK_SHIFT);
-			control_group->CycleTab(cycle_up);
+			ControlGroup::CycleTab(cycle_up);
 			return true;
 		}
 		case VK_ESCAPE:
