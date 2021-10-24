@@ -44,22 +44,23 @@ public:
 			.position{SPACE, SPACE},
 			.window_size{ws(WCX), ws(WCY)}};
 
-		ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
+		ctrlv.push_back(parent.AddChild(new ColorControl(ucci)));
 
 		ucci.position.x = WCX - ucci.window_size.cx - SPACE;
-		ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
+		ctrlv.push_back(parent.AddChild(new ColorControl(ucci)));
 		
 		ucci.position.x = SPACE;
 		ucci.position.y = WCY - ucci.window_size.cy - SPACE;
-		ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
+		ctrlv.push_back(parent.AddChild(new ColorControl(ucci)));
 
 		ucci.position.x = WCX - ucci.window_size.cx - SPACE;
-		ctrlv.push_back(parent.AddChild(ColorControl(ucci)));
+		ctrlv.push_back(parent.AddChild(new ColorControl(ucci)));
 
 		parent.Show();
 		while(parent.MessageUpdate()) {
 			for(auto c : ctrlv)
 				c->MessageUpdate();
+			Sleep(1);
 		}
 	}
 };

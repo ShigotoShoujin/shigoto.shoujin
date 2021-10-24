@@ -24,9 +24,11 @@ public:
 	[[nodiscard]] inline virtual SIZE GetSize() const noexcept { return bitmap_size; }
 	[[nodiscard]] inline virtual HDC GetDC() const noexcept { return hdc; }
 
-	virtual void Clear(COLORREF color);
-	virtual void Fill(const RECT& rect, COLORREF color);
-	virtual void Fill(POINT position, SIZE size, COLORREF color);
-	virtual void Draw(HDC source, int x, int y, int w, int h, int src_x = {}, int src_y = {});
-	virtual void Draw(const Bitmap& source);
+	virtual void Destroy() noexcept;
+	virtual void Reset(const SIZE& size) noexcept;
+	virtual void Fill(const RECT& rect, COLORREF color) noexcept;
+	virtual void Fill(POINT position, SIZE size, COLORREF color) noexcept;
+	virtual void Fill(COLORREF color) noexcept;
+	virtual void Draw(HDC source, int x, int y, int w, int h, int src_x = {}, int src_y = {}) noexcept;
+	virtual void Draw(const Bitmap& source) noexcept;
 };

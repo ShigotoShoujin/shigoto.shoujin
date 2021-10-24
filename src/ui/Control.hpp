@@ -50,10 +50,10 @@ public:
 	virtual ~Control() noexcept;
 
 	virtual void SetFocus() noexcept;
-	Control* AddChild(Control&& control);
+	Control* AddChild(Control* control);
 
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept override;
 
-private:
-	void SetParent(const Window& parent_window) noexcept;
+protected:
+	virtual void SetParent(const Window& parent_window) noexcept;
 };

@@ -18,7 +18,7 @@ class ControlGroup {
 	ControlGroup() noexcept;
 	~ControlGroup() noexcept;
 
-	Control* AddControl(Control&& control);
+	Control* AddControl(Control* control);
 	void CycleTab(bool cycle_up) noexcept;
 
 	int GetMaxTabOrder() const noexcept;

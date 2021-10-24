@@ -26,10 +26,7 @@ Bitmap::Bitmap() noexcept :
 
 Bitmap::Bitmap(const SIZE& size) noexcept
 {
-	HDC hdesktopdc = ::GetDC(HWND_DESKTOP);
-	CreateBitmap(hdesktopdc, size, hdc, hbitmap);
-	ReleaseDC(HWND_DESKTOP, hdesktopdc);
-	bitmap_size = size;
+	Reset(size);
 }
 
 Bitmap::Bitmap(const Bitmap& other) noexcept
@@ -67,23 +64,30 @@ Bitmap& Bitmap::operator=(Bitmap&& other) noexcept
 
 Bitmap::~Bitmap() noexcept
 {
+	Destroy();
+}
+
+void Bitmap::Destroy() noexcept
+{
 	if(hdc) {
 		DeleteDC(hdc);
 		DeleteObject(hbitmap);
 		hdc = nullptr;
 		hbitmap = nullptr;
+		bitmap_size = {0};
 	}
-
-	bitmap_size = {0};
 }
 
-void Bitmap::Clear(COLORREF color)
+void Bitmap::Reset(const SIZE& size) noexcept
 {
-	ASSERT_INITIALIZED
-	Fill({0, 0, bitmap_size.cx, bitmap_size.cy}, color);
+	Destroy();
+	HDC hdesktopdc = ::GetDC(HWND_DESKTOP);
+	CreateBitmap(hdesktopdc, size, hdc, hbitmap);
+	ReleaseDC(HWND_DESKTOP, hdesktopdc);
+	bitmap_size = size;
 }
 
-void Bitmap::Fill(const RECT& rect, COLORREF color)
+void Bitmap::Fill(const RECT& rect, COLORREF color) noexcept
 {
 	ASSERT_INITIALIZED
 	HBRUSH brush = CreateSolidBrush(color);
@@ -91,19 +95,25 @@ void Bitmap::Fill(const RECT& rect, COLORREF color)
 	DeleteObject(brush);
 }
 
-void Bitmap::Fill(POINT position, SIZE size, COLORREF color)
+void Bitmap::Fill(POINT position, SIZE size, COLORREF color) noexcept
 {
 	ASSERT_INITIALIZED
 	Fill({position.x, position.y, position.x + size.cx, position.y + size.cy}, color);
 }
 
-void Bitmap::Draw(HDC source, int x, int y, int w, int h, int src_x, int src_y)
+void Bitmap::Fill(COLORREF color) noexcept
+{
+	ASSERT_INITIALIZED
+	Fill({0, 0, bitmap_size.cx, bitmap_size.cy}, color);
+}
+
+void Bitmap::Draw(HDC source, int x, int y, int w, int h, int src_x, int src_y) noexcept
 {
 	ASSERT_INITIALIZED
 	BitBlt(hdc, x, y, w, h, source, src_x, src_y, SRCCOPY);
 }
 
-void Bitmap::Draw(const Bitmap& source)
+void Bitmap::Draw(const Bitmap& source) noexcept
 {
 	ASSERT_INITIALIZED
 	int w = max(source.bitmap_size.cx, bitmap_size.cx);

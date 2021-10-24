@@ -9,23 +9,21 @@ ControlGroup::~ControlGroup() noexcept
 		delete c.second;
 }
 
-Control* ControlGroup::AddControl(Control&& control)
+Control* ControlGroup::AddControl(Control* control)
 {
-	Control* ctrl = new Control(std::move(control));
+	if(control->tabstop)
+		control->taborder = GetMaxTabOrder() + 1;
 
-	if(ctrl->tabstop)
-		ctrl->taborder = GetMaxTabOrder() + 1;
-
-	ctrl->WndProc(0, 0, 0);
+	control->WndProc(0, 0, 0);
 
 	Control* parent_control = static_cast<Control*>(this);
-	ctrl->SetParent(*parent_control);
+	control->SetParent(*parent_control);
 
-	auto new_insertion = control_map.emplace(ctrl->hwnd, ctrl).second;
+	auto new_insertion = control_map.emplace(control->hwnd, control).second;
 	assert(new_insertion);
-	tab_map.emplace(ctrl->taborder, ctrl);
+	tab_map.emplace(control->taborder, control);
 
-	return ctrl;
+	return control;
 }
 
 void ControlGroup::CycleTab(bool cycle_up) noexcept

@@ -78,6 +78,7 @@ public:
 		while(root_wnd.MessageUpdate()) {
 			fill_wnd.MessageUpdate();
 			center_wnd.MessageUpdate();
+			Sleep(1);
 		}
 	}
 };

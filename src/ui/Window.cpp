@@ -173,12 +173,16 @@ tstring Window::GetText() const noexcept
 LRESULT Window::WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 {
 	switch(msg) {
+		case WM_KEYDOWN:
+			if(OnKeyDown(wparam))
+				return 0;
+			break;
 		case WM_LBUTTONDOWN:
 			if(OnMouseClick(wparam, LOWORD(lparam), HIWORD(lparam)))
 				return 0;
 			break;
-		case WM_KEYDOWN:
-			if(OnKeyDown(wparam))
+		case WM_PAINT:
+			if(OnPaint())
 				return 0;
 			break;
 		case WM_DESTROY:

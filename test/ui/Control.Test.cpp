@@ -41,7 +41,7 @@ public:
 		};
 
 		auto addEditControl = [&]() {
-			control.AddChild(EditControl{ucci});
+			control.AddChild(new EditControl{ucci});
 			ucci.position.y += 20 + SPACE;
 		};
 
@@ -52,11 +52,11 @@ public:
 		ucci.client_size = {};
 		ucci.window_size = {96, 24};
 		ucci.text = {TEXT("OK")};
-		control.AddChild(ButtonControl{ucci});
+		control.AddChild(new ButtonControl{ucci});
 
 		ucci.position.x -= -SPACE - 96;
 		ucci.text = {TEXT("Close")};
-		control.AddChild(ButtonControl{ucci});
+		control.AddChild(new ButtonControl{ucci});
 
 		control.Show();
 		control.MessageLoop();
