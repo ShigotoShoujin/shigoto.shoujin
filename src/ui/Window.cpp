@@ -21,6 +21,8 @@ Window::Window(Window&& other) noexcept :
 {
 	other.hwnd = {};
 	other.active = false;
+
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)this);
 }
 
 Window::Window(const WindowCreateInfo& wci) noexcept

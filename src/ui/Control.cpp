@@ -7,7 +7,9 @@ Control::Control(Control&& other) noexcept :
 	control_id{other.control_id},
 	taborder{other.taborder},
 	tabstop{other.tabstop}
-{}
+{
+	control_group->SetParentControl(this);
+}
 
 Control::Control(const ControlCreateInfo& cci) noexcept :
 	Window{{
