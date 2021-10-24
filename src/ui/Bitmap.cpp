@@ -45,9 +45,10 @@ Bitmap::Bitmap(const Bitmap& other) noexcept
 	}
 }
 
-Bitmap& Bitmap::operator=(Bitmap other) noexcept
+Bitmap& Bitmap::operator=(const Bitmap& other) noexcept
 {
-	swap(*this, other);
+	Bitmap local = other;
+	swap(*this, local);
 	return *this;
 }
 

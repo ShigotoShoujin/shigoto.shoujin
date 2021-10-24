@@ -15,9 +15,8 @@ public:
 	Bitmap(const SIZE& size) noexcept;
 
 	Bitmap(const Bitmap&) noexcept;
-	Bitmap& operator=(Bitmap) noexcept;
+	Bitmap& operator=(const Bitmap&) noexcept;
 	Bitmap(Bitmap&&) noexcept;
-	//Bitmap& operator=(Bitmap&&) noexcept;
 	Bitmap& operator=(Bitmap&&) noexcept;
 
 	virtual ~Bitmap() noexcept;
