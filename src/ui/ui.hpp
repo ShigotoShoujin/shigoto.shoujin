@@ -1,5 +1,8 @@
 #pragma once
 
-#include "Window.hpp"
-#include "Control.hpp"
+#include "global_operators.hpp"
+
+#include "ButtonControl.hpp"
+#include "BitmapControl.hpp"
+#include "ColorPickerControl.hpp"
 #include "EditControl.hpp"

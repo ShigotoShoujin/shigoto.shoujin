@@ -1,9 +1,8 @@
 #pragma once
-#include "../class_macro.hpp"
+#include "ControlGroup.hpp"
 #include "Window.hpp"
 #include <cassert>
-
-class ControlGroup;
+#include <memory>
 
 struct UserControlCreateInfo {
 	SIZE client_size{};
@@ -16,9 +15,7 @@ struct UserControlCreateInfo {
 	SIZE window_size{};
 };
 
-class Control : public Window {
-	ControlGroup* control_group;
-
+class Control : public Window, private ControlGroup {
 	friend ControlGroup;
 
 protected:
@@ -27,7 +24,7 @@ protected:
 	bool tabstop;
 
 public:
-	ENABLE_MOVE_CONSTRUCTOR(Control)
+	Control(Control&&) noexcept;
 
 	struct ControlCreateInfo {
 		LPCTSTR class_name{};
@@ -53,11 +50,10 @@ public:
 	virtual ~Control() noexcept;
 
 	virtual void SetFocus() noexcept;
-	virtual void AddChild(Control&& control) noexcept;
-	virtual void DrawTabOrder() noexcept;
+	Control* AddChild(Control* control);
 
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept override;
 
-private:
-	void SetParent(const Window& parent_window) noexcept;
+protected:
+	virtual void SetParent(const Window& parent_window) noexcept;
 };

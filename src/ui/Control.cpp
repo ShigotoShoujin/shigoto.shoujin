@@ -4,13 +4,10 @@
 
 Control::Control(Control&& other) noexcept :
 	Window{std::move(other)},
-	control_group{other.control_group},
 	control_id{other.control_id},
 	taborder{other.taborder},
 	tabstop{other.tabstop}
-{
-	other.control_group = nullptr;
-}
+{}
 
 Control::Control(const ControlCreateInfo& cci) noexcept :
 	Window{{
@@ -24,7 +21,6 @@ Control::Control(const ControlCreateInfo& cci) noexcept :
 		.text = cci.text,
 		.window_size = cci.window_size,
 	}},
-	control_group{new ControlGroup(this)},
 	control_id{cci.control_id},
 	taborder{cci.taborder},
 	tabstop{cci.tabstop}
@@ -41,28 +37,21 @@ Control::Control(const UserControlCreateInfo& cci, LPCTSTR class_name, DWORD sty
 		.text = cci.text,
 		.window_size = cci.window_size,
 	}},
-	control_group{new ControlGroup(this)},
 	control_id{cci.control_id},
 	taborder{cci.taborder},
 	tabstop{cci.tabstop}
 {}
 
-Control::~Control() noexcept
-{
-	if(control_group) {
-		delete control_group;
-		control_group = nullptr;
-	}
-}
+Control::~Control() noexcept {}
 
 void Control::SetFocus() noexcept
 {
 	::SetFocus(hwnd);
 }
 
-void Control::AddChild(Control&& control) noexcept
+Control* Control::AddChild(Control* control)
 {
-	control_group->AddControl(std::move(control));
+	return ControlGroup::AddControl(control);
 }
 
 void Control::DrawTabOrder() noexcept
@@ -88,7 +77,7 @@ bool Control::BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept
 		case VK_TAB: {
 			DrawTabOrder();
 			bool cycle_up = GetAsyncKeyState(VK_SHIFT);
-			control_group->CycleTab(cycle_up);
+			ControlGroup::CycleTab(cycle_up);
 			return true;
 		}
 		case VK_ESCAPE:
@@ -103,6 +92,6 @@ void Control::SetParent(const Window& parent_window) noexcept
 {
 	SetWindowLongPtr(hwnd, GWL_STYLE, style | WS_CHILD);
 	::SetParent(hwnd, parent_window.GetHandle());
-	SetWindowPos(hwnd, 0, 0, 0, window_size.cx, window_size.cy, SWP_NOZORDER | SWP_NOMOVE);
+	SetWindowPos(hwnd, 0, position.x, position.y, window_size.cx, window_size.cy, SWP_NOZORDER);
 	Show();
 }

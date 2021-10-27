@@ -25,18 +25,18 @@ public:
 		Assert::IsTrue(std::is_move_constructible_v<Window>);
 	}
 
-	TEST_METHOD(WindowTest_IsMoveAssignable) {
+	TEST_METHOD(WindowTest_IsNotMoveAssignable) {
 		Assert::IsFalse(std::is_move_assignable_v<Window>);
 	}
 
 	TEST_METHOD(WindowTestCustomLayout) {
-		Window w({.position{screen.cx / 5, screen.cy / 5}, .text = TEXT("WindowTestCustomLayout")});
+		Window w({.position{screen.cx / 5, screen.cy / 5}, .style = Window::DEFAULT_STYLE, .text = TEXT("WindowTestCustomLayout")});
 		w.Show();
 		w.MessageLoop();
 	}
 
 	TEST_METHOD(WindowTestCenterDesktop) {
-		Window w({.layout = Window::Layout::CenterParent, .text = TEXT("WindowTestCenterDesktop")});
+		Window w({.layout = Window::Layout::CenterParent, .style = Window::DEFAULT_STYLE, .text = TEXT("WindowTestCenterDesktop")});
 		w.Show();
 		w.MessageLoop();
 	}
@@ -70,7 +70,7 @@ public:
 			.hwnd_parent = fill_wnd.GetHandle(),
 			.layout = Window::Layout::CenterParent,
 			.style{WS_CHILD | WS_VISIBLE},
-			.text = TEXT("fill"),
+			.text = TEXT("center"),
 			.window_size = {screen.cx / 5, screen.cy / 5}};
 
 		Window center_wnd(wci_center);
@@ -78,6 +78,7 @@ public:
 		while(root_wnd.MessageUpdate()) {
 			fill_wnd.MessageUpdate();
 			center_wnd.MessageUpdate();
+			Sleep(1);
 		}
 	}
 };
