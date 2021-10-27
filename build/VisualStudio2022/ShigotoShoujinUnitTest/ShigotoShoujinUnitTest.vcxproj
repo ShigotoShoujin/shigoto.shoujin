@@ -26,7 +26,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\test\ui\Bitmap.Test.cpp" />
     <ClCompile Include="..\..\..\test\ui\BitmapControl.Test.cpp" />
-    <ClCompile Include="..\..\..\test\ui\ColorControl.Test.cpp" />
+    <ClCompile Include="..\..\..\test\ui\ColorPickerControl.Test.cpp" />
     <ClCompile Include="..\..\..\test\ui\Control.Test.cpp" />
     <ClCompile Include="..\..\..\test\ui\ControlGroup.Test.cpp" />
     <ClCompile Include="..\..\..\test\ui\EditControl.Test.cpp" />

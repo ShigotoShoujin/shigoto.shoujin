@@ -109,6 +109,11 @@ bool Window::MessageLoop() noexcept
 	return active;
 }
 
+void Window::Invalidate(const RECT* rect) noexcept
+{
+	::InvalidateRect(hwnd, rect, FALSE);
+}
+
 void Window::Destroy() noexcept
 {
 	if(hwnd && active) {

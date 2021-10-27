@@ -6,7 +6,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\test\ui\ColorControl.Test.cpp">
+    <ClCompile Include="..\..\..\test\ui\ColorPickerControl.Test.cpp">
       <Filter>ui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\ui\Control.Test.cpp">

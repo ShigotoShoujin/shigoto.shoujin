@@ -43,6 +43,7 @@ public:
 	virtual void Hide() noexcept;
 	virtual bool MessageUpdate() noexcept;
 	virtual bool MessageLoop() noexcept;
+	virtual void Invalidate(const RECT* rect = nullptr) noexcept;
 	virtual void Destroy() noexcept;
 
 	virtual bool BeforeKeyDown(HWND hwnd, WPARAM wparam) noexcept;

@@ -4,5 +4,5 @@
 
 #include "ButtonControl.hpp"
 #include "BitmapControl.hpp"
-#include "ColorControl.hpp"
+#include "ColorPickerControl.hpp"
 #include "EditControl.hpp"

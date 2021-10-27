@@ -30,7 +30,7 @@
     <ClCompile Include="..\..\..\src\ui\ButtonControl.cpp">
       <Filter>ui\controls</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\ui\ColorControl.cpp">
+    <ClCompile Include="..\..\..\src\ui\ColorPickerControl.cpp">
       <Filter>ui\controls</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\ui\BitmapControl.cpp">
@@ -60,7 +60,7 @@
     <ClInclude Include="..\..\..\src\ui\ButtonControl.hpp">
       <Filter>ui\controls</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\ui\ColorControl.hpp">
+    <ClInclude Include="..\..\..\src\ui\ColorPickerControl.hpp">
       <Filter>ui\controls</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\ui\BitmapControl.hpp">
