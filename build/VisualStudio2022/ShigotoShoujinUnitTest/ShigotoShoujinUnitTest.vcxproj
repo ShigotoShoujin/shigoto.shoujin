@@ -24,13 +24,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\test\ui\Bitmap.Test.cpp" />
-    <ClCompile Include="..\..\..\test\ui\BitmapControl.Test.cpp" />
-    <ClCompile Include="..\..\..\test\ui\ColorPickerControl.Test.cpp" />
-    <ClCompile Include="..\..\..\test\ui\Control.Test.cpp" />
-    <ClCompile Include="..\..\..\test\ui\ControlGroup.Test.cpp" />
-    <ClCompile Include="..\..\..\test\ui\EditControl.Test.cpp" />
-    <ClCompile Include="..\..\..\test\ui\Window.Test.cpp" />
+    <ClCompile Include="..\..\..\test\sample_test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

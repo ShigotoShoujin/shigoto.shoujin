@@ -143,29 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\ui\Bitmap.cpp" />
-    <ClCompile Include="..\..\..\src\ui\BitmapControl.cpp" />
-    <ClCompile Include="..\..\..\src\ui\ButtonControl.cpp" />
-    <ClCompile Include="..\..\..\src\ui\ColorPickerControl.cpp" />
-    <ClCompile Include="..\..\..\src\ui\Control.cpp" />
-    <ClCompile Include="..\..\..\src\ui\ControlGroup.cpp" />
-    <ClCompile Include="..\..\..\src\ui\Debug.cpp" />
-    <ClCompile Include="..\..\..\src\ui\EditControl.cpp" />
-    <ClCompile Include="..\..\..\src\ui\Window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\..\..\src\tstring.hpp" />
-    <ClInclude Include="..\..\..\src\ui\Bitmap.hpp" />
-    <ClInclude Include="..\..\..\src\ui\BitmapControl.hpp" />
-    <ClInclude Include="..\..\..\src\ui\ButtonControl.hpp" />
-    <ClInclude Include="..\..\..\src\ui\ColorPickerControl.hpp" />
-    <ClInclude Include="..\..\..\src\ui\Control.hpp" />
-    <ClInclude Include="..\..\..\src\ui\ControlGroup.hpp" />
-    <ClInclude Include="..\..\..\src\ui\Debug.hpp" />
-    <ClInclude Include="..\..\..\src\ui\EditControl.hpp" />
-    <ClInclude Include="..\..\..\src\ui\global_operators.hpp" />
-    <ClInclude Include="..\..\..\src\ui\ui.hpp" />
-    <ClInclude Include="..\..\..\src\ui\Window.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.clang-format" />

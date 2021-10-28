@@ -1,31 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ui">
-      <UniqueIdentifier>{204f3566-ae8b-4d59-9cc5-bb6efd5e0a87}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\..\test\ui\ColorPickerControl.Test.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\ui\Control.Test.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\ui\ControlGroup.Test.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\ui\EditControl.Test.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\ui\Window.Test.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\ui\BitmapControl.Test.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\ui\Bitmap.Test.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\..\test\sample_test.cpp" />
   </ItemGroup>
 </Project>
