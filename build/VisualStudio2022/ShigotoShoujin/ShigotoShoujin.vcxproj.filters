@@ -4,9 +4,26 @@
     <Filter Include="root">
       <UniqueIdentifier>{7e002c34-d0ec-4622-b5f1-97a1b54a1675}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{cba969e1-f36a-46a9-bc54-9ea0231a815f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{0a316b41-d54a-4fdc-8e64-fda4afa4ed43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\assert">
+      <UniqueIdentifier>{d835a18c-2cca-487e-95ba-2475c87bd7bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\tstring.hpp" />
+    <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tstring.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\assert\assert.hpp">
+      <Filter>src\assert</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.clang-format">
@@ -21,5 +38,10 @@
     <None Include="..\..\..\README.md">
       <Filter>root</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\assert\assert.cpp">
+      <Filter>src\assert</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
