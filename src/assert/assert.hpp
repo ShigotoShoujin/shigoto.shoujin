@@ -3,9 +3,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <system_error>
+#include "../tstring.hpp"
 
 namespace shoujin::assert {
-extern void (*ExitProcessFunc)(_In_ UINT uExitCode);
+extern void (*ExitProcessFunc)(UINT uExitCode, tstring error_message);
 __declspec(noreturn) void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
 __declspec(noreturn) void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
 __declspec(noreturn) void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);

@@ -9,6 +9,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include <shoujin/assert.hpp>
 #include <shoujin/file.hpp>
 
+using namespace shoujin;
 using namespace shoujin::assert;
 using namespace shoujin::file;
 
@@ -16,7 +17,7 @@ TEST_CLASS(StreamToFileRedirectorTest) {
 	static int _exit_process_call_count;
 
 public:
-	static void ExitProcess(UINT exit_code)
+	static void ExitProcess(UINT exit_code, tstring error_message)
 	{
 		++_exit_process_call_count;
 	}

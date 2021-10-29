@@ -15,7 +15,7 @@
 
 namespace shoujin::assert {
 
-void (*ExitProcessFunc)(_In_ UINT uExitCode) = nullptr;
+void (*ExitProcessFunc)(UINT uExitCode, tstring error_message) = nullptr;
 
 tstring FormatError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
@@ -31,19 +31,25 @@ tstring FormatError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression
 	return ss.str();
 }
 
-static void ExitProcess(UINT exit_code)
+static void ExitProcess(UINT exit_code, tstring error_message)
 {
-	ExitProcessFunc ? ExitProcessFunc(exit_code) : ::ExitProcess(exit_code);
+	ExitProcessFunc ? ExitProcessFunc(exit_code, error_message) : ::ExitProcess(exit_code);
 }
 
 __declspec(noreturn) void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
-	TCERR << FormatError(file, function, line, expression);
-	ExitProcess(1);
+	tstringstream ss;
+	ss << FormatError(file, function, line, expression);
+
+	auto error_message = ss.str();
+	TCERR << error_message;
+
+	ExitProcess(1, error_message);
 }
 
 __declspec(noreturn) void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
+	tstringstream ss;
 	const int MSG_BUFFER_SIZE = 0xff;
 	TCHAR msg_buffer[MSG_BUFFER_SIZE];
 	tstring custom_error;
@@ -56,25 +62,34 @@ __declspec(noreturn) void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function,
 		custom_error = ss.str();
 	}
 
-	TCERR
+	ss
 		<< FormatError(file, function, line, expression)
 		<< custom_error;
 
-	ExitProcess(errcode ? errcode : 1);
+	auto error_message = ss.str();
+	TCERR << error_message;
+
+	ExitProcess(errcode ? errcode : 1, error_message);
 }
 
 __declspec(noreturn) void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
-	TCERR
+	tstringstream ss;
+
+	ss
 		<< FormatError(file, function, line, expression)
 		<< TEXT("std::error_code::value: ") << std_error_code.value() << std::endl
 		<< TEXT("std::error_code::message: ") << std_error_code.message().c_str() << std::endl;
 
-	ExitProcess(std_error_code.value());
+	auto error_message = ss.str();
+	TCERR << error_message;
+
+	ExitProcess(std_error_code.value(), error_message);
 }
 
 __declspec(noreturn) void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
+	tstringstream ss;
 	DWORD last_error = GetLastError();
 	LPTSTR msg_buffer;
 	tstring custom_error;
@@ -90,11 +105,14 @@ __declspec(noreturn) void AbortWin32(LPCTSTR file, LPCTSTR function, int line, L
 		LocalFree(msg_buffer);
 	}
 
-	TCERR
+	ss
 		<< FormatError(file, function, line, expression)
 		<< custom_error;
 
-	ExitProcess(last_error ? last_error : 1);
+	auto error_message = ss.str();
+	TCERR << error_message;
+
+	ExitProcess(last_error ? last_error : 1, error_message);
 }
 
 }
