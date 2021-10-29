@@ -26,7 +26,7 @@ public:
 		shoujin::assert::ExitProcessFunc = ExitProcess;
 	}
 
-	TEST_METHOD(StreamToFileRedirector_IsNotConstructible) {
+	TEST_METHOD(StreamToFileRedirector_IsNotCopyConstructible) {
 		Assert::IsFalse(std::is_copy_constructible_v<StreamToFileRedirector>);
 	}
 

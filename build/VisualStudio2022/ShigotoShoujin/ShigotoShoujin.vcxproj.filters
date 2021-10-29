@@ -36,6 +36,15 @@
     <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp">
       <Filter>src\assert</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\shoujin\event.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\shoujin\tstring.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\event.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.clang-format">
