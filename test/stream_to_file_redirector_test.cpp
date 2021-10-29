@@ -4,59 +4,13 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <tchar.h>
+#include <filesystem>
 
 #include <shoujin/assert.hpp>
-
-namespace shoujin::assert {
-class StreamToFileRedirector {
-public:
-	StreamToFileRedirector(const StreamToFileRedirector&) = delete;
-	StreamToFileRedirector& operator=(const StreamToFileRedirector&) = delete;
-	StreamToFileRedirector(StreamToFileRedirector&&) noexcept;
-	StreamToFileRedirector& operator=(StreamToFileRedirector&&) noexcept;
-
-	StreamToFileRedirector(FILE* stream_to_redirect, LPCTSTR output_file);
-	~StreamToFileRedirector();
-
-private:
-	FILE* _target_stream;
-};
-}
-
-namespace shoujin::assert {
-//TODO add redirection to console, see CONOUT$
-
-StreamToFileRedirector::StreamToFileRedirector(StreamToFileRedirector&& rhs) noexcept :
-	_target_stream(rhs._target_stream)
-{
-	rhs._target_stream = nullptr;
-}
-
-StreamToFileRedirector& StreamToFileRedirector::operator=(StreamToFileRedirector&& rhs) noexcept
-{
-	if(this != &rhs) {
-		_target_stream = rhs._target_stream;
-		rhs._target_stream = nullptr;
-	}
-	return *this;
-}
-
-StreamToFileRedirector::StreamToFileRedirector(FILE* stream_to_redirect, LPCTSTR output_file)
-{
-	ASSERT_CLIB(0, _tfreopen_s(&_target_stream, output_file, TEXT("a"), stream_to_redirect));
-}
-
-StreamToFileRedirector::~StreamToFileRedirector()
-{
-	if(_target_stream) {
-		fclose(_target_stream);
-		_target_stream = nullptr;
-	}
-}
-}
+#include <shoujin/file.hpp>
 
 using namespace shoujin::assert;
+using namespace shoujin::file;
 
 TEST_CLASS(StreamToFileRedirectorTest) {
 	static int _exit_process_call_count;
@@ -89,15 +43,20 @@ public:
 
 	TEST_METHOD(StreamToFileRedirector_Test) {
 		//Arrange
-		_exit_process_call_count = 0;
+		const TCHAR* ERR_FILE = TEXT("err_file.txt");
+		auto temp_path = std::filesystem::temp_directory_path();
+		auto err_file_path = temp_path.replace_filename(ERR_FILE);
+		std::filesystem::remove(err_file_path);
 
-		StreamToFileRedirector redirector(stderr, TEXT("err_file.txt"));
+		StreamToFileRedirector redirector(stderr, err_file_path.c_str());
+		_exit_process_call_count = 0;
 
 		//Act
 		ASSERT_WIN32(CreateWindowEx(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 
 		//Assert
 		Assert::AreEqual(1, _exit_process_call_count);
+ 		Assert::IsTrue(FileExists(err_file_path));
 	}
 };
 

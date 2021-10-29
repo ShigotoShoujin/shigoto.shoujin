@@ -13,6 +13,9 @@
     <Filter Include="src\assert">
       <UniqueIdentifier>{d835a18c-2cca-487e-95ba-2475c87bd7bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\file">
+      <UniqueIdentifier>{90f51c40-7fb5-4790-a06e-f48d03556cee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -22,6 +25,15 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\assert\assert.hpp">
+      <Filter>src\assert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\file\file.hpp">
+      <Filter>src\file</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\shoujin\file.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp">
       <Filter>src\assert</Filter>
     </ClInclude>
   </ItemGroup>
@@ -41,6 +53,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
+      <Filter>src\assert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\file\file.cpp">
+      <Filter>src\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp">
       <Filter>src\assert</Filter>
     </ClCompile>
   </ItemGroup>

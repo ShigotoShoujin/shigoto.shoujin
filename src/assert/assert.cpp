@@ -2,8 +2,10 @@
 #include <Windows.h>
 #include <tchar.h>
 #include <iostream>
+#include <filesystem>
 #include <string>
 #include "../tstring.hpp"
+#include "../file/file.hpp"
 
 #ifdef UNICODE
 #define TCERR std::wcerr
@@ -13,19 +15,15 @@
 
 namespace shoujin::assert {
 
-/*static*/ void (*ExitProcessFunc)(_In_ UINT uExitCode) = nullptr;
-
-tstring GetFileFromPath(tstring file)
-{
-	return file.substr(file.find_last_of(TEXT("/\\")) + 1);
-}
+void (*ExitProcessFunc)(_In_ UINT uExitCode) = nullptr;
 
 tstring FormatError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
 	tstringstream ss;
+	std::filesystem::path path(file);
 
 	ss
-		<< TEXT("File: ") << GetFileFromPath(file) << std::endl
+		<< TEXT("File: ") << path.filename() << std::endl
 		<< TEXT("Function: ") << function << std::endl
 		<< TEXT("Line: ") << line << std::endl
 		<< TEXT("Expression: ") << expression << std::endl;
@@ -63,6 +61,16 @@ __declspec(noreturn) void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function,
 		<< custom_error;
 
 	ExitProcess(errcode ? errcode : 1);
+}
+
+__declspec(noreturn) void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+{
+	TCERR
+		<< FormatError(file, function, line, expression)
+		<< TEXT("std::error_code::value: ") << std_error_code.value() << std::endl
+		<< TEXT("std::error_code::message: ") << std_error_code.message().c_str() << std::endl;
+
+	ExitProcess(std_error_code.value());
 }
 
 __declspec(noreturn) void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
