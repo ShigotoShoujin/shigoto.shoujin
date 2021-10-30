@@ -14,13 +14,14 @@ using namespace shoujin::assert;
 using namespace shoujin::file;
 
 TEST_CLASS(StreamToFileRedirectorTest) {
-	static int _exit_process_call_count;
+	int _exit_process_call_count;
 
 public:
-	static void OnExitProcess(bool& exit_process)
+	static void OnExitProcess(bool& exit_process, void* userdata)
 	{
+		int* exit_process_call_count = reinterpret_cast<int*>(userdata);
 		exit_process = false;
-		++_exit_process_call_count;
+		++*exit_process_call_count;
 	}
 
 	TEST_CLASS_INITIALIZE(Initialize){
@@ -53,6 +54,8 @@ public:
 		StreamToFileRedirector redirector(stderr, err_file_path.c_str());
 		_exit_process_call_count = 0;
 
+		shoujin::assert::GlobalOnExitProcess = {OnExitProcess, &_exit_process_call_count};
+
 		//Act
 		ASSERT_WIN32(CreateWindowEx(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 
@@ -61,5 +64,3 @@ public:
  		Assert::IsTrue(FileExists(err_file_path));
 	}
 };
-
-int StreamToFileRedirectorTest::_exit_process_call_count = 0;

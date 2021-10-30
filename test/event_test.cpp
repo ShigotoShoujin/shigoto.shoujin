@@ -10,9 +10,21 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace shoujin;
 
 TEST_CLASS(EventTest) {
-	static void OnEventTwoParam(int x, int y, int& out_result)
+	struct UserData {
+		int x, y;
+		int add_result, mul_result;
+	};
+
+	static void OnEventTwoParam(int x, int y, int& out_result, void* userdata)
 	{
 		out_result = x + y;
+	}
+
+	static void OnEventUserData(void* userdata)
+	{
+		UserData* ud = reinterpret_cast<UserData*>(userdata);
+		ud->add_result = ud->x + ud->y;
+		ud->mul_result = ud->x * ud->y;
 	}
 
 public:
@@ -34,11 +46,11 @@ public:
 
 	TEST_METHOD(Event_WhenTwoParam_EventRaised) {
 		//Arrange
-		Event<int, int, int&> Event_two_param(OnEventTwoParam);
+		Event<int, int, int&> event_two_param(OnEventTwoParam);
 		int x{3}, y{2}, sum;
 
 		//Act
-		Event_two_param(x, y, sum);
+		event_two_param(x, y, sum);
 
 		//Assert
 		Assert::AreEqual(x + y, sum);
@@ -46,13 +58,13 @@ public:
 
 	TEST_METHOD(Event_CopyAssignment_EventRaised) {
 		//Arrange
-		Event<int, int, int&> Event_two_param;
+		Event<int, int, int&> event_two_param;
 		int x{3}, y{2}, sum;
 
-		Event_two_param = {OnEventTwoParam};
+		event_two_param = {OnEventTwoParam};
 
 		//Act
-		Event_two_param(x, y, sum);
+		event_two_param(x, y, sum);
 
 		//Assert
 		Assert::AreEqual(x + y, sum);
@@ -60,15 +72,29 @@ public:
 
 	TEST_METHOD(Event_OperatorBool_EventRaised) {
 		//Arrange
-		Event<int, int, int&> Event_two_param;
+		Event<int, int, int&> event_two_param;
 
 		//Act
-		bool before = Event_two_param;
-		Event_two_param = {OnEventTwoParam};
-		bool after = Event_two_param;
+		bool before = event_two_param;
+		event_two_param = {OnEventTwoParam};
+		bool after = event_two_param;
 
 		//Assert
 		Assert::IsFalse(before);
 		Assert::IsTrue(after);
+	}
+
+	TEST_METHOD(Event_UserData_UserDataUpdated) {
+		//Arrange
+		int x{5}, y{3};
+		UserData userdata{x, y};
+		Event<> event = {OnEventUserData, &userdata};
+
+		//Act
+		event();
+
+		//Assert
+		Assert::AreEqual(x + y, userdata.add_result);
+		Assert::AreEqual(x * y, userdata.mul_result);
 	}
 };
