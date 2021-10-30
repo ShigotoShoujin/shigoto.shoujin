@@ -4,6 +4,7 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
+#include "../event.hpp"
 #include "../tstring.hpp"
 #include "../file/file.hpp"
 
@@ -13,11 +14,51 @@
 #define TCERR std::cerr
 #endif
 
+//TODO Setup auto documentation from code to docs folder
+//TODO Consider build-in error processing options
+//     - console output
+//     - message box
+
 namespace shoujin::assert {
 
-void (*ExitProcessFunc)(UINT uExitCode, tstring error_message) = nullptr;
+Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> GlobalOnError;
+Event<tstring, bool&> GlobalOnErrorOutput;
+Event<bool&> GlobalOnExitProcess;
 
-tstring FormatError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+static bool OnError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+{
+	if(GlobalOnError) {
+		bool raise_error;
+		GlobalOnError(file, function, line, expression, raise_error);
+		return raise_error;
+	}
+
+	return true;
+}
+
+static void OnErrorOutput(tstring error_message)
+{
+	bool output_error = true;
+
+	if(GlobalOnErrorOutput)
+		GlobalOnErrorOutput(error_message, output_error);
+
+	if(output_error)
+		TCERR << error_message;
+}
+
+static void OnExitProcess(UINT exit_code)
+{
+	bool exit_process = true;
+
+	if(GlobalOnExitProcess)
+		GlobalOnExitProcess(exit_process);
+
+	if(exit_process)
+		::ExitProcess(exit_code);
+}
+
+static tstring FormatError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
 	tstringstream ss;
 	std::filesystem::path path(file);
@@ -31,49 +72,44 @@ tstring FormatError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression
 	return ss.str();
 }
 
-static void ExitProcess(UINT exit_code, tstring error_message)
+void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
-	ExitProcessFunc ? ExitProcessFunc(exit_code, error_message) : ::ExitProcess(exit_code);
-}
+	if(!OnError(file, function, line, expression))
+		return;
 
-__declspec(noreturn) void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
-{
 	tstringstream ss;
 	ss << FormatError(file, function, line, expression);
 
-	auto error_message = ss.str();
-	TCERR << error_message;
-
-	ExitProcess(1, error_message);
+	OnErrorOutput(ss.str());
+	OnExitProcess(1);
 }
 
-__declspec(noreturn) void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
+	if(!OnError(file, function, line, expression))
+		return;
+
 	tstringstream ss;
 	const int MSG_BUFFER_SIZE = 0xff;
 	TCHAR msg_buffer[MSG_BUFFER_SIZE];
-	tstring custom_error;
+
+	ss << FormatError(file, function, line, expression);
 
 	if(errcode && !_tcserror_s(msg_buffer, MSG_BUFFER_SIZE, errcode)) {
-		tstringstream ss;
 		ss
 			<< TEXT("CLib error code: ") << errcode << std::endl
 			<< TEXT("CLib error message: ") << msg_buffer << std::endl;
-		custom_error = ss.str();
 	}
 
-	ss
-		<< FormatError(file, function, line, expression)
-		<< custom_error;
-
-	auto error_message = ss.str();
-	TCERR << error_message;
-
-	ExitProcess(errcode ? errcode : 1, error_message);
+	OnErrorOutput(ss.str());
+	OnExitProcess(errcode ? errcode : 1);
 }
 
-__declspec(noreturn) void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
+	if(!OnError(file, function, line, expression))
+		return;
+
 	tstringstream ss;
 
 	ss
@@ -81,38 +117,31 @@ __declspec(noreturn) void AbortStdErrorCode(std::error_code std_error_code, LPCT
 		<< TEXT("std::error_code::value: ") << std_error_code.value() << std::endl
 		<< TEXT("std::error_code::message: ") << std_error_code.message().c_str() << std::endl;
 
-	auto error_message = ss.str();
-	TCERR << error_message;
-
-	ExitProcess(std_error_code.value(), error_message);
+	OnErrorOutput(ss.str());
+	OnExitProcess(std_error_code.value());
 }
 
-__declspec(noreturn) void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
+	if(!OnError(file, function, line, expression))
+		return;
+
 	tstringstream ss;
 	DWORD last_error = GetLastError();
 	LPTSTR msg_buffer;
-	tstring custom_error;
-
 	DWORD size_in_tchar;
 
+	ss << FormatError(file, function, line, expression);
+
 	if(last_error && (size_in_tchar = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, last_error, 0, reinterpret_cast<LPTSTR>(&msg_buffer), 0, 0))) {
-		tstringstream ss;
 		ss
 			<< TEXT("Win32 error code: ") << last_error << std::endl
 			<< TEXT("Win32 error message: ") << msg_buffer << std::endl;
-		custom_error = ss.str();
 		LocalFree(msg_buffer);
 	}
 
-	ss
-		<< FormatError(file, function, line, expression)
-		<< custom_error;
-
-	auto error_message = ss.str();
-	TCERR << error_message;
-
-	ExitProcess(last_error ? last_error : 1, error_message);
+	OnErrorOutput(ss.str());
+	OnExitProcess(last_error ? last_error : 1);
 }
 
 }

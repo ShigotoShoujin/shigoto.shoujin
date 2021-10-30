@@ -17,13 +17,14 @@ TEST_CLASS(StreamToFileRedirectorTest) {
 	static int _exit_process_call_count;
 
 public:
-	static void ExitProcess(UINT exit_code, tstring error_message)
+	static void OnExitProcess(bool& exit_process)
 	{
+		exit_process = false;
 		++_exit_process_call_count;
 	}
 
 	TEST_CLASS_INITIALIZE(Initialize){
-		shoujin::assert::ExitProcessFunc = ExitProcess;
+		shoujin::assert::GlobalOnExitProcess = OnExitProcess;
 	}
 
 	TEST_METHOD(StreamToFileRedirector_IsNotCopyConstructible) {

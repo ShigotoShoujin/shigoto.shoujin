@@ -10,9 +10,9 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace shoujin;
 
 TEST_CLASS(EventTest) {
-	static void OnEventTwoParam(int x, int y, int& value)
+	static void OnEventTwoParam(int x, int y, int& out_result)
 	{
-		value = x + y;
+		out_result = x + y;
 	}
 
 public:
@@ -34,42 +34,38 @@ public:
 
 	TEST_METHOD(Event_WhenTwoParam_EventRaised) {
 		//Arrange
-		int value;
-		Event<int, int, int> event_two_param(OnEventTwoParam, value);
-		int x{3}, y{2};
+		Event<int, int, int&> Event_two_param(OnEventTwoParam);
+		int x{3}, y{2}, sum;
 
 		//Act
-		event_two_param(x, y);
+		Event_two_param(x, y, sum);
 
 		//Assert
-		Assert::AreEqual(x + y, value);
+		Assert::AreEqual(x + y, sum);
 	}
 
 	TEST_METHOD(Event_CopyAssignment_EventRaised) {
 		//Arrange
-		int value;
-		Event<int, int, int> event_two_param;
-		int x{3}, y{2};
+		Event<int, int, int&> Event_two_param;
+		int x{3}, y{2}, sum;
 
-		event_two_param = {OnEventTwoParam, value};
+		Event_two_param = {OnEventTwoParam};
 
 		//Act
-		event_two_param(x, y);
+		Event_two_param(x, y, sum);
 
 		//Assert
-		Assert::AreEqual(x + y, value);
+		Assert::AreEqual(x + y, sum);
 	}
 
 	TEST_METHOD(Event_OperatorBool_EventRaised) {
 		//Arrange
-		int value;
-		Event<int, int, int> event_two_param;
-		int x{3}, y{2};
+		Event<int, int, int&> Event_two_param;
 
 		//Act
-		bool before = event_two_param;
-		event_two_param = {OnEventTwoParam, value};
-		bool after = event_two_param;
+		bool before = Event_two_param;
+		Event_two_param = {OnEventTwoParam};
+		bool after = Event_two_param;
 
 		//Assert
 		Assert::IsFalse(before);

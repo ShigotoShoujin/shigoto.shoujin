@@ -3,6 +3,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\test\assert_test.cpp" />
     <ClCompile Include="..\..\..\test\stream_to_file_redirector_test.cpp" />
+    <ClCompile Include="..\..\..\test\userdata_event_test.cpp" />
     <ClCompile Include="..\..\..\test\event_test.cpp" />
   </ItemGroup>
 </Project>
