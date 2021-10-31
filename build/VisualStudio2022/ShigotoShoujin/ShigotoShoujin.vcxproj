@@ -172,11 +172,13 @@
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp" />
     <ClInclude Include="..\..\..\include\shoujin\event.hpp" />
     <ClInclude Include="..\..\..\include\shoujin\file.hpp" />
+    <ClInclude Include="..\..\..\include\shoujin\gui.hpp" />
     <ClInclude Include="..\..\..\include\shoujin\tstring.hpp" />
     <ClInclude Include="..\..\..\src\assert\assert.hpp" />
     <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp" />
     <ClInclude Include="..\..\..\src\event.hpp" />
     <ClInclude Include="..\..\..\src\file\file.hpp" />
+    <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +191,7 @@
     <ClCompile Include="..\..\..\src\assert\assert.cpp" />
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp" />
     <ClCompile Include="..\..\..\src\file\file.cpp" />
+    <ClCompile Include="..\..\..\src\gui\window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

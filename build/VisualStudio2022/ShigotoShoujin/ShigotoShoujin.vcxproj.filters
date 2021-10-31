@@ -16,6 +16,9 @@
     <Filter Include="src\file">
       <UniqueIdentifier>{90f51c40-7fb5-4790-a06e-f48d03556cee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gui">
+      <UniqueIdentifier>{ab52bafa-b56d-45f3-bb76-f8cef644e38c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -45,6 +48,12 @@
     <ClInclude Include="..\..\..\src\event.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\shoujin\gui.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\window.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.clang-format">
@@ -69,6 +78,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp">
       <Filter>src\assert</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\window.cpp">
+      <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
