@@ -38,10 +38,8 @@ bool Window::ProcessMessages()
 	SHOUJIN_ASSERT(_hwnd);
 	MSG msg;
 
-	while(_hwnd && PeekMessage(&msg, _hwnd, 0, 0, PM_REMOVE)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+	while(_hwnd && PeekMessage(&msg, _hwnd, 0, 0, PM_REMOVE))
+		ProcessMessage(msg);
 
 	return _hwnd;
 }
@@ -49,7 +47,7 @@ bool Window::ProcessMessages()
 void Window::Show()
 {
 	if(!_hwnd)
-		WIP_Create();
+		CreateHandle();
 
 	ProcessMessages();
 }
@@ -59,17 +57,20 @@ void Window::ShowModal()
 	MSG msg;
 
 	if(!_hwnd)
-		WIP_Create();
+		CreateHandle();
 
-	auto isok_func = [](auto r) { return r != -1 /*GetMessage returns -1 on error*/; };
-	while(_hwnd && SHOUJIN_ASSERT_WIN32_FUNC(GetMessage(&msg, _hwnd, 0, 0), isok_func)) {
+	auto isok = [](auto r) { return r != -1 /*GetMessage returns -1 on error*/; };
+	while(_hwnd && SHOUJIN_ASSERT_WIN32_FUNC(GetMessage(&msg, _hwnd, 0, 0), isok))
 #pragma warning(suppress : 6001) //Warning C6001 Using uninitialized memory - The anonymous lambda in SHOUJIN_ASSERT_WIN32 hides the fact that msg is initialized
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
+		ProcessMessage(msg);
 }
 
-LRESULT Window::WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept
+bool Window::OnDispatchMessage(MSG& msg)
+{
+	return true;
+}
+
+LRESULT Window::OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	switch(msg) {
 		case WM_DESTROY: {
@@ -81,9 +82,9 @@ LRESULT Window::WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 	return DefWindowProc(_hwnd, msg, wparam, lparam);
 }
 
-void Window::WIP_Create()
+void Window::CreateHandle()
 {
-	const LPCTSTR CLASS_NAME = TEXT("WIP_Create");
+	const LPCTSTR CLASS_NAME = TEXT("ShoujinWindow");
 	HINSTANCE hinstance = GetModuleHandle(nullptr);
 	WNDCLASSEX wc;
 
@@ -125,7 +126,7 @@ void Window::WIP_Create()
 	SHOUJIN_ASSERT(UpdateWindow(_hwnd));
 }
 
-LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept
+LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	Window* instance;
 
@@ -142,7 +143,14 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 	} else
 		instance = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
-	return instance ? instance->WndProc(msg, wparam, lparam) : DefWindowProc(hwnd, msg, wparam, lparam);
+	return instance ? instance->OnWndProc(msg, wparam, lparam) : DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+void Window::ProcessMessage(MSG msg)
+{
+	TranslateMessage(&msg);
+	if(OnDispatchMessage(msg))
+		DispatchMessage(&msg);
 }
 
 }

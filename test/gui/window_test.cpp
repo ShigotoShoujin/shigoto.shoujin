@@ -30,7 +30,7 @@ public:
 		window.Show();
 
 		auto add = [&](int y, int64_t id) {
-			CreateWindowEx(WS_EX_STATICEDGE, TEXT("EDIT"), TEXT("Hello World"), WS_CHILD | WS_VISIBLE, 10, y, 128, 24, window.GetHandle(), reinterpret_cast<HMENU>(id), GetModuleHandle(nullptr), nullptr);
+			CreateWindowEx(WS_EX_STATICEDGE, TEXT("EDIT"), TEXT("Hello World"), WS_CHILD | WS_VISIBLE, 10, y, 128, 24, window.Handle(), reinterpret_cast<HMENU>(id), GetModuleHandle(nullptr), nullptr);
 		};
 
 		int y = 10;
@@ -38,7 +38,6 @@ public:
 		add(y += 34, 2);
 		add(y += 34, 3);
 
-		while(window.ProcessMessages())
-			Sleep(1);
+		window.ShowModal();
 	}
 };

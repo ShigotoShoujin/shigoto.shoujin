@@ -17,17 +17,19 @@ public:
 	Window();
 	virtual ~Window();
 
-	[[nodiscard]] HWND inline GetHandle() const { return _hwnd; }
+	[[nodiscard]] HWND inline Handle() const { return _hwnd; }
 
 	bool ProcessMessages();
 	void Show();
 	void ShowModal();
 
 protected:
-	virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
+	virtual bool OnDispatchMessage(MSG& msg);
+	virtual LRESULT OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-	void WIP_Create();
-	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
+	void CreateHandle();
+	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	void ProcessMessage(MSG msg);
 };
 }
