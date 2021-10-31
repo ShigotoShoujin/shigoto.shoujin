@@ -21,40 +21,41 @@
 
 namespace shoujin::assert {
 
-Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> GlobalOnError;
-Event<tstring, bool&> GlobalOnErrorOutput;
-Event<bool&> GlobalOnExitProcess;
+Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> OnErrorEvent;
+Event<tstring, bool&> OnErrorOutputEvent;
+Event<bool&> OnExitProcessEvent;
 
 static bool OnError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 {
-	if(GlobalOnError) {
-		bool raise_error;
-		GlobalOnError(file, function, line, expression, raise_error);
-		return raise_error;
-	}
+	bool cancel = false;
 
-	return true;
+	if(OnErrorEvent)
+		OnErrorEvent(file, function, line, expression, cancel);
+
+	return !cancel;
 }
 
-static void OnErrorOutput(tstring error_message)
+static bool OnErrorOutput(tstring error_message)
 {
-	bool output_error = true;
+	bool cancel = false;
 
-	if(GlobalOnErrorOutput)
-		GlobalOnErrorOutput(error_message, output_error);
+	if(OnErrorOutputEvent)
+		OnErrorOutputEvent(error_message, cancel);
 
-	if(output_error)
+	if(!cancel)
 		TCERR << error_message;
+
+	return !cancel;
 }
 
 static void OnExitProcess(UINT exit_code)
 {
-	bool exit_process = true;
+	bool cancel = false;
 
-	if(GlobalOnExitProcess)
-		GlobalOnExitProcess(exit_process);
+	if(OnExitProcessEvent)
+		OnExitProcessEvent(cancel);
 
-	if(exit_process)
+	if(!cancel)
 		::ExitProcess(exit_code);
 }
 
@@ -80,8 +81,8 @@ void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 	tstringstream ss;
 	ss << FormatError(file, function, line, expression);
 
-	OnErrorOutput(ss.str());
-	OnExitProcess(1);
+	if(OnErrorOutput(ss.str()))
+		OnExitProcess(1);
 }
 
 void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
@@ -101,8 +102,8 @@ void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR ex
 			<< TEXT("CLib error message: ") << msg_buffer << std::endl;
 	}
 
-	OnErrorOutput(ss.str());
-	OnExitProcess(errcode ? errcode : 1);
+	if(OnErrorOutput(ss.str()))
+		OnExitProcess(errcode ? errcode : 1);
 }
 
 void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
@@ -117,8 +118,8 @@ void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR fun
 		<< TEXT("std::error_code::value: ") << std_error_code.value() << std::endl
 		<< TEXT("std::error_code::message: ") << std_error_code.message().c_str() << std::endl;
 
-	OnErrorOutput(ss.str());
-	OnExitProcess(std_error_code.value());
+	if(OnErrorOutput(ss.str()))
+		OnExitProcess(std_error_code.value());
 }
 
 void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
@@ -140,8 +141,8 @@ void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 		LocalFree(msg_buffer);
 	}
 
-	OnErrorOutput(ss.str());
-	OnExitProcess(last_error ? last_error : 1);
+	if(OnErrorOutput(ss.str()))
+		OnExitProcess(last_error ? last_error : 1);
 }
 
 }

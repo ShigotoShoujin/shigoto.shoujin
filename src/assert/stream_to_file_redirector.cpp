@@ -21,7 +21,7 @@ StreamToFileRedirector& StreamToFileRedirector::operator=(StreamToFileRedirector
 
 StreamToFileRedirector::StreamToFileRedirector(FILE* stream_to_redirect, LPCTSTR output_file)
 {
-	ASSERT_CLIB(0, _tfreopen_s(&_target_stream, output_file, TEXT("a"), stream_to_redirect));
+	SHOUJIN_ASSERT_CLIB(0, _tfreopen_s(&_target_stream, output_file, TEXT("a"), stream_to_redirect));
 }
 
 StreamToFileRedirector::~StreamToFileRedirector()

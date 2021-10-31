@@ -17,15 +17,20 @@ TEST_CLASS(StreamToFileRedirectorTest) {
 	int _exit_process_call_count;
 
 public:
-	static void OnExitProcess(bool& exit_process, void* userdata)
+	static void OnExitProcess(bool& cancel, void* userdata)
 	{
 		int* exit_process_call_count = reinterpret_cast<int*>(userdata);
-		exit_process = false;
+		cancel = true;
 		++*exit_process_call_count;
 	}
 
 	TEST_CLASS_INITIALIZE(Initialize){
-		shoujin::assert::GlobalOnExitProcess = OnExitProcess;
+		shoujin::assert::OnExitProcessEvent = OnExitProcess;
+	}
+
+	TEST_CLASS_CLEANUP(TestClassCleanup)
+	{
+		shoujin::assert::OnExitProcessEvent = nullptr;
 	}
 
 	TEST_METHOD(StreamToFileRedirector_IsNotCopyConstructible) {
@@ -44,7 +49,7 @@ public:
 		Assert::IsTrue(std::is_move_assignable_v<StreamToFileRedirector>);
 	}
 
-	TEST_METHOD(StreamToFileRedirector_Test) {
+	TEST_METHOD(StreamToFileRedirector_ErrorOutputRedirectedToFile) {
 		//Arrange
 		const TCHAR* ERR_FILE = TEXT("err_file.txt");
 		auto temp_path = std::filesystem::temp_directory_path();
@@ -54,10 +59,10 @@ public:
 		StreamToFileRedirector redirector(stderr, err_file_path.c_str());
 		_exit_process_call_count = 0;
 
-		shoujin::assert::GlobalOnExitProcess = {OnExitProcess, &_exit_process_call_count};
+		shoujin::assert::OnExitProcessEvent = {OnExitProcess, &_exit_process_call_count};
 
 		//Act
-		ASSERT_WIN32(CreateWindowEx(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+		SHOUJIN_ASSERT_WIN32(CreateWindowEx(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 
 		//Assert
 		Assert::AreEqual(1, _exit_process_call_count);

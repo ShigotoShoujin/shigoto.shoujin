@@ -7,7 +7,7 @@ namespace shoujin::file {
 tstring GetProcessFile()
 {
 	TCHAR out_file[MAX_PATH];
-	ASSERT_WIN32(GetModuleFileName(GetModuleHandle(nullptr), out_file, MAX_PATH));
+	SHOUJIN_ASSERT_WIN32(GetModuleFileName(GetModuleHandle(nullptr), out_file, MAX_PATH));
 	return out_file;
 }
 
@@ -15,7 +15,7 @@ void FileDelete(tstring file)
 {
 	std::error_code remove_error_code;
 	std::filesystem::remove(file, remove_error_code);
-	ASSERT_STDERRORCODE(remove_error_code);
+	SHOUJIN_ASSERT_STDERRORCODE(remove_error_code);
 }
 
 bool DirectoryExists(tstring path)
