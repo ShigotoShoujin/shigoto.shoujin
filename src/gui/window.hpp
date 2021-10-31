@@ -2,8 +2,12 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+#include "window_layout.hpp"
+
 namespace shoujin::gui {
-class Window {
+class Window : public WindowLayout {
+	HWND _hwnd;
+
 public:
 	Window(Window&) = delete;
 	Window& operator=(const Window&) = delete;
@@ -25,6 +29,5 @@ protected:
 private:
 	void WIP_Create();
 	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept;
-	HWND _hwnd;
 };
 }

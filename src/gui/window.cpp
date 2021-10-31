@@ -69,7 +69,7 @@ void Window::ShowModal()
 
 LRESULT Window::WndProc(UINT msg, WPARAM wparam, LPARAM lparam) noexcept
 {
-	switch (msg) {
+	switch(msg) {
 		case WM_DESTROY: {
 			_hwnd = nullptr;
 			return 0;
@@ -102,11 +102,25 @@ void Window::WIP_Create()
 		SHOUJIN_ASSERT_WIN32(RegisterClassEx(&wc));
 	}
 
-	CreateWindowEx(0, CLASS_NAME, CLASS_NAME, WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, HWND_DESKTOP, nullptr, hinstance, this);
+	SHOUJIN_ASSERT(
+		CreateWindowEx(
+			WindowLayout::_exstyle,
+			CLASS_NAME,
+			CLASS_NAME,
+			WindowLayout::_style,
+			WindowLayout::_position.x,
+			WindowLayout::_position.y,
+			WindowLayout::_window_size.cx,
+			WindowLayout::_window_size.cy,
+			HWND_DESKTOP,
+			nullptr,
+			hinstance,
+			this));
+
 	SHOUJIN_ASSERT(_hwnd);
 
 	ShowWindow(_hwnd, SW_SHOW);
-	UpdateWindow(_hwnd);
+	SHOUJIN_ASSERT(UpdateWindow(_hwnd));
 }
 
 LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept

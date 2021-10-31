@@ -54,6 +54,9 @@
     <ClInclude Include="..\..\..\src\gui\window.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\window_layout.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.clang-format">
@@ -80,6 +83,9 @@
       <Filter>src\assert</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\window.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\window_layout.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
