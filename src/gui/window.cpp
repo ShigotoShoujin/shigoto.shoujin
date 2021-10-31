@@ -61,7 +61,9 @@ void Window::ShowModal()
 	if(!_hwnd)
 		WIP_Create();
 
-	while(_hwnd && GetMessage(&msg, _hwnd, 0, 0)) {
+	while(_hwnd && SHOUJIN_ASSERT_WIN32_FUNC(GetMessage(&msg, _hwnd, 0, 0), [](auto r) { return r != -1 /*GetMessage returns -1 on error*/; })) {
+//The anonymous lambda in SHOUJIN_ASSERT_WIN32 hides the fact that msg is initialized
+#pragma warning(suppress : 6001) //Warning C6001 Using uninitialized memory
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
