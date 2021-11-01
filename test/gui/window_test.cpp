@@ -3,6 +3,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include <shoujin/gui.hpp>
+#include <shoujin/assert.hpp>
 
 using namespace shoujin::gui;
 
@@ -39,6 +40,11 @@ public:
 
 TEST_CLASS(WindowTest) {
 public:
+	TEST_CLASS_INITIALIZE(ClassInitialize)
+	{
+		shoujin::assert::display_error_messagebox = true;
+	}
+
 	TEST_METHOD(Window_IsNotCopyConstructible) {
 		Assert::IsFalse(std::is_copy_constructible_v<Window>);
 	}

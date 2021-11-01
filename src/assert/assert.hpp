@@ -7,6 +7,8 @@
 #include "../tstring.hpp"
 
 namespace shoujin::assert {
+extern bool display_error_messagebox;
+
 extern Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> OnErrorEvent;
 extern Event<tstring, bool&> OnErrorOutputEvent;
 extern Event<bool&> OnExitProcessEvent;

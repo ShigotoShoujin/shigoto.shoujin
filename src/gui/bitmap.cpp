@@ -120,6 +120,7 @@ void Bitmap::Draw(const Bitmap& source)
 
 static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hbitmap)
 {
+	SHOUJIN_ASSERT(size);
 	out_hdc = SHOUJIN_ASSERT_WIN32(CreateCompatibleDC(hsourcedc));
 	out_hbitmap = SHOUJIN_ASSERT_WIN32(CreateCompatibleBitmap(hsourcedc, size.x, size.y));
 
