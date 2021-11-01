@@ -1,6 +1,11 @@
 # Contributing
 Everyone's welcome to open issues, submit pull requests or otherwise manifest their existence.
 
+## General
+### Commit message
+All commit messages should be written in the present.  
+Prefer "Remove implicit inline" over "Remove**d** implicit inline"
+
 ## Code Style
 
 ### Write self-documenting code
