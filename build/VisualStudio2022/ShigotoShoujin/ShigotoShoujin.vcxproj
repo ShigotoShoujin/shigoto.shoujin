@@ -186,6 +186,7 @@
   <ItemGroup>
     <None Include="..\..\..\.clang-format" />
     <None Include="..\..\..\.gitignore" />
+    <None Include="..\..\..\CONTRIBUTING.md" />
     <None Include="..\..\..\LICENSE" />
     <None Include="..\..\..\README.md" />
   </ItemGroup>

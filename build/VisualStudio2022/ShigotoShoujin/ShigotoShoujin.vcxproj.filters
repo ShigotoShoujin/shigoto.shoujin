@@ -74,6 +74,9 @@
     <None Include="..\..\..\README.md">
       <Filter>root</Filter>
     </None>
+    <None Include="..\..\..\CONTRIBUTING.md">
+      <Filter>root</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
