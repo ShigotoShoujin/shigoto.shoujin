@@ -1,3 +1,4 @@
+#include <shoujin/assert.hpp>
 #include <shoujin/gui.hpp>
 #include "CppUnitTest.h"
 
@@ -21,6 +22,28 @@ public:
 
 	TEST_METHOD(BitmapTest_IsMoveAssignable) {
 		Assert::IsTrue(std::is_move_assignable_v<Bitmap>);
+	}
+
+	static void OnError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, bool& cancel, void* userdata)
+	{
+		cancel = true;
+		int* count = reinterpret_cast<int*>(userdata);
+		++*count;
+	}
+
+	TEST_METHOD(BitmapTest_CreateWithSizeZero_Assert) {
+		//Arrange
+		int count{};
+		shoujin::assert::OnErrorEvent = {OnError, &count};
+
+		//Act
+		Bitmap bitmap{{}};
+
+		//Assert
+		Assert::AreEqual(2, count);
+
+		//Cleanup
+		shoujin::assert::OnErrorEvent = nullptr;
 	}
 
 	TEST_METHOD(BitmapTest_CopyConstructor) {

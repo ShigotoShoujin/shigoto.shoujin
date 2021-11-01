@@ -80,6 +80,7 @@ void Bitmap::Destroy() noexcept
 
 void Bitmap::Reset(const Size& size)
 {
+	SHOUJIN_ASSERT(size);
 	Destroy();
 	HDC hdesktopdc = ::GetDC(HWND_DESKTOP);
 	CreateBitmap(hdesktopdc, size, _hdc, _hbitmap);
