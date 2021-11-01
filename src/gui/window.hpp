@@ -1,12 +1,12 @@
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-
 #include "window_layout.hpp"
 
 namespace shoujin::gui {
 class Window : public WindowLayout {
 	HWND _hwnd;
+	HWND _hparentwnd;
 
 public:
 	Window(Window&) = delete;
@@ -15,9 +15,10 @@ public:
 	Window& operator=(Window&&) noexcept;
 
 	Window();
+	Window(const WindowLayout& layout, HWND hparentwnd);
 	virtual ~Window();
 
-	[[nodiscard]] HWND inline Handle() const { return _hwnd; }
+	[[nodiscard]] HWND inline hwnd() const { return _hwnd; }
 
 	bool ProcessMessages();
 	void Show();
@@ -25,7 +26,8 @@ public:
 
 protected:
 	virtual bool OnDispatchMessage(MSG& msg);
-	virtual LRESULT OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+	virtual bool OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+	void ProcessOnPaintMessageFromDC(HDC hsourcedc);
 
 private:
 	void CreateHandle();

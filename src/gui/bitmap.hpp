@@ -6,10 +6,9 @@ namespace shoujin::gui {
 class Bitmap {
 	friend void swap(Bitmap&, Bitmap&) noexcept;
 
-protected:
 	HDC _hdc;
 	HBITMAP _hbitmap;
-	SIZE _bitmap_size;
+	SIZE _size;
 
 private:
 	Bitmap();
@@ -24,8 +23,8 @@ public:
 
 	virtual ~Bitmap();
 
-	[[nodiscard]] inline virtual SIZE BitmapSize() const { return _bitmap_size; }
-	[[nodiscard]] inline virtual HDC HandleDC() const { return _hdc; }
+	[[nodiscard]] inline virtual SIZE size() const { return _size; }
+	[[nodiscard]] inline virtual HDC hdc() const { return _hdc; }
 
 	virtual void Destroy() noexcept;
 	virtual void Reset(const SIZE& size);

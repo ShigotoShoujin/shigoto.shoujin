@@ -3,8 +3,6 @@
 #include <Windows.h>
 #include <stdio.h>
 
-//TODO add redirection to console, see CONOUT$
-
 namespace shoujin::assert {
 class StreamToFileRedirector {
 	FILE* _target_stream;

@@ -6,23 +6,35 @@
 namespace shoujin::gui {
 
 Window::Window(Window&& rhs) noexcept :
-	_hwnd{rhs._hwnd}
+	_hwnd{rhs._hwnd},
+	_hparentwnd{rhs._hparentwnd}
 {
 	rhs._hwnd = nullptr;
+	rhs._hparentwnd = nullptr;
 }
 
 Window& Window::operator=(Window&& rhs) noexcept
 {
 	if(this != &rhs) {
 		_hwnd = rhs._hwnd;
+		_hparentwnd = rhs._hparentwnd;
 		rhs._hwnd = nullptr;
+		rhs._hparentwnd = nullptr;
 	}
 	return *this;
 }
 
-Window::Window()
+Window::Window() :
+	_hwnd{nullptr},
+	_hparentwnd{nullptr}
 {
-	_hwnd = nullptr;
+}
+
+Window::Window(const WindowLayout& layout, HWND hparentwnd) :
+	WindowLayout{layout},
+	_hwnd{nullptr},
+	_hparentwnd{hparentwnd}
+{
 }
 
 Window::~Window()
@@ -70,16 +82,28 @@ bool Window::OnDispatchMessage(MSG& msg)
 	return true;
 }
 
-LRESULT Window::OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+bool Window::OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	switch(msg) {
 		case WM_DESTROY: {
 			_hwnd = nullptr;
-			return 0;
+			return false;
 		}
 	}
 
-	return DefWindowProc(_hwnd, msg, wparam, lparam);
+	return true;
+}
+
+void Window::ProcessOnPaintMessageFromDC(HDC hsourcedc)
+{
+	PAINTSTRUCT ps;
+	BeginPaint(_hwnd, &ps);
+	int x = ps.rcPaint.left;
+	int y = ps.rcPaint.top;
+	int w = ps.rcPaint.right - x;
+	int h = ps.rcPaint.bottom - y;
+	BitBlt(ps.hdc, x, y, w, h, hsourcedc, x, y, SRCCOPY);
+	EndPaint(_hwnd, &ps);
 }
 
 void Window::CreateHandle()
@@ -107,15 +131,15 @@ void Window::CreateHandle()
 
 	SHOUJIN_ASSERT(
 		CreateWindowEx(
-			WindowLayout::_exstyle,
+			WindowLayout::exstyle(),
 			CLASS_NAME,
 			CLASS_NAME,
-			WindowLayout::_style,
-			WindowLayout::_position.x,
-			WindowLayout::_position.y,
-			WindowLayout::_window_size.cx,
-			WindowLayout::_window_size.cy,
-			HWND_DESKTOP,
+			WindowLayout::style(),
+			WindowLayout::position().x,
+			WindowLayout::position().y,
+			WindowLayout::window_size().cx,
+			WindowLayout::window_size().cy,
+			_hparentwnd,
 			nullptr,
 			hinstance,
 			this));
@@ -143,7 +167,10 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 	} else
 		instance = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
-	return instance ? instance->OnWndProc(msg, wparam, lparam) : DefWindowProc(hwnd, msg, wparam, lparam);
+	if(instance)
+		return instance->OnWndProc(msg, wparam, lparam) ? DefWindowProc(hwnd, msg, wparam, lparam) : 0;
+
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 void Window::ProcessMessage(MSG msg)
@@ -152,5 +179,4 @@ void Window::ProcessMessage(MSG msg)
 	if(OnDispatchMessage(msg))
 		DispatchMessage(&msg);
 }
-
 }

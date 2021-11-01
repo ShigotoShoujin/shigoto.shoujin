@@ -17,11 +17,11 @@ void swap(Bitmap& first, Bitmap& second) noexcept
 
 	swap(first._hdc, second._hdc);
 	swap(first._hbitmap, second._hbitmap);
-	swap(first._bitmap_size, second._bitmap_size);
+	swap(first._size, second._size);
 }
 
 Bitmap::Bitmap() :
-	_hdc{}, _hbitmap{}, _bitmap_size{} {}
+	_hdc{}, _hbitmap{}, _size{} {}
 
 Bitmap::Bitmap(const SIZE& size)
 {
@@ -31,13 +31,13 @@ Bitmap::Bitmap(const SIZE& size)
 Bitmap::Bitmap(const Bitmap& rhs)
 {
 	if(rhs._hdc) {
-		CreateBitmap(rhs._hdc, rhs._bitmap_size, _hdc, _hbitmap);
-		_bitmap_size = rhs._bitmap_size;
+		CreateBitmap(rhs._hdc, rhs._size, _hdc, _hbitmap);
+		_size = rhs._size;
 		Draw(rhs);
 	} else {
 		_hdc = nullptr;
 		_hbitmap = nullptr;
-		_bitmap_size = {0};
+		_size = {0};
 	}
 }
 
@@ -73,7 +73,7 @@ void Bitmap::Destroy() noexcept
 		DeleteObject(_hbitmap);
 		_hdc = nullptr;
 		_hbitmap = nullptr;
-		_bitmap_size = {};
+		_size = {};
 	}
 }
 
@@ -83,7 +83,7 @@ void Bitmap::Reset(const SIZE& size)
 	HDC hdesktopdc = ::GetDC(HWND_DESKTOP);
 	CreateBitmap(hdesktopdc, size, _hdc, _hbitmap);
 	ReleaseDC(HWND_DESKTOP, hdesktopdc);
-	_bitmap_size = size;
+	_size = size;
 }
 
 void Bitmap::Fill(const RECT& rect, COLORREF color)
@@ -100,7 +100,7 @@ void Bitmap::Fill(POINT position, SIZE size, COLORREF color)
 
 void Bitmap::Fill(COLORREF color)
 {
-	Fill({0, 0, _bitmap_size.cx, _bitmap_size.cy}, color);
+	Fill({0, 0, _size.cx, _size.cy}, color);
 }
 
 void Bitmap::Draw(HDC source, int x, int y, int w, int h, int src_x, int src_y)
@@ -110,8 +110,8 @@ void Bitmap::Draw(HDC source, int x, int y, int w, int h, int src_x, int src_y)
 
 void Bitmap::Draw(const Bitmap& source)
 {
-	int w = max(source._bitmap_size.cx, _bitmap_size.cx);
-	int h = max(source._bitmap_size.cy, _bitmap_size.cy);
+	int w = max(source._size.cx, _size.cx);
+	int h = max(source._size.cy, _size.cy);
 	Draw(source._hdc, 0, 0, w, h);
 }
 

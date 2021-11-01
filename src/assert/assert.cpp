@@ -14,11 +14,6 @@
 #define TCERR std::cerr
 #endif
 
-//TODO Setup auto documentation from code to docs folder
-//TODO Consider build-in error processing options
-//     - console output
-//     - message box
-
 namespace shoujin::assert {
 
 Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> OnErrorEvent;

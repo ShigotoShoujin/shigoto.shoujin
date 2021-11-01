@@ -1,22 +1,29 @@
 #pragma once
-#pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 namespace shoujin::gui {
 class WindowLayout {
-protected:
 	POINT _position;
-	SIZE _client_size, _window_size;
+	SIZE _window_size, _client_size;
 	DWORD _style, _exstyle;
 
 public:
-	WindowLayout(HWND hparentwnd = nullptr);
+	struct CreateInfo {
+		POINT position{};
+		SIZE window_size = {};
+		SIZE client_size = {};
+		DWORD style = {};
+		DWORD exstyle = {};
+	};
 
-	[[nodiscard]] inline POINT Position() const { return _position; }
-	[[nodiscard]] inline SIZE ClientSize() const { return _client_size; }
-	[[nodiscard]] inline SIZE WindowSize() const { return _window_size; }
-	[[nodiscard]] inline DWORD Style() const { return _style; }
-	[[nodiscard]] inline DWORD ExStyle() const { return _exstyle; }
+	WindowLayout();
+	WindowLayout(const CreateInfo&);
+
+	[[nodiscard]] inline POINT position() const { return _position; }
+	[[nodiscard]] inline SIZE window_size() const { return _window_size; }
+	[[nodiscard]] inline SIZE client_size() const { return _client_size; }
+	[[nodiscard]] inline DWORD style() const { return _style; }
+	[[nodiscard]] inline DWORD exstyle() const { return _exstyle; }
 };
 }

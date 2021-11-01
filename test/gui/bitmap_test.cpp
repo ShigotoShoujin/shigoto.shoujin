@@ -5,11 +5,6 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace shoujin::gui;
 
-inline bool operator==(const SIZE& first, const SIZE& second)
-{
-	return first.cx == second.cx && first.cy == second.cy;
-}
-
 TEST_CLASS(BitmapTest) {
 public:
 	TEST_METHOD(BitmapTest_IsCopyConstructible) {
@@ -37,12 +32,12 @@ public:
 		Bitmap copy(source);
 
 		//Assert
-		Assert::IsNotNull(source.HandleDC());
-		Assert::IsTrue(size == source.BitmapSize());
+		Assert::IsNotNull(source.hdc());
+		Assert::IsTrue(size == source.size());
 
-		Assert::IsNotNull(copy.HandleDC());
-		Assert::IsFalse(source.HandleDC() == copy.HandleDC());
-		Assert::IsTrue(size == copy.BitmapSize());
+		Assert::IsNotNull(copy.hdc());
+		Assert::IsFalse(source.hdc() == copy.hdc());
+		Assert::IsTrue(size == copy.size());
 	}
 
 	TEST_METHOD(BitmapTest_CopyAssignment) {
@@ -54,13 +49,13 @@ public:
 		second = first;
 
 		//Assert
-		Assert::IsNotNull(first.HandleDC());
-		Assert::IsTrue(SIZE{16, 16} == first.BitmapSize());
+		Assert::IsNotNull(first.hdc());
+		Assert::IsTrue(SIZE{16, 16} == first.size());
 
-		Assert::IsFalse(first.HandleDC() == second.HandleDC());
+		Assert::IsFalse(first.hdc() == second.hdc());
 
-		Assert::IsNotNull(second.HandleDC());
-		Assert::IsTrue(SIZE{16, 16} == second.BitmapSize());
+		Assert::IsNotNull(second.hdc());
+		Assert::IsTrue(SIZE{16, 16} == second.size());
 	}
 
 	TEST_METHOD(BitmapTest_MoveConstructor) {
@@ -72,11 +67,11 @@ public:
 		Bitmap moved(std::move(source));
 
 		//Assert
-		Assert::IsNull(source.HandleDC());
-		Assert::IsTrue(SIZE{0, 0} == source.BitmapSize());
+		Assert::IsNull(source.hdc());
+		Assert::IsTrue(SIZE{0, 0} == source.size());
 
-		Assert::IsNotNull(moved.HandleDC());
-		Assert::IsTrue(size == moved.BitmapSize());
+		Assert::IsNotNull(moved.hdc());
+		Assert::IsTrue(size == moved.size());
 	}
 
 	TEST_METHOD(BitmapTest_MoveAssignment) {
@@ -88,10 +83,10 @@ public:
 		second = std::move(first);
 
 		//Assert
-		Assert::IsNull(first.HandleDC());
-		Assert::IsTrue(SIZE{0, 0} == first.BitmapSize());
+		Assert::IsNull(first.hdc());
+		Assert::IsTrue(SIZE{0, 0} == first.size());
 
-		Assert::IsNotNull(second.HandleDC());
-		Assert::IsTrue(SIZE{16, 16} == second.BitmapSize());
+		Assert::IsNotNull(second.hdc());
+		Assert::IsTrue(SIZE{16, 16} == second.size());
 	}
 };

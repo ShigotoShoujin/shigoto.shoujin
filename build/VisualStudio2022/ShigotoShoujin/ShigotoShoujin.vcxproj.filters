@@ -19,6 +19,9 @@
     <Filter Include="src\gui">
       <UniqueIdentifier>{ab52bafa-b56d-45f3-bb76-f8cef644e38c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{8321acf7-d9e0-43f6-89ad-3c8450d326ef}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -60,6 +63,9 @@
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\operators.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.clang-format">
@@ -96,6 +102,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\bitmap.cpp">
       <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\doc\todo.cpp">
+      <Filter>doc</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

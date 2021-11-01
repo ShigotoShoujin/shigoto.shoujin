@@ -179,6 +179,7 @@
     <ClInclude Include="..\..\..\src\event.hpp" />
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
+    <ClInclude Include="..\..\..\src\gui\operators.hpp" />
     <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_layout.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
@@ -191,6 +192,7 @@
     <None Include="..\..\..\README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\doc\todo.cpp" />
     <ClCompile Include="..\..\..\src\assert\assert.cpp" />
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp" />
     <ClCompile Include="..\..\..\src\file\file.cpp" />
