@@ -24,8 +24,8 @@ public:
 
 	virtual ~Bitmap();
 
-	[[nodiscard]] inline virtual Size size() const { return _size; }
-	[[nodiscard]] inline virtual HDC hdc() const { return _hdc; }
+	[[nodiscard]] virtual Size size() const { return _size; }
+	[[nodiscard]] virtual HDC hdc() const { return _hdc; }
 
 	virtual void Destroy() noexcept;
 	virtual void Reset(const Size& size);

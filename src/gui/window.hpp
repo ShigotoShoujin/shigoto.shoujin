@@ -18,7 +18,7 @@ public:
 	Window(const WindowLayout& layout, HWND hparentwnd);
 	virtual ~Window();
 
-	[[nodiscard]] HWND inline hwnd() const { return _hwnd; }
+	[[nodiscard]] HWND hwnd() const { return _hwnd; }
 
 	bool ProcessMessages();
 	void Show();

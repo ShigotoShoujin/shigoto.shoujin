@@ -16,8 +16,8 @@ struct Point {
 	Point(const POINT& size) :
 		x{size.x}, y{size.y} {}
 
-	inline operator bool() const { return x != 0 || y != 0; }
-	inline operator POINT() const { return {x, y}; }
+	operator bool() const { return x != 0 || y != 0; }
+	operator POINT() const { return {x, y}; }
 };
 
 inline bool operator==(const Point& lhs, const Point& rhs)

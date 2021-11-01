@@ -27,8 +27,8 @@ Sorting the class members in alphabetical order will put the private/protected m
 
 #### Class Accessors
 Same as variables in order to differentiate between accessors which are most likely to be optimized away versus more *expansive* functions which might do work.  
-No "Get" prefix, `[[nodiscard]]`, `inline` and `const`  
-`[[nodiscard]] inline POINT position() const { return _position; }`
+No "Get" prefix, `[[nodiscard]]` and `const`  
+`[[nodiscard]] POINT position() const { return _position; }`
 
 **In base class**
 * Use an accessor over a protected variable when access is read-only.

@@ -16,8 +16,8 @@ struct Size {
 	Size(const SIZE& size) :
 		x{size.cx}, y{size.cy} {}
 
-	inline operator bool() const { return x != 0 || y != 0; }
-	inline operator SIZE() const { return {x, y}; }
+	operator bool() const { return x != 0 || y != 0; }
+	operator SIZE() const { return {x, y}; }
 };
 
 inline bool operator==(const Size& lhs, const Size& rhs)
