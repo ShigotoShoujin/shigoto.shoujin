@@ -3,10 +3,11 @@
 #include <Windows.h>
 #include <utility>
 #include "../assert/assert.hpp"
+#include "types.hpp"
 
 using namespace shoujin::gui;
 
-static void CreateBitmap(HDC hsourcedc, SIZE size, HDC& out_hdc, HBITMAP& out_hbitmap);
+static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hbitmap);
 
 namespace shoujin::gui {
 
@@ -23,7 +24,7 @@ void swap(Bitmap& first, Bitmap& second) noexcept
 Bitmap::Bitmap() :
 	_hdc{}, _hbitmap{}, _size{} {}
 
-Bitmap::Bitmap(const SIZE& size)
+Bitmap::Bitmap(const Size& size)
 {
 	Reset(size);
 }
@@ -37,7 +38,7 @@ Bitmap::Bitmap(const Bitmap& rhs)
 	} else {
 		_hdc = nullptr;
 		_hbitmap = nullptr;
-		_size = {0};
+		_size = {};
 	}
 }
 
@@ -77,7 +78,7 @@ void Bitmap::Destroy() noexcept
 	}
 }
 
-void Bitmap::Reset(const SIZE& size)
+void Bitmap::Reset(const Size& size)
 {
 	Destroy();
 	HDC hdesktopdc = ::GetDC(HWND_DESKTOP);
@@ -93,14 +94,14 @@ void Bitmap::Fill(const RECT& rect, COLORREF color)
 	DeleteObject(brush);
 }
 
-void Bitmap::Fill(POINT position, SIZE size, COLORREF color)
+void Bitmap::Fill(Point position, Size size, COLORREF color)
 {
-	Fill({position.x, position.y, position.x + size.cx, position.y + size.cy}, color);
+	Fill({position.x, position.y, position.x + size.x, position.y + size.y}, color);
 }
 
 void Bitmap::Fill(COLORREF color)
 {
-	Fill({0, 0, _size.cx, _size.cy}, color);
+	Fill({0, 0, _size.x, _size.y}, color);
 }
 
 void Bitmap::Draw(HDC source, int x, int y, int w, int h, int src_x, int src_y)
@@ -110,17 +111,17 @@ void Bitmap::Draw(HDC source, int x, int y, int w, int h, int src_x, int src_y)
 
 void Bitmap::Draw(const Bitmap& source)
 {
-	int w = max(source._size.cx, _size.cx);
-	int h = max(source._size.cy, _size.cy);
+	int w = max(source._size.x, _size.x);
+	int h = max(source._size.y, _size.y);
 	Draw(source._hdc, 0, 0, w, h);
 }
 
 }
 
-static void CreateBitmap(HDC hsourcedc, SIZE size, HDC& out_hdc, HBITMAP& out_hbitmap)
+static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hbitmap)
 {
 	SHOUJIN_ASSERT_WIN32(out_hdc = CreateCompatibleDC(hsourcedc));
-	SHOUJIN_ASSERT_WIN32(out_hbitmap = CreateCompatibleBitmap(hsourcedc, size.cx, size.cy));
+	SHOUJIN_ASSERT_WIN32(out_hbitmap = CreateCompatibleBitmap(hsourcedc, size.x, size.y));
 
 	auto isok = [](auto r) { return r && r != HGDI_ERROR; };
 	SHOUJIN_ASSERT_WIN32_FUNC(SelectObject(out_hdc, out_hbitmap), isok);

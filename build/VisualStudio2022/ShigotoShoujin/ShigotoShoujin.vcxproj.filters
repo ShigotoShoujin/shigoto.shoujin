@@ -63,7 +63,13 @@
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\operators.hpp">
+    <ClInclude Include="..\..\..\src\gui\size.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\point.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\types.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
   </ItemGroup>

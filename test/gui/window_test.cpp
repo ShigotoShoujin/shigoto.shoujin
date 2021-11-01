@@ -10,7 +10,7 @@ class ColorPicker : public Window {
 	Bitmap _bitmap;
 
 public:
-	ColorPicker(POINT position, SIZE window_size, HWND hparentwnd) :
+	ColorPicker(Point position, Size window_size, HWND hparentwnd) :
 		Window{
 			WindowLayout{
 				CreateInfo{

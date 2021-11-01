@@ -25,7 +25,7 @@ public:
 
 	TEST_METHOD(BitmapTest_CopyConstructor) {
 		//Arrange
-		SIZE size{32, 32};
+		Size size{32, 32};
 		Bitmap source(size);
 
 		//Act
@@ -50,17 +50,17 @@ public:
 
 		//Assert
 		Assert::IsNotNull(first.hdc());
-		Assert::IsTrue(SIZE{16, 16} == first.size());
+		Assert::IsTrue(Size{16, 16} == first.size());
 
 		Assert::IsFalse(first.hdc() == second.hdc());
 
 		Assert::IsNotNull(second.hdc());
-		Assert::IsTrue(SIZE{16, 16} == second.size());
+		Assert::IsTrue(Size{16, 16} == second.size());
 	}
 
 	TEST_METHOD(BitmapTest_MoveConstructor) {
 		//Arrange
-		SIZE size{32, 32};
+		Size size{32, 32};
 		Bitmap source(size);
 
 		//Act
@@ -68,7 +68,7 @@ public:
 
 		//Assert
 		Assert::IsNull(source.hdc());
-		Assert::IsTrue(SIZE{0, 0} == source.size());
+		Assert::IsTrue(Size{0, 0} == source.size());
 
 		Assert::IsNotNull(moved.hdc());
 		Assert::IsTrue(size == moved.size());
@@ -84,9 +84,9 @@ public:
 
 		//Assert
 		Assert::IsNull(first.hdc());
-		Assert::IsTrue(SIZE{0, 0} == first.size());
+		Assert::IsTrue(Size{0, 0} == first.size());
 
 		Assert::IsNotNull(second.hdc());
-		Assert::IsTrue(SIZE{16, 16} == second.size());
+		Assert::IsTrue(Size{16, 16} == second.size());
 	}
 };

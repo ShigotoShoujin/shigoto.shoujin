@@ -179,7 +179,9 @@
     <ClInclude Include="..\..\..\src\event.hpp" />
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
-    <ClInclude Include="..\..\..\src\gui\operators.hpp" />
+    <ClInclude Include="..\..\..\src\gui\point.hpp" />
+    <ClInclude Include="..\..\..\src\gui\size.hpp" />
+    <ClInclude Include="..\..\..\src\gui\types.hpp" />
     <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_layout.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
