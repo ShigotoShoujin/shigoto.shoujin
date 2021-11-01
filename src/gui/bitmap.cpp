@@ -70,8 +70,8 @@ Bitmap::~Bitmap()
 void Bitmap::Destroy() noexcept
 {
 	if(_hdc) {
-		DeleteDC(_hdc);
-		DeleteObject(_hbitmap);
+		SHOUJIN_ASSERT_WIN32(DeleteDC(_hdc));
+		SHOUJIN_ASSERT_WIN32(DeleteObject(_hbitmap));
 		_hdc = nullptr;
 		_hbitmap = nullptr;
 		_size = {};
@@ -83,15 +83,15 @@ void Bitmap::Reset(const Size& size)
 	Destroy();
 	HDC hdesktopdc = ::GetDC(HWND_DESKTOP);
 	CreateBitmap(hdesktopdc, size, _hdc, _hbitmap);
-	ReleaseDC(HWND_DESKTOP, hdesktopdc);
+	SHOUJIN_ASSERT_WIN32(ReleaseDC(HWND_DESKTOP, hdesktopdc));
 	_size = size;
 }
 
 void Bitmap::Fill(const RECT& rect, Color color)
 {
-	HBRUSH brush = CreateSolidBrush(color);
-	::FillRect(_hdc, &rect, brush);
-	DeleteObject(brush);
+	HBRUSH brush = SHOUJIN_ASSERT_WIN32(CreateSolidBrush(color));
+	SHOUJIN_ASSERT_WIN32(::FillRect(_hdc, &rect, brush));
+	SHOUJIN_ASSERT_WIN32(DeleteObject(brush));
 }
 
 void Bitmap::Fill(Point position, Size size, Color color)
@@ -120,9 +120,9 @@ void Bitmap::Draw(const Bitmap& source)
 
 static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hbitmap)
 {
-	SHOUJIN_ASSERT_WIN32(out_hdc = CreateCompatibleDC(hsourcedc));
-	SHOUJIN_ASSERT_WIN32(out_hbitmap = CreateCompatibleBitmap(hsourcedc, size.x, size.y));
+	out_hdc = SHOUJIN_ASSERT_WIN32(CreateCompatibleDC(hsourcedc));
+	out_hbitmap = SHOUJIN_ASSERT_WIN32(CreateCompatibleBitmap(hsourcedc, size.x, size.y));
 
 	auto isok = [](auto r) { return r && r != HGDI_ERROR; };
-	SHOUJIN_ASSERT_WIN32_FUNC(SelectObject(out_hdc, out_hbitmap), isok);
+	SHOUJIN_ASSERT_WIN32_EX(SelectObject(out_hdc, out_hbitmap), isok);
 }

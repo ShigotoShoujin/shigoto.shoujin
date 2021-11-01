@@ -23,7 +23,7 @@ void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
 #define SHOUJIN_ASSERT_CLIB(expected, fn) assert(fn)
 #define SHOUJIN_ASSERT_STDERRORCODE(std_error_code) assert(fn)
 #define SHOUJIN_ASSERT_WIN32(fn) assert(fn)
-#define SHOUJIN_ASSERT_WIN32_FUNC(fn, isok_func) assert(isok_func((fn)))
+#define SHOUJIN_ASSERT_WIN32_EX(fn, isok_func) assert(isok_func((fn)))
 #else
 #define SHOUJIN_ASSERT(fn) \
 	if(!(fn)) \
@@ -48,7 +48,7 @@ void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
 		return ret; \
 	}()
 
-#define SHOUJIN_ASSERT_WIN32_FUNC(fn, isok_func) \
+#define SHOUJIN_ASSERT_WIN32_EX(fn, isok_func) \
 	[&]() { \
 		auto ret = (fn); \
 		if(!(isok_func(ret))) \
