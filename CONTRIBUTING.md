@@ -6,6 +6,9 @@ Everyone's welcome to open issues, submit pull requests or otherwise manifest th
 All commit messages should be written in the present.  
 Prefer "Remove implicit inline" over "Remove**d** implicit inline"
 
+### C++ Core Guidelines
+In doubt refer to the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/)
+
 ## Code Style
 
 ### Write self-documenting code
