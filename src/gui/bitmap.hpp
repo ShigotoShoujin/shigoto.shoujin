@@ -32,7 +32,7 @@ public:
 	virtual void Fill(const RECT& rect, COLORREF color);
 	virtual void Fill(Point position, Size size, COLORREF color);
 	virtual void Fill(COLORREF color);
-	virtual void Draw(HDC source, int x, int y, int w, int h, int src_x = {}, int src_y = {});
+	virtual void Draw(HDC source, Point position, Size size, Point src_position = {});
 	virtual void Draw(const Bitmap& source);
 };
 }

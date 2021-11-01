@@ -104,16 +104,16 @@ void Bitmap::Fill(COLORREF color)
 	Fill({0, 0, _size.x, _size.y}, color);
 }
 
-void Bitmap::Draw(HDC source, int x, int y, int w, int h, int src_x, int src_y)
+void Bitmap::Draw(HDC source, Point position, Size size, Point src_position)
 {
-	BitBlt(_hdc, x, y, w, h, source, src_x, src_y, SRCCOPY);
+	BitBlt(_hdc, position.x, position.y, size.x, size.y, source, src_position.x, src_position.y, SRCCOPY);
 }
 
 void Bitmap::Draw(const Bitmap& source)
 {
 	int w = max(source._size.x, _size.x);
 	int h = max(source._size.y, _size.y);
-	Draw(source._hdc, 0, 0, w, h);
+	Draw(source._hdc, {}, {w, h});
 }
 
 }
