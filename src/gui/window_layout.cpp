@@ -7,6 +7,8 @@
 static constexpr int DEFAULT_WINDOW_Size_DIVIDER = 3;
 static constexpr DWORD DEFAULT_STYLE = WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
 
+using namespace shoujin::gui;
+
 static inline Size RectToSize(const RECT& rect);
 static Size GetWindowSize(HWND hwnd);
 static Size GetDefaultWindowSize(HWND hwnd);

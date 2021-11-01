@@ -22,7 +22,7 @@ public:
 			hparentwnd},
 		_bitmap{WindowLayout::client_size()}
 	{
-		_bitmap.Fill(RGB(0xff, 0, 0));
+		_bitmap.Fill(Color::Navy);
 	}
 
 	virtual bool OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam) override

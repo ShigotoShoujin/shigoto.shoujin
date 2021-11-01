@@ -72,6 +72,9 @@
     <ClInclude Include="..\..\..\src\gui\types.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\color.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.clang-format">
@@ -111,6 +114,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\doc\todo.cpp">
       <Filter>doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\color.cpp">
+      <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

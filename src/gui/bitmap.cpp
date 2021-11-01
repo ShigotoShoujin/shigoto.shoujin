@@ -87,19 +87,19 @@ void Bitmap::Reset(const Size& size)
 	_size = size;
 }
 
-void Bitmap::Fill(const RECT& rect, COLORREF color)
+void Bitmap::Fill(const RECT& rect, Color color)
 {
 	HBRUSH brush = CreateSolidBrush(color);
 	::FillRect(_hdc, &rect, brush);
 	DeleteObject(brush);
 }
 
-void Bitmap::Fill(Point position, Size size, COLORREF color)
+void Bitmap::Fill(Point position, Size size, Color color)
 {
 	Fill({position.x, position.y, position.x + size.x, position.y + size.y}, color);
 }
 
-void Bitmap::Fill(COLORREF color)
+void Bitmap::Fill(Color color)
 {
 	Fill({0, 0, _size.x, _size.y}, color);
 }

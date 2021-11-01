@@ -179,6 +179,7 @@
     <ClInclude Include="..\..\..\src\event.hpp" />
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
+    <ClInclude Include="..\..\..\src\gui\color.hpp" />
     <ClInclude Include="..\..\..\src\gui\point.hpp" />
     <ClInclude Include="..\..\..\src\gui\size.hpp" />
     <ClInclude Include="..\..\..\src\gui\types.hpp" />
@@ -199,6 +200,7 @@
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp" />
     <ClCompile Include="..\..\..\src\file\file.cpp" />
     <ClCompile Include="..\..\..\src\gui\bitmap.cpp" />
+    <ClCompile Include="..\..\..\src\gui\color.cpp" />
     <ClCompile Include="..\..\..\src\gui\window.cpp" />
     <ClCompile Include="..\..\..\src\gui\window_layout.cpp" />
   </ItemGroup>
