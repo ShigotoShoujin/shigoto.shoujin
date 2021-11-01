@@ -2,6 +2,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+namespace shoujin::gui {
 struct Point {
 	int x;
 	int y;
@@ -15,7 +16,7 @@ struct Point {
 	Point(const POINT& size) :
 		x{size.x}, y{size.y} {}
 
-	inline operator bool() const { return x == 0 && y == 0; }
+	inline operator bool() const { return x != 0 || y != 0; }
 	inline operator POINT() const { return {x, y}; }
 };
 
@@ -37,4 +38,5 @@ inline Point operator*(const Point& lhs, int rhs)
 inline Point operator/(const Point& lhs, int rhs)
 {
 	return {lhs.x / rhs, lhs.y / rhs};
+}
 }
