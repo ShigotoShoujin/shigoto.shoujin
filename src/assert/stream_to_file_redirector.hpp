@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 namespace shoujin::assert {
+
 class StreamToFileRedirector {
 	FILE* _target_stream;
 
@@ -16,4 +17,5 @@ public:
 	StreamToFileRedirector(FILE* stream_to_redirect, LPCTSTR output_file);
 	~StreamToFileRedirector();
 };
+
 }

@@ -4,6 +4,7 @@
 #include "assert.hpp"
 
 namespace shoujin::assert {
+
 StreamToFileRedirector::StreamToFileRedirector(StreamToFileRedirector&& rhs) noexcept :
 	_target_stream(rhs._target_stream)
 {
@@ -31,4 +32,5 @@ StreamToFileRedirector::~StreamToFileRedirector()
 		_target_stream = nullptr;
 	}
 }
+
 }

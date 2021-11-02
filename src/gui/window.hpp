@@ -4,6 +4,7 @@
 #include "window_layout.hpp"
 
 namespace shoujin::gui {
+
 class Window : public WindowLayout {
 	HWND _hwnd;
 	HWND _hparentwnd;
@@ -15,7 +16,7 @@ public:
 	Window& operator=(Window&&) noexcept;
 
 	Window();
-	Window(const WindowLayout& layout, HWND hparentwnd);
+	Window(const WindowLayout& layout, HWND hparentwnd = nullptr);
 	virtual ~Window();
 
 	[[nodiscard]] HWND hwnd() const { return _hwnd; }
@@ -25,8 +26,14 @@ public:
 	void ShowModal();
 
 protected:
+	struct WindowMessage {
+		UINT msg;
+		WPARAM wparam;
+		LPARAM lparam;
+	};
+
 	virtual bool OnDispatchMessage(MSG& msg);
-	virtual bool OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+	virtual bool OnWndProc(const WindowMessage& message);
 	void ProcessOnPaintMessageFromDC(HDC hsourcedc);
 
 private:
@@ -34,4 +41,5 @@ private:
 	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	void ProcessMessage(MSG msg);
 };
+
 }

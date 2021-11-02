@@ -4,9 +4,10 @@
 #include "../assert/assert.hpp"
 
 namespace shoujin::file {
+
 tstring GetProcessFile()
 {
-	TCHAR out_file[MAX_PATH];
+	TCHAR out_file[MAX_PATH]{};
 	SHOUJIN_ASSERT_WIN32(GetModuleFileName(GetModuleHandle(nullptr), out_file, MAX_PATH));
 	return out_file;
 }
@@ -35,4 +36,5 @@ bool TryFileDelete(tstring file)
 	std::error_code remove_error_code;
 	return std::filesystem::remove(file, remove_error_code);
 }
+
 }

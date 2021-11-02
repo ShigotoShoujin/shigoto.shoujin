@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 namespace shoujin::gui {
+
 class Color {
 	COLORREF _color;
 
@@ -37,4 +38,5 @@ public:
 	static const Color Teal;
 	static const Color Navy;
 };
+
 }

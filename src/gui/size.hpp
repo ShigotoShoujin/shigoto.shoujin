@@ -3,6 +3,7 @@
 #include <Windows.h>
 
 namespace shoujin::gui {
+
 struct Size {
 	int x;
 	int y;
@@ -18,25 +19,11 @@ struct Size {
 
 	operator bool() const { return x != 0 || y != 0; }
 	operator SIZE() const { return {x, y}; }
+
+	friend bool operator==(const Size& lhs, const Size& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
+	friend bool operator!=(const Size& lhs, const Size& rhs) { return !(lhs == rhs); }
+	friend Size operator*(const Size& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
+	friend Size operator/(const Size& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
 };
 
-inline bool operator==(const Size& lhs, const Size& rhs)
-{
-	return lhs.x == rhs.x && lhs.y == rhs.y;
-}
-
-inline bool operator!=(const Size& lhs, const Size& rhs)
-{
-	return !(lhs == rhs);
-}
-
-inline Size operator*(const Size& lhs, int rhs)
-{
-	return {lhs.x * rhs, lhs.y * rhs};
-}
-
-inline Size operator/(const Size& lhs, int rhs)
-{
-	return {lhs.x / rhs, lhs.y / rhs};
-}
 }

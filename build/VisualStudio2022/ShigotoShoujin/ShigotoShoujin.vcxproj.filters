@@ -75,6 +75,12 @@
     <ClInclude Include="..\..\..\src\gui\color.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\message_string.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\file\logfile.hpp">
+      <Filter>src\file</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\.clang-format">
@@ -117,6 +123,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\color.cpp">
       <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\message_string.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\file\logfile.cpp">
+      <Filter>src\file</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

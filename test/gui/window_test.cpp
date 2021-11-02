@@ -26,15 +26,17 @@ public:
 		_bitmap.Fill(Color::Navy);
 	}
 
-	virtual bool OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam) override
+	virtual bool OnWndProc(const WindowMessage& message) override
 	{
-		switch(msg) {
+		switch(message.msg) {
 			case WM_PAINT:
 				Window::ProcessOnPaintMessageFromDC(_bitmap.hdc());
 				return false;
+			case WM_SIZE:
+				return false;
 		}
 
-		return true;
+		return Window::OnWndProc(message);
 	}
 };
 
@@ -42,7 +44,7 @@ TEST_CLASS(WindowTest) {
 public:
 	TEST_CLASS_INITIALIZE(ClassInitialize)
 	{
-		shoujin::assert::display_error_messagebox = true;
+		shoujin::assert::_display_error_messagebox_ = true;
 	}
 
 	TEST_METHOD(Window_IsNotCopyConstructible) {
@@ -62,18 +64,18 @@ public:
 	}
 
 	TEST_METHOD(Window_WIP) {
-		Window window;
+		Window window{WindowLayout{WindowLayout::CreateInfo{.create_mode = WindowLayout::CreateMode::Centered, .style = WindowLayout::DEFAULT_STYLE | WS_SIZEBOX}}};
 
 		window.Show();
 
-		auto add = [&](int y, int64_t id) {
-			CreateWindowEx(WS_EX_STATICEDGE, TEXT("EDIT"), TEXT("Hello World"), WS_CHILD | WS_VISIBLE, 10, y, 128, 24, window.hwnd(), reinterpret_cast<HMENU>(id), GetModuleHandle(nullptr), nullptr);
-		};
-
-		int y = 10;
-		add(y, 1);
-		add(y += 34, 2);
-		add(y += 34, 3);
+		//auto add = [&](int y, int64_t id) {
+		//	CreateWindowEx(WS_EX_STATICEDGE, TEXT("EDIT"), TEXT("Hello World"), WS_CHILD | WS_VISIBLE, 10, y, 128, 24, window.hwnd(), reinterpret_cast<HMENU>(id), GetModuleHandle(nullptr), nullptr);
+		//};
+		//
+		//int y = 10;
+		//add(y, 1);
+		//add(y += 34, 2);
+		//add(y += 34, 3);
 
 		ColorPicker cp({}, window.client_size() / 2, window.hwnd());
 

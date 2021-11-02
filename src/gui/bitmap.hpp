@@ -4,6 +4,7 @@
 #include "types.hpp"
 
 namespace shoujin::gui {
+
 class Bitmap {
 	friend void swap(Bitmap&, Bitmap&) noexcept;
 
@@ -35,4 +36,5 @@ public:
 	virtual void Draw(HDC source, Point position, Size size, Point src_position = {});
 	virtual void Draw(const Bitmap& source);
 };
+
 }

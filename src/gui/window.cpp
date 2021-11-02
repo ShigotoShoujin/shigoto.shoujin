@@ -2,6 +2,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include "../assert/assert.hpp"
+#include "../file/file.hpp"
+#include "../file/logfile.hpp"
+#include "message_string.hpp"
 
 namespace shoujin::gui {
 
@@ -82,9 +85,9 @@ bool Window::OnDispatchMessage(MSG& msg)
 	return true;
 }
 
-bool Window::OnWndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+bool Window::OnWndProc(const WindowMessage& message)
 {
-	switch(msg) {
+	switch(message.msg) {
 		case WM_DESTROY: {
 			_hwnd = nullptr;
 			return false;
@@ -154,6 +157,12 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 {
 	Window* instance;
 
+	if(!file::FileExists(file::LogFile::GetDebugFile()))
+		file::LogFile::AppendDebug(FormatWindowMessageHeader());
+
+	tstring msg_text = FormatWindowMessageLine(hwnd, msg, wparam, lparam);
+	file::LogFile::AppendDebug(msg_text);
+
 	if(msg == WM_NCCREATE) {
 		CREATESTRUCT& create_struct = *reinterpret_cast<LPCREATESTRUCT>(lparam);
 		instance = reinterpret_cast<Window*>(create_struct.lpCreateParams);
@@ -168,7 +177,7 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 		instance = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	if(instance)
-		return instance->OnWndProc(msg, wparam, lparam) ? DefWindowProc(hwnd, msg, wparam, lparam) : 0;
+		return instance->OnWndProc({msg, wparam, lparam}) ? DefWindowProc(hwnd, msg, wparam, lparam) : 0;
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
@@ -179,4 +188,5 @@ void Window::ProcessMessage(MSG msg)
 	if(OnDispatchMessage(msg))
 		DispatchMessage(&msg);
 }
+
 }

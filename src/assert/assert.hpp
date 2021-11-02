@@ -7,7 +7,8 @@
 #include "../tstring.hpp"
 
 namespace shoujin::assert {
-extern bool display_error_messagebox;
+
+extern bool _display_error_messagebox_;
 
 extern Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> OnErrorEvent;
 extern Event<tstring, bool&> OnErrorOutputEvent;
@@ -17,6 +18,7 @@ void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
 void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
 void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
 void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
+
 }
 
 #ifdef NDEBUG
@@ -24,8 +26,20 @@ void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression);
 #define SHOUJIN_ASSERT(fn) assert(fn)
 #define SHOUJIN_ASSERT_CLIB(expected, fn) assert(fn)
 #define SHOUJIN_ASSERT_STDERRORCODE(std_error_code) assert(fn)
-#define SHOUJIN_ASSERT_WIN32(fn) assert(fn)
-#define SHOUJIN_ASSERT_WIN32_EX(fn, isok_func) assert(isok_func((fn)))
+
+#define SHOUJIN_ASSERT_WIN32(fn) \
+	[&]() { \
+		auto ret = (fn); \
+		assert(!ret); \
+		return ret; \
+	}()
+
+#define SHOUJIN_ASSERT_WIN32_EX(fn, isok_func) \
+	[&]() { \
+		auto ret = (fn); \
+		assert(!(isok_func(ret))); \
+		return ret; \
+	}()
 #else
 #define SHOUJIN_ASSERT(fn) \
 	if(!(fn)) \

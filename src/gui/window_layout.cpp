@@ -5,7 +5,6 @@
 #include "types.hpp"
 
 static constexpr int DEFAULT_WINDOW_Size_DIVIDER = 3;
-static constexpr DWORD DEFAULT_STYLE = WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
 
 using namespace shoujin::gui;
 
@@ -19,26 +18,23 @@ static void AdjustSizes(Size& window_size, Size& client_size, DWORD style, DWORD
 
 namespace shoujin::gui {
 
-WindowLayout::WindowLayout()
-{
-	HWND hparentwnd = GetDesktopWindow();
-
-	_style = DEFAULT_STYLE;
-	_exstyle = 0;
-
-	_window_size = GetDefaultWindowSize(hparentwnd);
-	_client_size = GetClientSizeFromWindowSize(_window_size, _style, _exstyle);
-	_position = GetCenteredPosition(_window_size, hparentwnd);
-}
-
-WindowLayout::WindowLayout(const CreateInfo& ci) :
+WindowLayout::WindowLayout(const CreateInfo& ci, HWND hparentwnd) :
 	_position{ci.position},
-	_window_size {ci.window_size},
-	_client_size {ci.client_size},
+	_window_size{ci.window_size},
+	_client_size{ci.client_size},
 	_style{ci.style ? ci.style : DEFAULT_STYLE},
 	_exstyle{ci.exstyle}
 {
+	if(!hparentwnd)
+		hparentwnd = GetDesktopWindow();
+
+	if(!_window_size && !_client_size)
+		_window_size = GetDefaultWindowSize(hparentwnd);
+
 	AdjustSizes(_window_size, _client_size, _style, _exstyle);
+
+	if(ci.create_mode == WindowLayout::CreateMode::Centered)
+		_position = GetCenteredPosition(_window_size, hparentwnd);
 }
 
 }
@@ -99,8 +95,6 @@ static Point GetCenteredPosition(const Size& window_size, HWND hparentwnd)
 /// <param name="window_size">The size of the window. Has priority over client_size</param>
 static void AdjustSizes(Size& window_size, Size& client_size, DWORD style, DWORD exstyle)
 {
-	SHOUJIN_ASSERT(window_size != 0 || client_size != 0);
-
 	if(!window_size)
 		window_size = GetWindowSizeFromClientSize(client_size, style, exstyle);
 	else

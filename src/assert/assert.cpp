@@ -16,7 +16,7 @@
 
 namespace shoujin::assert {
 
-bool display_error_messagebox;
+bool _display_error_messagebox_;
 
 Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> OnErrorEvent;
 Event<tstring, bool&> OnErrorOutputEvent;
@@ -41,7 +41,7 @@ static bool OnErrorOutput(tstring error_message)
 
 	if(!cancel) {
 		TCERR << error_message;
-		if(display_error_messagebox) {
+		if(_display_error_messagebox_) {
 			LPCTSTR text = error_message.c_str();
 			MessageBox(HWND_DESKTOP, text, TEXT("Shoujin Assert"), MB_OK | MB_ICONWARNING);
 		}

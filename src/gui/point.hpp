@@ -3,6 +3,7 @@
 #include <Windows.h>
 
 namespace shoujin::gui {
+
 struct Point {
 	int x;
 	int y;
@@ -18,25 +19,11 @@ struct Point {
 
 	operator bool() const { return x != 0 || y != 0; }
 	operator POINT() const { return {x, y}; }
+
+	friend bool operator==(const Point& lhs, const Point& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
+	friend bool operator!=(const Point& lhs, const Point& rhs) { return !(lhs == rhs); }
+	friend Point operator*(const Point& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
+	friend Point operator/(const Point& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
 };
 
-inline bool operator==(const Point& lhs, const Point& rhs)
-{
-	return lhs.x == rhs.x && lhs.y == rhs.y;
-}
-
-inline bool operator!=(const Point& lhs, const Point& rhs)
-{
-	return !(lhs == rhs);
-}
-
-inline Point operator*(const Point& lhs, int rhs)
-{
-	return {lhs.x * rhs, lhs.y * rhs};
-}
-
-inline Point operator/(const Point& lhs, int rhs)
-{
-	return {lhs.x / rhs, lhs.y / rhs};
-}
 }

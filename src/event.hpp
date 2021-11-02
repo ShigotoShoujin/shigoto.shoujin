@@ -1,7 +1,8 @@
 #pragma once
 
 namespace shoujin {
-template<typename ...TArguments>
+
+template<typename... TArguments>
 class Event {
 	using TFunc = void (*)(TArguments..., void* userdata);
 	TFunc _func;
@@ -18,7 +19,7 @@ public:
 };
 
 template<typename... TArguments>
-Event<TArguments...>::Event():
+Event<TArguments...>::Event() :
 	_func{},
 	_userdata{}
 {}
@@ -43,7 +44,6 @@ Event<TArguments...>::~Event()
 	_func = nullptr;
 	_userdata = nullptr;
 }
-
 
 template<typename... TArguments>
 void Event<TArguments...>::operator()(TArguments... args) const
