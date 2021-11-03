@@ -30,13 +30,13 @@ Putting private and protected variables first allows for inline accessors and im
 8. private functions
 
 #### Class Data Members
-Class Data Members have a prefix _ instead of trailing  
+Class Data Members have a prefix _ instead of trailing _  
 Sorting the class members in alphabetical order will put the private/protected members together.
 
 #### Class Accessors
 Same as variables in order to differentiate between accessors which are most likely to be optimized away versus more *expansive* functions which might do work.  
 No "Get" prefix, `[[nodiscard]]` and `const`  
-`[[nodiscard]] POINT position() const { return _position; }`
+`[[nodiscard]] Point position() const { return _position; }`
 
 **In base class**
 * Use an accessor over a protected variable when access is read-only.
@@ -45,7 +45,17 @@ No "Get" prefix, `[[nodiscard]]` and `const`
 **In derived class**
 * For clarity prefer `Window::position()` over `position()`
 
+#### Variable and parameter names
+snake_case
+
 #### Constant Names
+**For locals or privates**  
+`k` prefix followed by PascalCase: `kMsgBufferSize`
+
+**For public values where having `k` would not be nice**  
+No prefix and PascalCase: `Color::Red` is more sensible than `Color::kRed`
+
+#### MACRO Names
 ALL_UPPER_CASE
 
 #### Line Length

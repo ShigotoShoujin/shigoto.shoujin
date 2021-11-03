@@ -27,6 +27,7 @@
     <ClCompile Include="..\..\..\test\assert\assert_test.cpp" />
     <ClCompile Include="..\..\..\test\assert\stream_to_file_redirector_test.cpp" />
     <ClCompile Include="..\..\..\test\event_test.cpp" />
+    <ClCompile Include="..\..\..\test\file\file_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_test.cpp" />
   </ItemGroup>

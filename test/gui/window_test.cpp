@@ -64,7 +64,7 @@ public:
 	}
 
 	TEST_METHOD(Window_WIP) {
-		Window window{WindowLayout{WindowLayout::CreateInfo{.create_mode = WindowLayout::CreateMode::Centered, .style = WindowLayout::DEFAULT_STYLE | WS_SIZEBOX}}};
+		Window window{WindowLayout{WindowLayout::CreateInfo{.create_mode = WindowLayout::CreateMode::Centered, .style = WindowLayout::DefaultStyle | WS_SIZEBOX}}};
 
 		window.Show();
 

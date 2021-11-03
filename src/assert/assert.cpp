@@ -1,12 +1,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <tchar.h>
-#include <iostream>
+#include <any>
 #include <filesystem>
+#include <iostream>
 #include <string>
+#include <tchar.h>
 #include "../event.hpp"
-#include "../tstring.hpp"
 #include "../file/file.hpp"
+#include "../tstring.hpp"
 
 #ifdef UNICODE
 #define TCERR std::wcerr
@@ -74,8 +75,7 @@ static tstring FormatError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR exp
 
 	return ss.str();
 }
-
-void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result)
 {
 	if(!OnError(file, function, line, expression))
 		return;
@@ -87,18 +87,20 @@ void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
 		OnExitProcess(1);
 }
 
-void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+void AbortCLib(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result)
 {
 	if(!OnError(file, function, line, expression))
 		return;
 
+	int errcode = std::any_cast<int>(result);
+
 	tstringstream ss;
-	const int MSG_BUFFER_SIZE = 0xff;
-	TCHAR msg_buffer[MSG_BUFFER_SIZE];
+	const int kMsgBufferSize = 0xff;
+	TCHAR msg_buffer[kMsgBufferSize];
 
 	ss << FormatError(file, function, line, expression);
 
-	if(errcode && !_tcserror_s(msg_buffer, MSG_BUFFER_SIZE, errcode)) {
+	if(errcode && !_tcserror_s(msg_buffer, kMsgBufferSize, errcode)) {
 		ss
 			<< TEXT("CLib error code: ") << errcode << std::endl
 			<< TEXT("CLib error message: ") << msg_buffer << std::endl;
@@ -108,23 +110,25 @@ void AbortCLib(int errcode, LPCTSTR file, LPCTSTR function, int line, LPCTSTR ex
 		OnExitProcess(errcode ? errcode : 1);
 }
 
-void AbortStdErrorCode(std::error_code std_error_code, LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+void AbortStdErrorCode(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result)
 {
 	if(!OnError(file, function, line, expression))
 		return;
+
+	auto error_code = std::any_cast<std::error_code>(result);
 
 	tstringstream ss;
 
 	ss
 		<< FormatError(file, function, line, expression)
-		<< TEXT("std::error_code::value: ") << std_error_code.value() << std::endl
-		<< TEXT("std::error_code::message: ") << std_error_code.message().c_str() << std::endl;
+		<< TEXT("std::error_code::value: ") << error_code.value() << std::endl
+		<< TEXT("std::error_code::message: ") << error_code.message().c_str() << std::endl;
 
 	if(OnErrorOutput(ss.str()))
-		OnExitProcess(std_error_code.value());
+		OnExitProcess(error_code.value());
 }
 
-void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result)
 {
 	if(!OnError(file, function, line, expression))
 		return;

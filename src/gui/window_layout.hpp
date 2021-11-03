@@ -11,7 +11,7 @@ class WindowLayout {
 	DWORD _style, _exstyle;
 
 public:
-	static constexpr DWORD DEFAULT_STYLE = WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
+	static constexpr DWORD DefaultStyle = WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
 
 	enum class CreateMode {
 		Default,

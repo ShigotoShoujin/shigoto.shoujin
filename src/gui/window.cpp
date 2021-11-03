@@ -75,7 +75,7 @@ void Window::ShowModal()
 		CreateHandle();
 
 	auto isok = [](auto r) { return r != -1 /*GetMessage returns -1 on error*/; };
-	while(_hwnd && SHOUJIN_ASSERT_WIN32_EX(GetMessage(&msg, _hwnd, 0, 0), isok))
+	while(_hwnd && SHOUJIN_ASSERT_WIN32_EXPLICIT(GetMessage(&msg, _hwnd, 0, 0), isok))
 #pragma warning(suppress : 6001) //Warning C6001 Using uninitialized memory - The anonymous lambda in SHOUJIN_ASSERT_WIN32 hides the fact that msg is initialized
 		ProcessMessage(msg);
 }

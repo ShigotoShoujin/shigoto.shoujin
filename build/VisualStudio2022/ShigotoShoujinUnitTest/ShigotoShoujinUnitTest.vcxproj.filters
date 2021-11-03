@@ -14,6 +14,9 @@
     <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\file\file_test.cpp">
+      <Filter>file</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">
@@ -21,6 +24,9 @@
     </Filter>
     <Filter Include="gui">
       <UniqueIdentifier>{5e5a23a0-1300-4416-944d-631286dd12cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="file">
+      <UniqueIdentifier>{d124f70d-dda1-4207-b2cd-00c6028d637d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

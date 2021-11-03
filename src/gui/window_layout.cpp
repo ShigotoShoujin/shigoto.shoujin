@@ -4,7 +4,7 @@
 #include "../assert/assert.hpp"
 #include "types.hpp"
 
-static constexpr int DEFAULT_WINDOW_Size_DIVIDER = 3;
+static constexpr int kDefaultWindowSizeDivider = 3;
 
 using namespace shoujin::gui;
 
@@ -22,7 +22,7 @@ WindowLayout::WindowLayout(const CreateInfo& ci, HWND hparentwnd) :
 	_position{ci.position},
 	_window_size{ci.window_size},
 	_client_size{ci.client_size},
-	_style{ci.style ? ci.style : DEFAULT_STYLE},
+	_style{ci.style ? ci.style : DefaultStyle},
 	_exstyle{ci.exstyle}
 {
 	if(!hparentwnd)
@@ -51,8 +51,8 @@ static Size GetWindowSize(HWND hwnd)
 static Size GetDefaultWindowSize(HWND hwnd)
 {
 	Size size = GetWindowSize(hwnd);
-	size.x /= DEFAULT_WINDOW_Size_DIVIDER;
-	size.y /= DEFAULT_WINDOW_Size_DIVIDER;
+	size.x /= kDefaultWindowSizeDivider;
+	size.y /= kDefaultWindowSizeDivider;
 	return size;
 }
 

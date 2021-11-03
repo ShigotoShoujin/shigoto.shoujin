@@ -126,5 +126,5 @@ static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hb
 	out_hbitmap = SHOUJIN_ASSERT_WIN32(CreateCompatibleBitmap(hsourcedc, size.x, size.y));
 
 	auto isok = [](auto r) { return r && r != HGDI_ERROR; };
-	SHOUJIN_ASSERT_WIN32_EX(SelectObject(out_hdc, out_hbitmap), isok);
+	SHOUJIN_ASSERT_WIN32_EXPLICIT(SelectObject(out_hdc, out_hbitmap), isok);
 }

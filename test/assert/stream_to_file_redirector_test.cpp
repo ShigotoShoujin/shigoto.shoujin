@@ -14,18 +14,12 @@ using namespace shoujin::assert;
 using namespace shoujin::file;
 
 TEST_CLASS(StreamToFileRedirectorTest) {
-	int _exit_process_call_count;
-
 public:
 	static void OnExitProcess(bool& cancel, void* userdata)
 	{
 		int* exit_process_call_count = reinterpret_cast<int*>(userdata);
 		cancel = true;
 		++*exit_process_call_count;
-	}
-
-	TEST_CLASS_INITIALIZE(Initialize){
-		shoujin::assert::OnExitProcessEvent = OnExitProcess;
 	}
 
 	TEST_CLASS_CLEANUP(TestClassCleanup)
@@ -51,21 +45,21 @@ public:
 
 	TEST_METHOD(StreamToFileRedirector_ErrorOutputRedirectedToFile) {
 		//Arrange
-		const TCHAR* ERR_FILE = TEXT("err_file.txt");
+		const TCHAR* kErrFile = TEXT("err_file.txt");
 		auto temp_path = std::filesystem::temp_directory_path();
-		auto err_file_path = temp_path.replace_filename(ERR_FILE);
+		auto err_file_path = temp_path.replace_filename(kErrFile);
 		std::filesystem::remove(err_file_path);
 
 		StreamToFileRedirector redirector(stderr, err_file_path.c_str());
-		_exit_process_call_count = 0;
+		int exit_process_call_count = 0;
 
-		shoujin::assert::OnExitProcessEvent = {OnExitProcess, &_exit_process_call_count};
+		shoujin::assert::OnExitProcessEvent = {OnExitProcess, &exit_process_call_count};
 
 		//Act
 		SHOUJIN_ASSERT_WIN32(CreateWindowEx(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 
 		//Assert
-		Assert::AreEqual(1, _exit_process_call_count);
+		Assert::AreEqual(1, exit_process_call_count);
  		Assert::IsTrue(FileExists(err_file_path));
 	}
 };
