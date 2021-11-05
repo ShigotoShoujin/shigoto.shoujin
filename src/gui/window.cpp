@@ -20,7 +20,7 @@ Window::Window(const CreateInfo& ci) :
 	_position{ci.position},
 	_window_size{ci.window_size},
 	_client_size{ci.client_size},
-	_style{ci.style ? ci.style : DefaultStyle},
+	_style{ci.style},
 	_exstyle{ci.exstyle}
 {
 	HWND hparentwnd = GetDesktopWindow();
@@ -34,25 +34,43 @@ Window::Window(const CreateInfo& ci) :
 		_position = GetCenteredPosition(_window_size, hparentwnd);
 }
 
-void Window::Show()
+void Window::AddChild(Window* child)
 {
-	if(!WindowHandle::hwnd())
-		WindowHandle::CreateHandle(*this);
-
-	WindowHandle::Show();
+	SHOUJIN_ASSERT(child);
+	_childs.emplace_back(child);
 }
 
-void Window::ShowModal()
+bool Window::ProcessMessages()
 {
-	if(!WindowHandle::hwnd())
-		WindowHandle::CreateHandle(*this);
-
-	WindowHandle::ShowModal();
+	return WindowHandle::ProcessMessages();
 }
 
 void Window::Close()
 {
 	WindowHandle::Close();
+}
+
+void Window::Show()
+{
+	if(!WindowHandle::hwnd())
+		Create();
+
+	WindowHandle::ProcessMessages();
+}
+
+void Window::ShowModal()
+{
+	if(!WindowHandle::hwnd())
+		Create();
+
+	WindowHandle::ShowModal();
+}
+
+void Window::Create(HWND hwnd_parent)
+{
+	WindowHandle::CreateHandle(*this, hwnd_parent);
+	for(auto& child : _childs)
+		child->Create(WindowHandle::hwnd());
 }
 
 }

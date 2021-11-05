@@ -1,6 +1,7 @@
 #pragma once
 #include "types.hpp"
 #include "window_handle.hpp"
+#include <vector>
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -12,6 +13,7 @@ class Window : protected WindowHandle {
 	Size _client_size;
 	DWORD _style;
 	DWORD _exstyle;
+	std::vector<std::unique_ptr<Window>> _childs;
 
 public:
 	static constexpr DWORD DefaultStyle = WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
@@ -24,22 +26,27 @@ public:
 	struct CreateInfo {
 		CreateMode create_mode{};
 		Point position{};
-		Size window_size = {};
-		Size client_size = {};
-		DWORD style = {};
-		DWORD exstyle = {};
+		Size window_size{};
+		Size client_size{};
+		DWORD style{};
+		DWORD exstyle{};
 	};
 
 	Window(const CreateInfo& ci = {});
-	virtual void Show() override;
-	virtual void ShowModal() override;
+	virtual void AddChild(Window* child);
+	virtual bool ProcessMessages() override;
 	virtual void Close() override;
+	virtual void Show();
+	virtual void ShowModal() override;
 
-	[[nodiscard]] Point position() const { return _position; }
-	[[nodiscard]] Size window_size() const { return _window_size; }
-	[[nodiscard]] Size client_size() const { return _client_size; }
-	[[nodiscard]] DWORD style() const { return _style; }
-	[[nodiscard]] DWORD exstyle() const { return _exstyle; }
+	[[nodiscard]] const Point& position() const { return _position; }
+	[[nodiscard]] const Size& window_size() const { return _window_size; }
+	[[nodiscard]] const Size& client_size() const { return _client_size; }
+	[[nodiscard]] const DWORD& style() const { return _style; }
+	[[nodiscard]] const DWORD& exstyle() const { return _exstyle; }
+
+private:
+	void Create(HWND hwnd_parent = nullptr);
 };
 
 }

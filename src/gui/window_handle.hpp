@@ -8,9 +8,8 @@ namespace shoujin::gui {
 class Window;
 
 class WindowHandle {
-	using ParentHandle = std::shared_ptr<WindowHandle>;
 	HWND _hwnd;
-	ParentHandle _parent;
+	HWND _hwnd_parent;
 
 protected:
 	struct WindowMessage {
@@ -22,16 +21,18 @@ protected:
 	WindowHandle();
 	~WindowHandle();
 
-	void CreateHandle(const Window& window);
+	void CreateHandle(const Window& window, HWND hwnd_parent);
 	void Reset();
 
-	[[nodiscard]] HWND hwnd() const { return _hwnd; }
-	[[nodiscard]] ParentHandle const parent() const { return _parent; }
+	[[nodiscard]] const HWND& hwnd() const { return _hwnd; }
+	[[nodiscard]] const HWND& hwnd_parent() const { return _hwnd_parent; }
 
+	virtual bool OnCreate(const CREATESTRUCT& createinfo) { return true; }
+	virtual bool OnPaint() { return true; }
 	virtual bool OnDispatchMessage(const MSG& msg);
 	virtual bool OnWndProc(const WindowMessage& message);
 	virtual void ProcessOnPaintMessageFromDC(HDC hsourcedc);
-	virtual void Show();
+	virtual bool ProcessMessages();
 	virtual void ShowModal();
 	virtual void Close();
 

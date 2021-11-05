@@ -1,29 +1,25 @@
 #pragma once
+#include "vector2d.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 namespace shoujin::gui {
 
-struct Point {
-	int x;
-	int y;
-
+struct Point : public Vector2d {
 	Point() :
-		x{}, y{} {}
+		Vector2d{} {}
 
 	Point(int x, int y) :
-		x{x}, y{y} {}
+		Vector2d{x, y} {}
 
-	Point(const POINT& size) :
-		x{size.x}, y{size.y} {}
+	Point(const Vector2d& rhs) :
+		Vector2d{rhs} {}
 
-	operator bool() const { return x != 0 || y != 0; }
-	operator POINT() const { return {x, y}; }
+	Point(const POINT& rhs) :
+		Vector2d{rhs} {}
 
-	friend bool operator==(const Point& lhs, const Point& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
-	friend bool operator!=(const Point& lhs, const Point& rhs) { return !(lhs == rhs); }
-	friend Point operator*(const Point& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
-	friend Point operator/(const Point& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
+	Point(const SIZE& rhs) :
+		Vector2d{rhs} {}
 };
 
 }

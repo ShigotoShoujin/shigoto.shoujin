@@ -7,37 +7,36 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace shoujin::gui;
 
-//class ColorPicker : public Window {
-//	Bitmap _bitmap;
-//
-//public:
-//	ColorPicker(Point position, Size window_size) :
-//		Window{
-//			CreateInfo{
-//				.position{position},
-//				.window_size{window_size},
-//				.style{WS_CHILD},
-//				.exstyle{WS_EX_STATICEDGE},
-//			},
-//		},
-//		_bitmap{client_size()}
-//	{
-//		_bitmap.Fill(Color::Navy);
-//	}
-//
-//	virtual bool OnWndProc(const WindowMessage& message) override
-//	{
-//		switch(message.msg) {
-//			case WM_PAINT:
-//				Window::ProcessOnPaintMessageFromDC(_bitmap.hdc());
-//				return false;
-//			case WM_SIZE:
-//				return false;
-//		}
-//
-//		return Window::OnWndProc(message);
-//	}
-//};
+class ColorPicker : public Window {
+	std::unique_ptr<Bitmap> _bitmap;
+
+public:
+	ColorPicker(Point position, Size window_size) :
+		Window{
+			CreateInfo{
+				.position{position},
+				.window_size{window_size},
+				.exstyle{WS_EX_STATICEDGE},
+			},
+		}
+	{}
+
+	virtual bool OnCreate(const CREATESTRUCT& createinfo) override
+	{
+		auto cs = Window::client_size();
+		_bitmap.reset(new Bitmap(cs));
+		_bitmap->Fill(Color::Cyan);
+		_bitmap->Fill(cs / 4, cs / 2, Color::Red);
+		return false;
+	}
+
+	virtual bool OnPaint() override
+	{
+		if(_bitmap)
+			Window::ProcessOnPaintMessageFromDC(_bitmap->hdc());
+		return false;
+	}
+};
 
 TEST_CLASS(WindowTest) {
 public:
@@ -65,7 +64,7 @@ public:
 	TEST_METHOD(Window_WIP) {
 		Window window{Window::CreateInfo{.create_mode = Window::CreateMode::Centered, .style = Window::DefaultStyle | WS_SIZEBOX}};
 
-		//ColorPicker cp({}, window.client_size() / 2, window.hwnd());
+		window.AddChild(new ColorPicker({}, window.client_size() / 2));
 
 		window.ShowModal();
 	}

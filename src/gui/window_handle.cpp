@@ -8,7 +8,8 @@
 namespace shoujin::gui {
 
 WindowHandle::WindowHandle() :
-	_hwnd{}
+	_hwnd{},
+	_hwnd_parent{}
 {
 }
 
@@ -17,7 +18,7 @@ WindowHandle::~WindowHandle()
 	Reset();
 }
 
-void WindowHandle::CreateHandle(const Window& window)
+void WindowHandle::CreateHandle(const Window& window, HWND hwnd_parent)
 {
 	const LPCTSTR CLASS_NAME = TEXT("ShoujinWindow");
 	HINSTANCE hinstance = GetModuleHandle(nullptr);
@@ -40,19 +41,25 @@ void WindowHandle::CreateHandle(const Window& window)
 		SHOUJIN_ASSERT_WIN32(RegisterClassEx(&wc));
 	}
 
-	HWND hwnd_parent = _parent ? _parent->hwnd() : nullptr;
+	_hwnd_parent = hwnd_parent;
+
+	DWORD style = window.style();
+	if(_hwnd_parent)
+		style |= WS_CHILD;
+	else if(!style)
+		style = Window::DefaultStyle;
 
 	SHOUJIN_ASSERT(
 		CreateWindowEx(
 			window.exstyle(),
 			CLASS_NAME,
 			CLASS_NAME,
-			window.style(),
+			style,
 			window.position().x,
 			window.position().y,
 			window.window_size().x,
 			window.window_size().y,
-			hwnd_parent,
+			_hwnd_parent,
 			nullptr,
 			hinstance,
 			this));
@@ -79,6 +86,12 @@ bool WindowHandle::OnDispatchMessage(const MSG& msg)
 bool WindowHandle::OnWndProc(const WindowMessage& message)
 {
 	switch(message.msg) {
+		case WM_CREATE: {
+			auto& createinfo = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
+			return OnCreate(createinfo);
+		}
+		case WM_PAINT:
+			return OnPaint();
 		case WM_DESTROY: {
 			_hwnd = nullptr;
 			return false;
@@ -100,13 +113,15 @@ void WindowHandle::ProcessOnPaintMessageFromDC(HDC hsourcedc)
 	EndPaint(_hwnd, &ps);
 }
 
-void WindowHandle::Show()
+bool WindowHandle::ProcessMessages()
 {
 	SHOUJIN_ASSERT(_hwnd);
 	MSG msg;
 
 	while(_hwnd && ReadMessageAsync(msg))
 		TranslateAndDispatchMessage(msg);
+
+	return _hwnd;
 }
 
 void WindowHandle::ShowModal()
@@ -147,7 +162,10 @@ LRESULT CALLBACK WindowHandle::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam,
 		window_handle = reinterpret_cast<WindowHandle*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	if(window_handle)
-		return window_handle->OnWndProc({msg, wparam, lparam}) ? DefWindowProc(hwnd, msg, wparam, lparam) : 0;
+		if(window_handle->OnWndProc({msg, wparam, lparam}))
+			return DefWindowProc(hwnd, msg, wparam, lparam);
+		else
+			return 0; //The message was already processed by an override and DefWindowProc should not be called
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }

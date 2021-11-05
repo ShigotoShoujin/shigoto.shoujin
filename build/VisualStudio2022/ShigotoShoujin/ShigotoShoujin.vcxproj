@@ -181,6 +181,7 @@
     <ClInclude Include="..\..\..\src\gui\point.hpp" />
     <ClInclude Include="..\..\..\src\gui\size.hpp" />
     <ClInclude Include="..\..\..\src\gui\types.hpp" />
+    <ClInclude Include="..\..\..\src\gui\vector2d.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
     <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />

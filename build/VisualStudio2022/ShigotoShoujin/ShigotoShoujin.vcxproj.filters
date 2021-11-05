@@ -78,6 +78,9 @@
     <ClInclude Include="..\..\..\src\file\logfile.hpp">
       <Filter>src\file</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\vector2d.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
