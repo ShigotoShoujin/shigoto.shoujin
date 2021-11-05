@@ -24,7 +24,7 @@ public:
 		Assert::IsTrue(std::is_move_assignable_v<Bitmap>);
 	}
 
-	static void OnError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, bool& cancel, void* userdata)
+	static void OnError(const shoujin::assert::ErrorInfo& ei, bool& cancel, void* userdata)
 	{
 		cancel = true;
 		int* count = reinterpret_cast<int*>(userdata);

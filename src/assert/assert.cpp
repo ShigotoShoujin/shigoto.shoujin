@@ -1,6 +1,4 @@
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <any>
+#include "assert.hpp"
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -19,16 +17,16 @@ namespace shoujin::assert {
 
 bool _display_error_messagebox_;
 
-Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> OnErrorEvent;
+Event<const ErrorInfo&, bool&> OnErrorEvent;
 Event<tstring, bool&> OnErrorOutputEvent;
 Event<bool&> OnExitProcessEvent;
 
-static bool OnError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+static bool OnError(const ErrorInfo& ei)
 {
 	bool cancel = false;
 
 	if(OnErrorEvent)
-		OnErrorEvent(file, function, line, expression, cancel);
+		OnErrorEvent(ei, cancel);
 
 	return !cancel;
 }
@@ -62,43 +60,44 @@ static void OnExitProcess(UINT exit_code)
 		::ExitProcess(exit_code);
 }
 
-static tstring FormatError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression)
+static tstring FormatError(const ErrorInfo& ei)
 {
 	tstringstream ss;
-	std::filesystem::path path(file);
+	std::filesystem::path path(ei.file);
 
 	ss
 		<< TEXT("File: ") << path.filename() << std::endl
-		<< TEXT("Function: ") << function << std::endl
-		<< TEXT("Line: ") << line << std::endl
-		<< TEXT("Expression: ") << expression << std::endl;
+		<< TEXT("Function: ") << ei.function << std::endl
+		<< TEXT("Line: ") << ei.line << std::endl
+		<< TEXT("Expression: ") << ei.expression << std::endl;
 
 	return ss.str();
 }
-void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result)
+
+void Abort(const ErrorInfo& ei)
 {
-	if(!OnError(file, function, line, expression))
+	if(!OnError(ei))
 		return;
 
 	tstringstream ss;
-	ss << FormatError(file, function, line, expression);
+	ss << FormatError(ei);
 
 	if(OnErrorOutput(ss.str()))
 		OnExitProcess(1);
 }
 
-void AbortCLib(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result)
+void AbortCLib(const ErrorInfo& ei)
 {
-	if(!OnError(file, function, line, expression))
+	if(!OnError(ei))
 		return;
 
-	int errcode = std::any_cast<int>(result);
+	int errcode = std::any_cast<int>(ei.result);
 
 	tstringstream ss;
 	const int kMsgBufferSize = 0xff;
 	TCHAR msg_buffer[kMsgBufferSize];
 
-	ss << FormatError(file, function, line, expression);
+	ss << FormatError(ei);
 
 	if(errcode && !_tcserror_s(msg_buffer, kMsgBufferSize, errcode)) {
 		ss
@@ -110,17 +109,17 @@ void AbortCLib(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std
 		OnExitProcess(errcode ? errcode : 1);
 }
 
-void AbortStdErrorCode(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result)
+void AbortStdErrorCode(const ErrorInfo& ei)
 {
-	if(!OnError(file, function, line, expression))
+	if(!OnError(ei))
 		return;
 
-	auto error_code = std::any_cast<std::error_code>(result);
+	auto error_code = std::any_cast<std::error_code>(ei.result);
 
 	tstringstream ss;
 
 	ss
-		<< FormatError(file, function, line, expression)
+		<< FormatError(ei)
 		<< TEXT("std::error_code::value: ") << error_code.value() << std::endl
 		<< TEXT("std::error_code::message: ") << error_code.message().c_str() << std::endl;
 
@@ -128,9 +127,9 @@ void AbortStdErrorCode(LPCTSTR file, LPCTSTR function, int line, LPCTSTR express
 		OnExitProcess(error_code.value());
 }
 
-void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result)
+void AbortWin32(const ErrorInfo& ei)
 {
-	if(!OnError(file, function, line, expression))
+	if(!OnError(ei))
 		return;
 
 	tstringstream ss;
@@ -138,7 +137,7 @@ void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, st
 	LPTSTR msg_buffer;
 	DWORD size_in_tchar;
 
-	ss << FormatError(file, function, line, expression);
+	ss << FormatError(ei);
 
 	if(last_error && (size_in_tchar = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, last_error, 0, reinterpret_cast<LPTSTR>(&msg_buffer), 0, 0))) {
 		ss

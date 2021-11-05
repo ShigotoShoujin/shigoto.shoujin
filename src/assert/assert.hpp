@@ -11,14 +11,22 @@ namespace shoujin::assert {
 
 extern bool _display_error_messagebox_;
 
-extern Event<LPCTSTR, LPCTSTR, int, LPCTSTR, bool&> OnErrorEvent;
+struct ErrorInfo {
+	tstring_view file;
+	tstring_view function;
+	int line;
+	tstring_view expression;
+	std::any result;
+};
+
+extern Event<const ErrorInfo&, bool&> OnErrorEvent;
 extern Event<tstring, bool&> OnErrorOutputEvent;
 extern Event<bool&> OnExitProcessEvent;
 
-void Abort(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result);
-void AbortCLib(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result);
-void AbortStdErrorCode(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result);
-void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, std::any result);
+void Abort(const ErrorInfo& ei);
+void AbortCLib(const ErrorInfo& ei);
+void AbortStdErrorCode(const ErrorInfo& ei);
+void AbortWin32(const ErrorInfo& ei);
 
 }
 
@@ -35,7 +43,7 @@ void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, st
 	[&]() { \
 		auto result = expression; \
 		if(!result) \
-			abort_func(TEXT(__FILE__), TEXT(__FUNCTION__), __LINE__, TEXT(#expression), result); \
+			abort_func({TEXT(__FILE__), TEXT(__FUNCTION__), __LINE__, TEXT(#expression), result}); \
 		return result; \
 	}()
 
@@ -53,7 +61,7 @@ void AbortWin32(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, st
 	[&]() { \
 		auto result = expression; \
 		if(!(result_ok_func(result))) \
-			abort_func(TEXT(__FILE__), TEXT(__FUNCTION__), __LINE__, TEXT(#expression), result); \
+			abort_func({TEXT(__FILE__), TEXT(__FUNCTION__), __LINE__, TEXT(#expression), result}); \
 		return result; \
 	}()
 

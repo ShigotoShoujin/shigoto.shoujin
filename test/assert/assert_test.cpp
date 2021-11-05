@@ -4,6 +4,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <any>
 #include <shoujin/assert.hpp>
 
 using namespace shoujin;
@@ -15,6 +16,7 @@ TEST_CLASS(AssertTest) {
 			int callcount{};
 			bool cancel{};
 		} onerror, onerroroutput, onexitprocess;
+		ErrorInfo ei{};
 	};
 
 	static void UpdateEventData(TestData::EventData & event_data, bool& cancel)
@@ -25,9 +27,11 @@ TEST_CLASS(AssertTest) {
 		++event_data.callcount;
 	}
 
-	static void OnError(LPCTSTR file, LPCTSTR function, int line, LPCTSTR expression, bool& cancel, void* userdata)
+	static void OnError(const ErrorInfo& ei, bool& cancel, void* userdata)
 	{
-		UpdateEventData(reinterpret_cast<TestData*>(userdata)->onerror, cancel);
+		auto testdata = reinterpret_cast<TestData*>(userdata);
+		testdata->ei = ei;
+		UpdateEventData(testdata->onerror, cancel);
 	}
 
 	static void OnErrorOutput(tstring error_message, bool& cancel, void* userdata)
@@ -85,5 +89,21 @@ public:
 		Assert::AreEqual(1, testdata.onerror.callcount);
 		Assert::AreEqual(1, testdata.onerroroutput.callcount);
 		Assert::AreEqual(1, testdata.onexitprocess.callcount);
+	}
+
+	TEST_METHOD(Assert_OnErrorRaised_ParametersOk) {
+		TestData testdata{.onerror{.cancel = true}};
+		ErrorInfo& ei = testdata.ei;
+		OnErrorEvent = {OnError, &testdata};
+		const int kFailCode = 8;
+
+		auto line = __LINE__ + 1;
+		SHOUJIN_ASSERT_EXPLICIT(("This assertion will fail", kFailCode), [kFailCode](int ret_code) { return ret_code != kFailCode; });
+
+		Assert::IsTrue(ei.file.ends_with(TEXT("assert_test.cpp")));
+		Assert::IsTrue(ei.function.starts_with(TEXT("AssertTest::Assert_OnErrorRaised_ParametersOk::")));
+		Assert::IsTrue(line == ei.line);
+		Assert::IsTrue(ei.expression == TEXT("(\"This assertion will fail\", kFailCode)"));
+		Assert::IsTrue(any_cast<int>(ei.result) == kFailCode);
 	}
 };
