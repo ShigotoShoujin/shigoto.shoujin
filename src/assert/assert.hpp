@@ -1,11 +1,11 @@
 #pragma once
 
+#include "../event.hpp"
+#include "../tstring.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <any>
 #include <system_error>
-#include "../event.hpp"
-#include "../tstring.hpp"
 
 namespace shoujin::assert {
 

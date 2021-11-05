@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="root">
-      <UniqueIdentifier>{7e002c34-d0ec-4622-b5f1-97a1b54a1675}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include">
       <UniqueIdentifier>{cba969e1-f36a-46a9-bc54-9ea0231a815f}</UniqueIdentifier>
     </Filter>
@@ -54,10 +51,10 @@
     <ClInclude Include="..\..\..\include\shoujin\gui.hpp">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window.hpp">
+    <ClInclude Include="..\..\..\src\gui\window_handle.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window_layout.hpp">
+    <ClInclude Include="..\..\..\src\gui\window.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp">
@@ -83,23 +80,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\.clang-format">
-      <Filter>root</Filter>
-    </None>
-    <None Include="..\..\..\.gitignore">
-      <Filter>root</Filter>
-    </None>
-    <None Include="..\..\..\LICENSE">
-      <Filter>root</Filter>
-    </None>
-    <None Include="..\..\..\README.md">
-      <Filter>root</Filter>
-    </None>
-    <None Include="..\..\..\CONTRIBUTING.md">
-      <Filter>root</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
       <Filter>src\assert</Filter>
     </ClCompile>
@@ -109,10 +89,10 @@
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp">
       <Filter>src\assert</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\window.cpp">
+    <ClCompile Include="..\..\..\src\gui\window_handle.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\window_layout.cpp">
+    <ClCompile Include="..\..\..\src\gui\window.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\bitmap.cpp">

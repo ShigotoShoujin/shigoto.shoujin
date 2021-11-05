@@ -1,7 +1,7 @@
+#include "assert.hpp"
 #include "stream_to_file_redirector.hpp"
 #include <stdio.h>
 #include <tchar.h>
-#include "assert.hpp"
 
 namespace shoujin::assert {
 
@@ -20,7 +20,8 @@ StreamToFileRedirector& StreamToFileRedirector::operator=(StreamToFileRedirector
 	return *this;
 }
 
-StreamToFileRedirector::StreamToFileRedirector(FILE* stream_to_redirect, LPCTSTR output_file)
+StreamToFileRedirector::StreamToFileRedirector(FILE* stream_to_redirect, LPCTSTR output_file) :
+	_target_stream{}
 {
 	SHOUJIN_ASSERT_CLIB(_tfreopen_s(&_target_stream, output_file, TEXT("a"), stream_to_redirect));
 }

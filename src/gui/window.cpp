@@ -1,192 +1,120 @@
-#include "window.hpp"
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
 #include "../assert/assert.hpp"
-#include "../file/file.hpp"
-#include "../file/logfile.hpp"
-#include "message_string.hpp"
+#include "types.hpp"
+#include "window.hpp"
+
+static constexpr int kDefaultWindowSizeDivider = 3;
+
+using namespace shoujin::gui;
+
+static Size RectToSize(const RECT& rect);
+static Size GetWindowSize(HWND hwnd);
+static Size GetDefaultWindowSize(HWND hwnd);
+static Size GetClientSizeFromWindowSize(const Size& window_size, DWORD style, DWORD exstyle);
+static Size GetWindowSizeFromClientSize(const Size& window_size, DWORD style, DWORD exstyle);
+static Point GetCenteredPosition(const Size& window_size, HWND hparentwnd);
+static void AdjustSizes(Size& window_size, Size& client_size, DWORD style, DWORD exstyle);
 
 namespace shoujin::gui {
 
-Window::Window(Window&& rhs) noexcept :
-	_hwnd{rhs._hwnd},
-	_hparentwnd{rhs._hparentwnd}
+Window::Window(const CreateInfo& ci) :
+	_position{ci.position},
+	_window_size{ci.window_size},
+	_client_size{ci.client_size},
+	_style{ci.style ? ci.style : DefaultStyle},
+	_exstyle{ci.exstyle}
 {
-	rhs._hwnd = nullptr;
-	rhs._hparentwnd = nullptr;
-}
+	HWND hparentwnd = GetDesktopWindow();
 
-Window& Window::operator=(Window&& rhs) noexcept
-{
-	if(this != &rhs) {
-		_hwnd = rhs._hwnd;
-		_hparentwnd = rhs._hparentwnd;
-		rhs._hwnd = nullptr;
-		rhs._hparentwnd = nullptr;
-	}
-	return *this;
-}
+	if(!_window_size && !_client_size)
+		_window_size = GetDefaultWindowSize(hparentwnd);
 
-Window::Window() :
-	_hwnd{nullptr},
-	_hparentwnd{nullptr}
-{
-}
+	AdjustSizes(_window_size, _client_size, _style, _exstyle);
 
-Window::Window(const WindowLayout& layout, HWND hparentwnd) :
-	WindowLayout{layout},
-	_hwnd{nullptr},
-	_hparentwnd{hparentwnd}
-{
-}
-
-Window::~Window()
-{
-	if(_hwnd) {
-		DestroyWindow(_hwnd);
-		_hwnd = nullptr;
-	}
-}
-
-bool Window::ProcessMessages()
-{
-	SHOUJIN_ASSERT(_hwnd);
-	MSG msg;
-
-	while(_hwnd && PeekMessage(&msg, _hwnd, 0, 0, PM_REMOVE))
-		ProcessMessage(msg);
-
-	return _hwnd;
+	if(ci.create_mode == Window::CreateMode::Centered)
+		_position = GetCenteredPosition(_window_size, hparentwnd);
 }
 
 void Window::Show()
 {
-	if(!_hwnd)
-		CreateHandle();
+	if(!WindowHandle::hwnd())
+		WindowHandle::CreateHandle(*this);
 
-	ProcessMessages();
+	WindowHandle::Show();
 }
 
 void Window::ShowModal()
 {
-	MSG msg;
+	if(!WindowHandle::hwnd())
+		WindowHandle::CreateHandle(*this);
 
-	if(!_hwnd)
-		CreateHandle();
-
-	auto isok = [](auto r) { return r != -1 /*GetMessage returns -1 on error*/; };
-	while(_hwnd && SHOUJIN_ASSERT_WIN32_EXPLICIT(GetMessage(&msg, _hwnd, 0, 0), isok))
-#pragma warning(suppress : 6001) //Warning C6001 Using uninitialized memory - The anonymous lambda in SHOUJIN_ASSERT_WIN32 hides the fact that msg is initialized
-		ProcessMessage(msg);
+	WindowHandle::ShowModal();
 }
 
-bool Window::OnDispatchMessage(MSG& msg)
+void Window::Close()
 {
-	return true;
+	WindowHandle::Close();
 }
 
-bool Window::OnWndProc(const WindowMessage& message)
+}
+
+static Size RectToSize(const RECT& rect) { return {rect.right - rect.left, rect.bottom - rect.top}; }
+
+static Size GetWindowSize(HWND hwnd)
 {
-	switch(message.msg) {
-		case WM_DESTROY: {
-			_hwnd = nullptr;
-			return false;
-		}
-	}
-
-	return true;
+	RECT parent_rect;
+	SHOUJIN_ASSERT_WIN32(GetWindowRect(hwnd, &parent_rect));
+	return RectToSize(parent_rect);
 }
 
-void Window::ProcessOnPaintMessageFromDC(HDC hsourcedc)
+static Size GetDefaultWindowSize(HWND hwnd)
 {
-	PAINTSTRUCT ps;
-	BeginPaint(_hwnd, &ps);
-	int x = ps.rcPaint.left;
-	int y = ps.rcPaint.top;
-	int w = ps.rcPaint.right - x;
-	int h = ps.rcPaint.bottom - y;
-	BitBlt(ps.hdc, x, y, w, h, hsourcedc, x, y, SRCCOPY);
-	EndPaint(_hwnd, &ps);
+	Size size = GetWindowSize(hwnd);
+	size.x /= kDefaultWindowSizeDivider;
+	size.y /= kDefaultWindowSizeDivider;
+	return size;
 }
 
-void Window::CreateHandle()
+static Size GetClientSizeFromWindowSize(const Size& window_size, DWORD style, DWORD exstyle)
 {
-	const LPCTSTR CLASS_NAME = TEXT("ShoujinWindow");
-	HINSTANCE hinstance = GetModuleHandle(nullptr);
-	WNDCLASSEX wc;
-
-	if(!GetClassInfoEx(hinstance, CLASS_NAME, &wc)) {
-		wc.cbSize = sizeof(wc);
-		wc.style = CS_OWNDC;
-		wc.lpfnWndProc = WndProcStatic;
-		wc.cbClsExtra = 0;
-		wc.cbWndExtra = 0;
-		wc.hInstance = hinstance;
-		wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
-		wc.lpszMenuName = NULL;
-		wc.lpszClassName = CLASS_NAME;
-		wc.hIconSm = NULL;
-
-		SHOUJIN_ASSERT_WIN32(RegisterClassEx(&wc));
-	}
-
-	SHOUJIN_ASSERT(
-		CreateWindowEx(
-			WindowLayout::exstyle(),
-			CLASS_NAME,
-			CLASS_NAME,
-			WindowLayout::style(),
-			WindowLayout::position().x,
-			WindowLayout::position().y,
-			WindowLayout::window_size().x,
-			WindowLayout::window_size().y,
-			_hparentwnd,
-			nullptr,
-			hinstance,
-			this));
-
-	SHOUJIN_ASSERT(_hwnd);
-
-	ShowWindow(_hwnd, SW_SHOW);
-	SHOUJIN_ASSERT(UpdateWindow(_hwnd));
+	RECT rect{0, 0, window_size.x, window_size.y};
+	SHOUJIN_ASSERT_WIN32(AdjustWindowRectEx(&rect, style, 0, exstyle));
+	Size adjusted_size = RectToSize(rect);
+	return {
+		window_size.x - (adjusted_size.x - window_size.x),
+		window_size.y - (adjusted_size.y - window_size.y),
+	};
 }
 
-LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+static Size GetWindowSizeFromClientSize(const Size& client_size, DWORD style, DWORD exstyle)
 {
-	Window* instance;
-
-	if(!file::FileExists(file::LogFile::GetDebugFile()))
-		file::LogFile::AppendDebug(FormatWindowMessageHeader());
-
-	tstring msg_text = FormatWindowMessageLine(hwnd, msg, wparam, lparam);
-	file::LogFile::AppendDebug(msg_text);
-
-	if(msg == WM_NCCREATE) {
-		CREATESTRUCT& create_struct = *reinterpret_cast<LPCREATESTRUCT>(lparam);
-		instance = reinterpret_cast<Window*>(create_struct.lpCreateParams);
-		SHOUJIN_ASSERT(instance);
-
-		instance->_hwnd = hwnd;
-
-		SetLastError(0);
-		LONG_PTR previous_value = SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(instance));
-		SHOUJIN_ASSERT_WIN32(previous_value || !GetLastError());
-	} else
-		instance = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-
-	if(instance)
-		return instance->OnWndProc({msg, wparam, lparam}) ? DefWindowProc(hwnd, msg, wparam, lparam) : 0;
-
-	return DefWindowProc(hwnd, msg, wparam, lparam);
+	RECT rect{0, 0, client_size.x, client_size.y};
+	SHOUJIN_ASSERT_WIN32(AdjustWindowRectEx(&rect, style, 0, exstyle));
+	Size adjusted_size = RectToSize(rect);
+	return {adjusted_size.x, adjusted_size.y};
 }
 
-void Window::ProcessMessage(MSG msg)
+static Point GetCenteredPosition(const Size& window_size, HWND hparentwnd)
 {
-	TranslateMessage(&msg);
-	if(OnDispatchMessage(msg))
-		DispatchMessage(&msg);
+	RECT parent_rect;
+	SHOUJIN_ASSERT_WIN32(GetWindowRect(hparentwnd, &parent_rect));
+	Size parent_size = RectToSize(parent_rect);
+	return {
+		(parent_size.x - window_size.x) >> 1,
+		(parent_size.y - window_size.y) >> 1,
+	};
 }
 
+/// <summary>
+/// When window_size is specified, adjust client_size.
+/// Else when client_size is specified, adjust window_size.
+/// ASSERT if none are specified
+/// </summary>
+/// <param name="client_size">The size of the client area. Only used when window_size is not specified</param>
+/// <param name="window_size">The size of the window. Has priority over client_size</param>
+static void AdjustSizes(Size& window_size, Size& client_size, DWORD style, DWORD exstyle)
+{
+	if(!window_size)
+		window_size = GetWindowSizeFromClientSize(client_size, style, exstyle);
+	else
+		client_size = GetClientSizeFromWindowSize(window_size, style, exstyle);
 }

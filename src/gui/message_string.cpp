@@ -1,8 +1,6 @@
-#include "message_string.hpp"
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#include <map>
 #include "../tstring.hpp"
+#include "message_string.hpp"
+#include <map>
 
 static const std::map<int, LPCTSTR> _messages = {
 	{0x0000, TEXT("WM_NULL")},

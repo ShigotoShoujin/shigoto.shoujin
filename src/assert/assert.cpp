@@ -1,11 +1,11 @@
+#include "../event.hpp"
+#include "../file/file.hpp"
+#include "../tstring.hpp"
 #include "assert.hpp"
 #include <filesystem>
 #include <iostream>
 #include <string>
 #include <tchar.h>
-#include "../event.hpp"
-#include "../file/file.hpp"
-#include "../tstring.hpp"
 
 #ifdef UNICODE
 #define TCERR std::wcerr

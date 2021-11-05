@@ -1,7 +1,7 @@
+#include "../tstring.hpp"
 #include "logfile.hpp"
 #include <filesystem>
 #include <fstream>
-#include "../tstring.hpp"
 
 static void AppendToFile(std::filesystem::path file, shoujin::tstring text, bool newline = false)
 {
