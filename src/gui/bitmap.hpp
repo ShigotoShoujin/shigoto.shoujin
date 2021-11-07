@@ -38,3 +38,12 @@ public:
 };
 
 }
+//
+//
+//void Test()
+//{
+//	HDC _hdc;
+//	HBITMAP _hbitmap;
+//
+//	GetDIBits(_hdc, _hbitmap, 0, )
+//}

@@ -19,6 +19,12 @@
     <Filter Include="doc">
       <UniqueIdentifier>{8321acf7-d9e0-43f6-89ad-3c8450d326ef}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gui\common_control">
+      <UniqueIdentifier>{0da46b8e-c831-40c2-89a9-972f6d294586}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui\user_control">
+      <UniqueIdentifier>{706047fb-fde6-454b-be4c-ee374b86f218}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -81,6 +87,18 @@
     <ClInclude Include="..\..\..\src\gui\vector2d.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\user_control\color_picker.hpp">
+      <Filter>src\gui\user_control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\user_control\color_plane.hpp">
+      <Filter>src\gui\user_control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\common_control\control_handle.hpp">
+      <Filter>src\gui\common_control</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\common_control\button_control.hpp">
+      <Filter>src\gui\common_control</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
@@ -112,6 +130,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\file\logfile.cpp">
       <Filter>src\file</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\user_control\color_plane.cpp">
+      <Filter>src\gui\user_control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\user_control\color_picker.cpp">
+      <Filter>src\gui\user_control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\common_control\control_handle.cpp">
+      <Filter>src\gui\common_control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\common_control\button_control.cpp">
+      <Filter>src\gui\common_control</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

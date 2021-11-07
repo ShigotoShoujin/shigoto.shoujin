@@ -22,7 +22,7 @@ protected:
 	~WindowHandle();
 
 	void CreateHandle(const Window& window, HWND hwnd_parent);
-	void Reset();
+	void DestroyHandle();
 
 	[[nodiscard]] const HWND& hwnd() const { return _hwnd; }
 	[[nodiscard]] const HWND& hwnd_parent() const { return _hwnd_parent; }

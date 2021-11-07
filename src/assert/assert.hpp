@@ -9,7 +9,7 @@
 
 namespace shoujin::assert {
 
-extern bool _display_error_messagebox_;
+extern thread_local bool _display_error_messagebox_;
 
 struct ErrorInfo {
 	tstring_view file;

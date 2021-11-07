@@ -15,7 +15,7 @@ WindowHandle::WindowHandle() :
 
 WindowHandle::~WindowHandle()
 {
-	Reset();
+	DestroyHandle();
 }
 
 void WindowHandle::CreateHandle(const Window& window, HWND hwnd_parent)
@@ -55,10 +55,10 @@ void WindowHandle::CreateHandle(const Window& window, HWND hwnd_parent)
 			CLASS_NAME,
 			CLASS_NAME,
 			style,
-			window.position().x,
-			window.position().y,
-			window.window_size().x,
-			window.window_size().y,
+			window.left(),
+			window.top(),
+			window.window_width(),
+			window.window_height(),
 			_hwnd_parent,
 			nullptr,
 			hinstance,
@@ -70,7 +70,7 @@ void WindowHandle::CreateHandle(const Window& window, HWND hwnd_parent)
 	SHOUJIN_ASSERT(UpdateWindow(_hwnd));
 }
 
-void WindowHandle::Reset()
+void WindowHandle::DestroyHandle()
 {
 	if(_hwnd) {
 		DestroyWindow(_hwnd);
