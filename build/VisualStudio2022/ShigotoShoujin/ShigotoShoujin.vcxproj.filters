@@ -105,6 +105,9 @@
     <ClInclude Include="..\..\..\src\gui\rect.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\window_core.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
@@ -150,6 +153,9 @@
       <Filter>src\gui\common_control</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\layout.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\window_core.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>

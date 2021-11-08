@@ -12,7 +12,7 @@ ColorPicker::ColorPicker(Point position, Size window_size) :
 		},
 	}
 {
-	AddChild(new ColorPlane({}, {client_width() / 2, client_height()}));
+	AddChild(new ColorPlane({}, {client_size().x / 2, client_size().y}));
 }
 
 bool ColorPicker::OnCreate(const CREATESTRUCT& createinfo)
