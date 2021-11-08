@@ -20,7 +20,7 @@ struct Vector2d {
 	Vector2d(const SIZE& rhs) :
 		x{rhs.cx}, y{rhs.cy} {}
 
-	operator bool() const { return x != 0 || y != 0; }
+	operator bool() const { return x || y; }
 	operator POINT() const { return {x, y}; }
 	operator SIZE() const { return {x, y}; }
 

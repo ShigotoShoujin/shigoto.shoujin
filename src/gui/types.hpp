@@ -1,6 +1,8 @@
 #pragma once
 
 #include "color.hpp"
-#include "vector2d.hpp"
 #include "point.hpp"
+#include "rect.hpp"
 #include "size.hpp"
+#include "vector2d.hpp"
+

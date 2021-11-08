@@ -26,7 +26,7 @@ public:
 	}
 
 	TEST_METHOD(Window_CreateAndClose_NoAssertions) {
-		Window window{Window::CreateInfo{.create_mode = Window::CreateMode::Centered, .style = Window::DefaultStyle | WS_SIZEBOX}};
+		Window window{Window::LayoutInfo{.create_mode = Window::CreateMode::CenterParent, .style = Window::DefaultStyle | WS_SIZEBOX}};
 		window.Show();
 		window.Close();
 	}

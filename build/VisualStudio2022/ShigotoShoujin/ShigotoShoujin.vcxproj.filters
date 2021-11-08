@@ -99,6 +99,12 @@
     <ClInclude Include="..\..\..\src\gui\common_control\button_control.hpp">
       <Filter>src\gui\common_control</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\layout.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\rect.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
@@ -142,6 +148,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\common_control\button_control.cpp">
       <Filter>src\gui\common_control</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\layout.cpp">
+      <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

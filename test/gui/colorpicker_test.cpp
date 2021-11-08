@@ -32,7 +32,7 @@ public:
 
 	TEST_METHOD(ColorPicker_WIP) {
 		shoujin::assert::_display_error_messagebox_ = true;
-		Window window{Window::CreateInfo{.create_mode = Window::CreateMode::Centered, .style = Window::DefaultStyle | WS_SIZEBOX}};
+		Window window{Window::LayoutInfo{.create_mode = Window::CreateMode::CenterParent, .style = Window::DefaultStyle | WS_SIZEBOX}};
 
 		window.AddChild(new ColorPicker({}, window.client_size() / 2));
 

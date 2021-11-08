@@ -181,6 +181,7 @@
     <ClInclude Include="..\..\..\src\gui\common_control\control_handle.hpp" />
     <ClInclude Include="..\..\..\src\gui\message_string.hpp" />
     <ClInclude Include="..\..\..\src\gui\point.hpp" />
+    <ClInclude Include="..\..\..\src\gui\rect.hpp" />
     <ClInclude Include="..\..\..\src\gui\size.hpp" />
     <ClInclude Include="..\..\..\src\gui\types.hpp" />
     <ClInclude Include="..\..\..\src\gui\user_control\color_picker.hpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="..\..\..\src\gui\vector2d.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
     <ClInclude Include="..\..\..\src\gui\window.hpp" />
+    <ClInclude Include="..\..\..\src\gui\layout.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +207,7 @@
     <ClCompile Include="..\..\..\src\gui\user_control\color_plane.cpp" />
     <ClCompile Include="..\..\..\src\gui\window_handle.cpp" />
     <ClCompile Include="..\..\..\src\gui\window.cpp" />
+    <ClCompile Include="..\..\..\src\gui\layout.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

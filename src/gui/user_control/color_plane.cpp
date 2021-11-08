@@ -4,7 +4,7 @@ namespace shoujin::gui {
 
 ColorPlane::ColorPlane(Point position, Size window_size) :
 	Window{
-		CreateInfo{
+		LayoutInfo{
 			.position{position},
 			.window_size{window_size},
 			.exstyle{WS_EX_STATICEDGE},
