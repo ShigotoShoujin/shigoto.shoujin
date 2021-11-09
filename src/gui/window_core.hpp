@@ -1,5 +1,7 @@
 #pragma once
 #include "layout.hpp"
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 namespace shoujin::gui {
 
@@ -8,18 +10,24 @@ protected:
 	HWND _hwnd;
 	HWND _hwnd_parent;
 
-public:
 	struct WindowMessage {
 		UINT msg;
 		WPARAM wparam;
 		LPARAM lparam;
 	};
 
-	WindowCore();
+	WindowCore(const LayoutInfo& li = {});
+
+public:
+	WindowCore(const WindowCore&) = delete;
+	WindowCore& operator=(const WindowCore&) = delete;
+	WindowCore(WindowCore&&) noexcept;
+	WindowCore& operator=(WindowCore&&) noexcept;
+
 	virtual ~WindowCore();
 
-	[[nodiscard]] virtual bool hwnd() const { return _hwnd; }
-	[[nodiscard]] virtual bool hwnd_parent() const { return _hwnd_parent; }
+	[[nodiscard]] HWND hwnd() const { return _hwnd; }
+	[[nodiscard]] HWND hwnd_parent() const { return _hwnd_parent; }
 
 	virtual void CreateHandle(const Layout& layout, HWND hwnd_parent) = 0;
 	virtual void DestroyHandle();
@@ -29,9 +37,6 @@ public:
 	virtual bool OnDispatchMessage(const MSG& msg) { return true; }
 	virtual bool OnWndProc(const WindowMessage& message);
 	virtual void ProcessOnPaintUsingDC(HDC hsourcedc);
-
-private:
-	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 }

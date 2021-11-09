@@ -2,7 +2,6 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-#include <shoujin/assert.hpp>
 #include <shoujin/gui.hpp>
 
 using namespace shoujin::gui;
@@ -27,7 +26,7 @@ public:
 
 	TEST_METHOD(Window_CreateAndClose_NoAssertions) {
 		Window window{Window::LayoutInfo{.create_mode = Window::CreateMode::CenterParent, .style = Window::DefaultStyle | WS_SIZEBOX}};
-		window.Show();
+		window.ShowModal();
 		window.Close();
 	}
 };

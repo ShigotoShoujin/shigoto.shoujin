@@ -178,7 +178,6 @@
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\color.hpp" />
     <ClInclude Include="..\..\..\src\gui\common_control\button_control.hpp" />
-    <ClInclude Include="..\..\..\src\gui\common_control\control_handle.hpp" />
     <ClInclude Include="..\..\..\src\gui\message_string.hpp" />
     <ClInclude Include="..\..\..\src\gui\point.hpp" />
     <ClInclude Include="..\..\..\src\gui\rect.hpp" />
@@ -188,7 +187,6 @@
     <ClInclude Include="..\..\..\src\gui\user_control\color_plane.hpp" />
     <ClInclude Include="..\..\..\src\gui\vector2d.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_core.hpp" />
-    <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
     <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\gui\layout.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
@@ -202,12 +200,10 @@
     <ClCompile Include="..\..\..\src\gui\bitmap.cpp" />
     <ClCompile Include="..\..\..\src\gui\color.cpp" />
     <ClCompile Include="..\..\..\src\gui\common_control\button_control.cpp" />
-    <ClCompile Include="..\..\..\src\gui\common_control\control_handle.cpp" />
     <ClCompile Include="..\..\..\src\gui\message_string.cpp" />
     <ClCompile Include="..\..\..\src\gui\user_control\color_picker.cpp" />
     <ClCompile Include="..\..\..\src\gui\user_control\color_plane.cpp" />
     <ClCompile Include="..\..\..\src\gui\window_core.cpp" />
-    <ClCompile Include="..\..\..\src\gui\window_handle.cpp" />
     <ClCompile Include="..\..\..\src\gui\window.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout.cpp" />
   </ItemGroup>

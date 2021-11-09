@@ -27,7 +27,7 @@ bool ColorPicker::OnCreate(const CREATESTRUCT& createinfo)
 bool ColorPicker::OnPaint()
 {
 	if(_bitmap)
-		Window::ProcessOnPaintMessageFromDC(_bitmap->hdc());
+		Window::ProcessOnPaintUsingDC(_bitmap->hdc());
 	return false;
 }
 

@@ -23,7 +23,7 @@ bool ColorPlane::OnCreate(const CREATESTRUCT& createinfo)
 bool ColorPlane::OnPaint()
 {
 	if(_bitmap)
-		Window::ProcessOnPaintMessageFromDC(_bitmap->hdc());
+		Window::ProcessOnPaintUsingDC(_bitmap->hdc());
 	return false;
 }
 

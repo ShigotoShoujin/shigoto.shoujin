@@ -31,6 +31,7 @@
     <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\colorpicker_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\rect_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui\window_core.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

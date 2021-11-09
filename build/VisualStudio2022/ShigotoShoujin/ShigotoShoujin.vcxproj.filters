@@ -57,9 +57,6 @@
     <ClInclude Include="..\..\..\include\shoujin\gui.hpp">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window_handle.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\gui\window.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
@@ -93,9 +90,6 @@
     <ClInclude Include="..\..\..\src\gui\user_control\color_plane.hpp">
       <Filter>src\gui\user_control</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\common_control\control_handle.hpp">
-      <Filter>src\gui\common_control</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\gui\common_control\button_control.hpp">
       <Filter>src\gui\common_control</Filter>
     </ClInclude>
@@ -118,9 +112,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp">
       <Filter>src\assert</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\window_handle.cpp">
-      <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\window.cpp">
       <Filter>src\gui</Filter>
@@ -145,9 +136,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\user_control\color_picker.cpp">
       <Filter>src\gui\user_control</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\common_control\control_handle.cpp">
-      <Filter>src\gui\common_control</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\common_control\button_control.cpp">
       <Filter>src\gui\common_control</Filter>
