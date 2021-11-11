@@ -1,4 +1,3 @@
-#include "../tstring.hpp"
 #include "message_string.hpp"
 #include <map>
 
@@ -262,7 +261,7 @@ static const std::map<int, LPCTSTR> _messages = {
 	{0x038F, TEXT("WM_PENWINLAST")},
 };
 
-namespace shoujin::gui {
+namespace shoujin::gui::logging {
 
 LPCTSTR LookupWindowMessageText(UINT msg)
 {
@@ -280,7 +279,7 @@ tstring FormatWindowMessageText(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
 	tstringstream ss;
 	ss
 		<< TEXT("hwnd: ") << hwnd << std::endl
-		<< TEXT("id: ") << std::hex << TEXT("0x") << msg << std::dec << std::endl
+		<< TEXT("message_id: ") << std::hex << TEXT("0x") << msg << std::dec << std::endl
 		<< TEXT("wparam: ") << wparam << std::endl
 		<< TEXT("lparam: ") << lparam << std::endl
 		<< TEXT("message: ") << msg_name << std::endl;
@@ -290,7 +289,7 @@ tstring FormatWindowMessageText(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lpara
 
 tstring FormatWindowMessageHeader()
 {
-	return TEXT("hwnd\tid\twparam\tlparam\tmessage\r\n");
+	return TEXT("hwnd\tmessage_id\twparam\tlparam\tmessage\r\n");
 }
 
 tstring FormatWindowMessageLine(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

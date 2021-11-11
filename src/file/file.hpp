@@ -3,10 +3,11 @@
 
 namespace shoujin::file {
 
-tstring GetProcessFile();
+[[nodiscard]] tstring GetProcessFile();
 void FileDelete(tstring file);
-bool DirectoryExists(tstring path);
-bool FileExists(tstring file);
-bool TryFileDelete(tstring file);
+[[nodiscard]] bool DirectoryExists(tstring path);
+[[nodiscard]] bool FileExists(tstring file);
+[[nodiscard]] uintmax_t GetFileSize(tstring file);
+[[nodiscard]] bool TryFileDelete(tstring file);
 
 }

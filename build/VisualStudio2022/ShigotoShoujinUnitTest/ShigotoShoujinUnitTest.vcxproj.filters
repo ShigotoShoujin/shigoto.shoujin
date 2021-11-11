@@ -11,19 +11,19 @@
     <ClCompile Include="..\..\..\test\gui\window_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\file\file_test.cpp">
       <Filter>file</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\gui\colorpicker_test.cpp">
+    <ClCompile Include="..\..\..\test\gui\window_handle_test.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\modal_comctrl32.cpp">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\gui\rect_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\gui\window_core.cpp">
+    <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
   </ItemGroup>

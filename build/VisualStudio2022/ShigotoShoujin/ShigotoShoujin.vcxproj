@@ -177,18 +177,16 @@
     <ClInclude Include="..\..\..\src\file\logfile.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\color.hpp" />
-    <ClInclude Include="..\..\..\src\gui\common_control\button_control.hpp" />
-    <ClInclude Include="..\..\..\src\gui\message_string.hpp" />
+    <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp" />
+    <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp" />
     <ClInclude Include="..\..\..\src\gui\point.hpp" />
     <ClInclude Include="..\..\..\src\gui\rect.hpp" />
     <ClInclude Include="..\..\..\src\gui\size.hpp" />
     <ClInclude Include="..\..\..\src\gui\types.hpp" />
-    <ClInclude Include="..\..\..\src\gui\user_control\color_picker.hpp" />
-    <ClInclude Include="..\..\..\src\gui\user_control\color_plane.hpp" />
     <ClInclude Include="..\..\..\src\gui\vector2d.hpp" />
-    <ClInclude Include="..\..\..\src\gui\window_core.hpp" />
-    <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\gui\layout.hpp" />
+    <ClInclude Include="..\..\..\src\gui\window.hpp" />
+    <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -199,13 +197,10 @@
     <ClCompile Include="..\..\..\src\file\logfile.cpp" />
     <ClCompile Include="..\..\..\src\gui\bitmap.cpp" />
     <ClCompile Include="..\..\..\src\gui\color.cpp" />
-    <ClCompile Include="..\..\..\src\gui\common_control\button_control.cpp" />
-    <ClCompile Include="..\..\..\src\gui\message_string.cpp" />
-    <ClCompile Include="..\..\..\src\gui\user_control\color_picker.cpp" />
-    <ClCompile Include="..\..\..\src\gui\user_control\color_plane.cpp" />
-    <ClCompile Include="..\..\..\src\gui\window_core.cpp" />
-    <ClCompile Include="..\..\..\src\gui\window.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout.cpp" />
+    <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp" />
+    <ClCompile Include="..\..\..\src\gui\logging\message_string.cpp" />
+    <ClCompile Include="..\..\..\src\gui\window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

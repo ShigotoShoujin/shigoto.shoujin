@@ -19,11 +19,8 @@
     <Filter Include="doc">
       <UniqueIdentifier>{8321acf7-d9e0-43f6-89ad-3c8450d326ef}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\gui\common_control">
-      <UniqueIdentifier>{0da46b8e-c831-40c2-89a9-972f6d294586}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\gui\user_control">
-      <UniqueIdentifier>{706047fb-fde6-454b-be4c-ee374b86f218}</UniqueIdentifier>
+    <Filter Include="src\gui\logging">
+      <UniqueIdentifier>{3381b635-786e-4846-87ad-b4ded2945c8e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,9 +54,6 @@
     <ClInclude Include="..\..\..\include\shoujin\gui.hpp">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
@@ -75,23 +69,11 @@
     <ClInclude Include="..\..\..\src\gui\color.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\message_string.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\file\logfile.hpp">
       <Filter>src\file</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\gui\vector2d.hpp">
       <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\user_control\color_picker.hpp">
-      <Filter>src\gui\user_control</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\user_control\color_plane.hpp">
-      <Filter>src\gui\user_control</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\common_control\button_control.hpp">
-      <Filter>src\gui\common_control</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\gui\layout.hpp">
       <Filter>src\gui</Filter>
@@ -99,8 +81,17 @@
     <ClInclude Include="..\..\..\src\gui\rect.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window_core.hpp">
+    <ClInclude Include="..\..\..\src\gui\window.hpp">
       <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\window_handle.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp">
+      <Filter>src\gui\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp">
+      <Filter>src\gui\logging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -113,9 +104,6 @@
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp">
       <Filter>src\assert</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\window.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\gui\bitmap.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
@@ -125,26 +113,20 @@
     <ClCompile Include="..\..\..\src\gui\color.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\message_string.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\file\logfile.cpp">
       <Filter>src\file</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\user_control\color_plane.cpp">
-      <Filter>src\gui\user_control</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\user_control\color_picker.cpp">
-      <Filter>src\gui\user_control</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\common_control\button_control.cpp">
-      <Filter>src\gui\common_control</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\layout.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\window_core.cpp">
+    <ClCompile Include="..\..\..\src\gui\window.cpp">
       <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\logging\message_string.cpp">
+      <Filter>src\gui\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp">
+      <Filter>src\gui\logging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

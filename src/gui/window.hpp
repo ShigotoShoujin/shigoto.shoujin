@@ -1,35 +1,55 @@
 #pragma once
-#include "window_core.hpp"
+#include "../event.hpp"
+#include "layout.hpp"
+#include "window_handle.hpp"
 #include <memory>
-#include <vector>
 
 namespace shoujin::gui {
 
-class Window : public WindowCore {
-	HWND _hwnd;
-	HWND _hwnd_parent;
-	std::vector<std::unique_ptr<WindowCore>> _childs;
+class Window : public Layout {
+	std::unique_ptr<WindowHandle> _handle;
 
 public:
-	Window(const LayoutInfo& li = {});
+	struct WindowMessage {
+		UINT msg;
+		WPARAM wparam;
+		LPARAM lparam;
+	};
 
-	Window(const Window&) = delete;
-	Window& operator=(const Window&) = delete;
-	Window(Window&&) noexcept = default;
-	Window& operator=(Window&&) noexcept = default;
+	explicit Window(const LayoutParam& = {});
+	Window(const Window&);
+	Window& operator=(const Window&);
+	Window(Window&&) = default;
+	Window& operator=(Window&&) = default;
+	virtual ~Window() = default;
 
-	virtual void AddChild(WindowCore* child);
-	virtual bool ProcessMessages();
-	virtual void Close();
-	virtual void Show();
-	virtual void ShowModal();
+	[[nodiscard]] const WindowHandle* handle() const { return _handle.get(); }
+	bool ProcessMessageQueue();
+	void Show();
+	void ShowModal();
+
+	Event<const Window&, const CREATESTRUCT&> OnCreateEvent;
+
+protected:
+	static const bool kMsgHandled;
+	static const bool kMsgNotHandled;
+
+	struct CreateParam {
+		LPCTSTR classname;
+	};
+
+	void CreateHandle(const WindowHandle* parent = nullptr);
+
+	virtual CreateParam OnCreateParam();
+	virtual bool OnDispatchMessage(const MSG& msg);
+	virtual bool OnWndProc(const WindowMessage& message);
+	virtual bool OnCreate(const CREATESTRUCT& createparam);
 
 private:
-	virtual void CreateHandle(const Layout& layout, HWND hwnd_parent = nullptr) final override;
+	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	bool ReadMessage(MSG& msg);
 	bool ReadMessageAsync(MSG& msg);
 	void TranslateAndDispatchMessage(const MSG& msg);
-	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 }

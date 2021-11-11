@@ -17,6 +17,7 @@ public:
 	static void AppendLineDebug(tstring text)
 	{}
 #else
+	/// <returns>%temp%\shoujin.log</returns>
 	static tstring GetDebugFile();
 	static void AppendDebug(tstring text);
 	static void AppendLineDebug(tstring text);

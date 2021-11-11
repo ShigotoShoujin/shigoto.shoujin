@@ -1,67 +1,73 @@
 #include "../assert/assert.hpp"
-#include "../file/file.hpp"
-#include "../file/logfile.hpp"
-#include "message_string.hpp"
+#include "logging/message_logger.hpp"
 #include "window.hpp"
 
-using namespace shoujin::gui;
+template<typename T> static T GetWindowPtr(HWND hWnd, int nIndex);
+static LONG_PTR SetWindowPtr(HWND hWnd, int nIndex, auto dwNewLong);
 
 namespace shoujin::gui {
 
-Window::Window(const LayoutInfo& li) :
-	WindowCore{li}
+Window::Window(const LayoutParam& lp) :
+	Layout{lp}
 {
 }
 
-void Window::AddChild(WindowCore* child)
+Window::Window(const Window& rhs) :
+	Layout{rhs}
 {
-	SHOUJIN_ASSERT(child);
-	_childs.emplace_back(child);
+	//TODO See if the default copy ctor is enough
 }
 
-bool Window::ProcessMessages()
+Window& Window::operator=(const Window& rhs)
 {
-	SHOUJIN_ASSERT(_hwnd);
+	//TODO See if the default copy assignment operator is enough
+
+	if(this != &rhs) {
+		// TODO Trace this
+		Layout::Layout(rhs);
+	}
+
+	return *this;
+}
+
+bool Window::ProcessMessageQueue()
+{
+	SHOUJIN_ASSERT(!!_handle);
+
 	MSG msg;
-
-	while(_hwnd && ReadMessageAsync(msg))
+	while(_handle && ReadMessageAsync(msg))
 		TranslateAndDispatchMessage(msg);
 
-	return _hwnd;
-}
-
-void Window::Close()
-{
-	SHOUJIN_ASSERT(_hwnd);
-	SendMessage(_hwnd, WM_CLOSE, 0, 0);
+	return !!_handle;
 }
 
 void Window::Show()
 {
-	if(!_hwnd)
-		CreateHandle(*this);
+	if(!_handle)
+		CreateHandle();
 
-	ProcessMessages();
+	ShowWindow(*_handle, SW_SHOW);
+	SHOUJIN_ASSERT(UpdateWindow(*_handle));
+
+	ProcessMessageQueue();
 }
 
 void Window::ShowModal()
 {
-	if(!_hwnd)
-		CreateHandle(*this);
+	Show();
 
-	SHOUJIN_ASSERT(_hwnd);
 	MSG msg;
-	while(_hwnd && ReadMessage(msg))
+	while(_handle && ReadMessage(msg))
 		TranslateAndDispatchMessage(msg);
 }
 
-void Window::CreateHandle(const Layout& layout, HWND hwnd_parent)
+void Window::CreateHandle(const WindowHandle* parent)
 {
-	const LPCTSTR CLASS_NAME = TEXT("ShoujinWindow");
+	CreateParam cp = OnCreateParam();
 	HINSTANCE hinstance = GetModuleHandle(nullptr);
 	WNDCLASSEX wc;
 
-	if(!GetClassInfoEx(hinstance, CLASS_NAME, &wc)) {
+	if(!GetClassInfoEx(hinstance, cp.classname, &wc)) {
 		wc.cbSize = sizeof(wc);
 		wc.style = CS_OWNDC;
 		wc.lpfnWndProc = WndProcStatic;
@@ -72,53 +78,96 @@ void Window::CreateHandle(const Layout& layout, HWND hwnd_parent)
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
 		wc.lpszMenuName = NULL;
-		wc.lpszClassName = CLASS_NAME;
+		wc.lpszClassName = cp.classname;
 		wc.hIconSm = NULL;
 
 		SHOUJIN_ASSERT_WIN32(RegisterClassEx(&wc));
 	}
 
-	_hwnd_parent = hwnd_parent;
-
-	DWORD style = layout.style();
-	if(_hwnd_parent)
+	DWORD style = Layout::style();
+	if(parent)
 		style |= WS_CHILD;
 	else if(!style)
 		style = Window::DefaultStyle;
 
-	SHOUJIN_ASSERT(
-		CreateWindowEx(
-			layout.exstyle(),
-			CLASS_NAME,
-			CLASS_NAME,
-			style,
-			layout.position().x,
-			layout.position().y,
-			layout.window_size().x,
-			layout.window_size().y,
-			_hwnd_parent,
-			nullptr,
-			hinstance,
-			this));
+	auto pos = position();
+	auto size = window_size();
+	auto hwnd_parent = parent ? parent->hwnd() : nullptr;
+	HWND hwnd = SHOUJIN_ASSERT(CreateWindowEx(exstyle(), cp.classname, cp.classname, style, pos.x, pos.y, size.x, size.y, hwnd_parent, nullptr, hinstance, this));
 
-	SHOUJIN_ASSERT(_hwnd);
+	//TODO Do we have a comctrl32 ?
+	SHOUJIN_ASSERT(hwnd && _handle);
+}
 
-	ShowWindow(_hwnd, SW_SHOW);
-	SHOUJIN_ASSERT(UpdateWindow(_hwnd));
+Window::CreateParam Window::OnCreateParam()
+{
+	return {.classname = TEXT("ShoujinWindow")};
+}
 
-	for(auto& child : _childs)
-		child->CreateHandle(*this, _hwnd);
+bool Window::OnDispatchMessage(const MSG& msg)
+{
+	return true;
+}
+
+bool Window::OnWndProc(const WindowMessage& message)
+{
+	switch(message.msg) {
+		case WM_CREATE: {
+			auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
+			bool handled = OnCreate(createparam);
+			OnCreateEvent(*this, createparam);
+			return handled;
+		}
+		case WM_DESTROY:
+			_handle.release();
+			return kMsgHandled;
+	}
+
+	return kMsgNotHandled;
+}
+
+bool Window::OnCreate(const CREATESTRUCT& createparam)
+{
+	return kMsgNotHandled;
+}
+
+LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	Window* self;
+
+	logging::LogMessage(hwnd, msg, wparam, lparam);
+
+	if(msg == WM_NCCREATE)
+	{
+		CREATESTRUCT& createparam = *reinterpret_cast<LPCREATESTRUCT>(lparam);
+		self = SHOUJIN_ASSERT(reinterpret_cast<Window*>(createparam.lpCreateParams));
+		self->_handle = std::make_unique<WindowHandle>(hwnd);
+
+		SetWindowPtr(hwnd, GWLP_USERDATA, self);
+	}
+	else
+		self = GetWindowPtr<Window*>(hwnd, GWLP_USERDATA);
+
+	if(self)
+		if(self->OnWndProc({msg, wparam, lparam}))
+			return DefWindowProc(hwnd, msg, wparam, lparam);
+		else
+			return kMsgHandled;
+
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 bool Window::ReadMessage(MSG& msg)
 {
+	SHOUJIN_ASSERT(!!_handle);
 	auto isok = [](auto result) { return result != -1; }; // GetMessage returns -1 on error
-	return SHOUJIN_ASSERT_WIN32_EXPLICIT(GetMessage(&msg, _hwnd, 0, 0), isok);
+	return SHOUJIN_ASSERT_WIN32_EXPLICIT(GetMessage(&msg, *_handle, 0, 0), isok);
 }
 
 bool Window::ReadMessageAsync(MSG& msg)
 {
-	return PeekMessage(&msg, _hwnd, 0, 0, PM_REMOVE);
+	SHOUJIN_ASSERT(!!_handle);
+	return PeekMessage(&msg, *_handle, 0, 0, PM_REMOVE);
 }
 
 void Window::TranslateAndDispatchMessage(const MSG& msg)
@@ -128,34 +177,20 @@ void Window::TranslateAndDispatchMessage(const MSG& msg)
 		DispatchMessage(&msg);
 }
 
-LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
-{
-	Window* self;
+const bool Window::kMsgHandled = false;
+const bool Window::kMsgNotHandled = true;
 
-	if(!file::FileExists(file::LogFile::GetDebugFile()))
-		file::LogFile::AppendDebug(FormatWindowMessageHeader());
-
-	tstring msg_text = FormatWindowMessageLine(hwnd, msg, wparam, lparam);
-	file::LogFile::AppendDebug(msg_text);
-
-	if(msg == WM_NCCREATE) {
-		CREATESTRUCT& create_struct = *reinterpret_cast<LPCREATESTRUCT>(lparam);
-		self = SHOUJIN_ASSERT(reinterpret_cast<Window*>(create_struct.lpCreateParams));
-		self->_hwnd = hwnd;
-
-		SetLastError(0);
-		LONG_PTR previous_value = SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(self));
-		SHOUJIN_ASSERT_WIN32(previous_value || !GetLastError());
-	} else
-		self = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
-
-	if(self)
-		if(self->OnWndProc({msg, wparam, lparam}))
-			return DefWindowProc(hwnd, msg, wparam, lparam);
-		else
-			return 0; //The message was already processed by an override and DefWindowProc should not be called
-
-	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
+template<typename T> static T GetWindowPtr<T>(HWND hWnd, int nIndex)
+{
+	return reinterpret_cast<T>(GetWindowLongPtr(hWnd, nIndex));
+}
+
+static LONG_PTR SetWindowPtr(HWND hWnd, int nIndex, auto dwNewLong)
+{
+	SetLastError(0);
+	LONG_PTR previous_value = SetWindowLongPtr(hWnd, nIndex, reinterpret_cast<LONG_PTR>(dwNewLong));
+	SHOUJIN_ASSERT_WIN32(previous_value || !GetLastError());
+	return previous_value;
 }

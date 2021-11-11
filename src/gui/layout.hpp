@@ -5,6 +5,21 @@
 
 namespace shoujin::gui {
 
+enum class LayoutMode {
+	Default,
+	CenterParent,
+	FillParent
+};
+
+struct LayoutParam {
+	LayoutMode create_mode{};
+	Point position{};
+	Size window_size{};
+	Size client_size{};
+	DWORD style{};
+	DWORD exstyle{};
+};
+
 class Layout {
 	Point _position;
 	Size _window_size;
@@ -15,22 +30,7 @@ class Layout {
 public:
 	static constexpr DWORD DefaultStyle = WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
 
-	enum class CreateMode {
-		Default,
-		CenterParent,
-		FillParent
-	};
-
-	struct LayoutInfo {
-		CreateMode create_mode{};
-		Point position{};
-		Size window_size{};
-		Size client_size{};
-		DWORD style{};
-		DWORD exstyle{};
-	};
-
-	Layout(const LayoutInfo& li = {});
+	Layout(const LayoutParam& = {});
 
 	[[nodiscard]] const Point& position() const { return _position; }
 	[[nodiscard]] const Size& window_size() const { return _window_size; }

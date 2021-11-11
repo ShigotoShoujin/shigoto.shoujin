@@ -90,6 +90,7 @@ public:
 		Bitmap moved(std::move(source));
 
 		//Assert
+#pragma warning(suppress : 26800)
 		Assert::IsNull(source.hdc());
 		Assert::IsTrue(Size{0, 0} == source.size());
 
@@ -106,6 +107,7 @@ public:
 		second = std::move(first);
 
 		//Assert
+#pragma warning(suppress : 26800)
 		Assert::IsNull(first.hdc());
 		Assert::IsTrue(Size{0, 0} == first.size());
 

@@ -15,12 +15,12 @@ static void AdjustSizes(Size& window_size, Size& client_size, DWORD style, DWORD
 
 namespace shoujin::gui {
 
-Layout::Layout(const LayoutInfo& li) :
-	_position{li.position},
-	_window_size{li.window_size},
-	_client_size{li.client_size},
-	_style{li.style},
-	_exstyle{li.exstyle}
+Layout::Layout(const LayoutParam& lp) :
+	_position{lp.position},
+	_window_size{lp.window_size},
+	_client_size{lp.client_size},
+	_style{lp.style},
+	_exstyle{lp.exstyle}
 {
 	HWND hparentwnd = GetDesktopWindow();
 
@@ -29,7 +29,7 @@ Layout::Layout(const LayoutInfo& li) :
 
 	AdjustSizes(_window_size, _client_size, _style, _exstyle);
 
-	if(li.create_mode == Layout::CreateMode::CenterParent)
+	if(lp.create_mode == LayoutMode::CenterParent)
 		_position = GetCenteredPosition(_window_size, hparentwnd);
 }
 
