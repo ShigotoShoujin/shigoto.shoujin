@@ -34,14 +34,16 @@ Window::Window(const Window& rhs) :
 
 Window& Window::operator=(const Window& rhs)
 {
-	//TODO Add a test for this function
+	if(this == &rhs)
+		return *this;
 
-	if(this != &rhs) {
-		Layout::Layout(rhs);
-		_default_wndproc = rhs._default_wndproc;
-		_taborder = rhs._taborder;
-		CopyChilds(rhs);
-	}
+	Destroy();
+
+	Layout::operator=(rhs);
+	_default_wndproc = rhs._default_wndproc;
+	_taborder = rhs._taborder;
+
+	CopyChilds(rhs);
 
 	return *this;
 }
@@ -66,6 +68,18 @@ void Window::AddChild(Window* child)
 {
 	SHOUJIN_ASSERT(child);
 	_child_vec.emplace_back(child);
+}
+
+void Window::Close()
+{
+	if(_handle)
+		SendMessage(*_handle, WM_CLOSE, 0, 0);
+}
+
+void Window::Destroy()
+{
+	if(_handle)
+		PostMessage(*_handle, WM_DESTROY, 0, 0);
 }
 
 bool Window::ProcessMessageQueue()
@@ -118,6 +132,8 @@ void Window::CreateHandle(const WindowHandle* parent)
 		child->CreateHandle(_handle.get());
 		_window_group->AddWindow(&*child, child->_taborder);
 	}
+
+	SetFocus();
 }
 
 Window::CreateParam Window::OnCreateParam()
@@ -157,11 +173,17 @@ bool Window::OnCreate(const CREATESTRUCT& createparam)
 	return kMsgNotHandled;
 }
 
+Window* Window::Clone() const
+{
+	return new Window(*this);
+}
+
 void Window::CopyChilds(const Window& rhs)
 {
 	_child_vec.reserve(rhs._child_vec.size());
 	for(auto& child : rhs._child_vec) {
-		_child_vec.emplace_back(new Window(*child));
+		auto clone = child->Clone();
+		_child_vec.emplace_back(clone);
 	}
 }
 
@@ -206,6 +228,7 @@ void Window::ConstructWindow(const WindowHandle* parent)
 	}
 
 	SHOUJIN_ASSERT(hwnd && _handle);
+	Layout::UpdateFromHandle(hwnd);
 }
 
 LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

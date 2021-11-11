@@ -39,6 +39,8 @@ public:
 	static Window* FindWindowByHandle(HWND hwnd);
 
 	void AddChild(Window* child);
+	void Close();
+	void Destroy();
 	bool ProcessMessageQueue();
 	void SetFocus();
 	void Show();
@@ -60,6 +62,7 @@ protected:
 	virtual bool OnCreate(const CREATESTRUCT& createparam);
 
 private:
+	virtual Window* Clone() const;
 	void CopyChilds(const Window& rhs);
 	void ConstructWindow(const WindowHandle* parent);
 	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);

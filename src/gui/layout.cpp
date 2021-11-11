@@ -30,8 +30,45 @@ Layout::Layout(const LayoutParam& lp) :
 
 	AdjustSizes(_window_size, _client_size, _style, _exstyle);
 
-	if(lp.create_mode == LayoutMode::CenterParent)
+	if(lp.layout_mode == LayoutMode::CenterParent)
 		_position = GetCenteredPosition(_window_size, hparentwnd);
+}
+
+void Layout::set_position(const Point& position)
+{
+}
+
+void Layout::set_size(const Size& window_size, const Size& client_size)
+{
+}
+
+void Layout::set_style(DWORD style)
+{
+}
+
+void Layout::set_exstyle(DWORD exstyle)
+{
+}
+
+void Layout::UpdateFromHandle(HWND hwnd)
+{
+	RECT rect;
+
+	SHOUJIN_ASSERT_WIN32(::GetWindowRect(hwnd, &rect));
+	_position.x = rect.left;
+	_position.y = rect.right;
+	_window_size = RectToSize(rect);
+
+	SHOUJIN_ASSERT_WIN32(::GetClientRect(hwnd, &rect));
+	_client_size = RectToSize(rect);
+
+	auto gwlp = [&hwnd](int index) {
+		auto longptr = GetWindowLongPtr(hwnd, index);
+		return *reinterpret_cast<DWORD*>(&longptr);
+	};
+
+	_style = gwlp(GWL_STYLE);
+	_exstyle = gwlp(GWL_EXSTYLE);
 }
 
 }

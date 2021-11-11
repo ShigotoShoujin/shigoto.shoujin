@@ -12,7 +12,7 @@ enum class LayoutMode {
 };
 
 struct LayoutParam {
-	LayoutMode create_mode{};
+	LayoutMode layout_mode{};
 	Point position{};
 	Size window_size{};
 	Size client_size{};
@@ -40,6 +40,13 @@ public:
 	[[nodiscard]] const DWORD& style() const { return _style; }
 	[[nodiscard]] const DWORD& exstyle() const { return _exstyle; }
 	[[nodiscard]] const bool& tabstop() const { return _tabstop; }
+
+	void set_position(const Point& position);
+	void set_size(const Size& window_size, const Size& client_size);
+	void set_style(DWORD style);
+	void set_exstyle(DWORD exstyle);
+
+	void UpdateFromHandle(HWND hwnd);
 };
 
 }

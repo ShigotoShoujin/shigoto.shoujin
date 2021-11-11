@@ -22,6 +22,9 @@
     <Filter Include="src\gui\logging">
       <UniqueIdentifier>{3381b635-786e-4846-87ad-b4ded2945c8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gui\comctl32">
+      <UniqueIdentifier>{0eccf6fe-9310-4968-8e11-37bf8a5bfcbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -99,6 +102,9 @@
     <ClInclude Include="..\..\..\src\gui\window_group.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
@@ -136,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\window_group.cpp">
       <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp">
+      <Filter>src\gui\comctl32</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -10,7 +10,7 @@ class Window;
 class WindowGroup {
 public:
 	std::multimap<int, Window*> _taborder_map;
-	int _taborder_max;
+	int _taborder_max{};
 
 public:
 	void AddWindow(Window* window, int& out_taborder);
