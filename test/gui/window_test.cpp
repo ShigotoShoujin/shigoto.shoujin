@@ -8,7 +8,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace shoujin;
 using namespace shoujin::gui;
 
-static void OnCreateSendCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata);
+static bool OnCreateSendCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata);
 static bool OnErrorOutput(tstring message, void* userdata);
 
 TEST_CLASS(WindowTest) {
@@ -63,10 +63,11 @@ public:
 	}
 };
 
-static void OnCreateSendCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata)
+static bool OnCreateSendCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata)
 {
 	SHOUJIN_ASSERT(window.handle());
 	PostMessage(window.handle()->hwnd(), WM_CLOSE, 0, 0);
+	return Window::kMsgNotHandled;
 }
 
 static bool OnErrorOutput(tstring message, void* userdata)

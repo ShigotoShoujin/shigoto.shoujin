@@ -114,9 +114,7 @@ bool Window::OnWndProc(const WindowMessage& message)
 	switch(message.msg) {
 		case WM_CREATE: {
 			auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
-			bool handled = OnCreate(createparam);
-			OnCreateEvent(*this, createparam);
-			return handled;
+			return OnCreate(createparam) && OnCreateEvent(*this, createparam);
 		}
 		case WM_DESTROY:
 			_handle.release();

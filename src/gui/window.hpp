@@ -10,6 +10,9 @@ class Window : public Layout {
 	std::unique_ptr<WindowHandle> _handle;
 
 public:
+	static const bool kMsgHandled;
+	static const bool kMsgNotHandled;
+
 	struct WindowMessage {
 		UINT msg;
 		WPARAM wparam;
@@ -28,12 +31,9 @@ public:
 	void Show();
 	void ShowModal();
 
-	Event<void, const Window&, const CREATESTRUCT&> OnCreateEvent;
+	Event<bool, const Window&, const CREATESTRUCT&> OnCreateEvent;
 
 protected:
-	static const bool kMsgHandled;
-	static const bool kMsgNotHandled;
-
 	struct CreateParam {
 		LPCTSTR classname;
 	};
