@@ -8,7 +8,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace shoujin;
 using namespace shoujin::gui;
 
-static bool OnCreateSendCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata);
+static bool OnCreatePostCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata);
 static bool OnErrorOutput(tstring message, void* userdata);
 
 TEST_CLASS(WindowTest) {
@@ -49,7 +49,7 @@ public:
 
 	TEST_METHOD(Window_ShowModal_NoAssertions) {
 		Window window{LayoutParam{.create_mode = LayoutMode::CenterParent}};
-		window.OnCreateEvent = OnCreateSendCloseMsg;
+		window.OnCreateEvent = OnCreatePostCloseMsg;
 
 		window.ShowModal();
 	}
@@ -61,9 +61,36 @@ public:
 		while(window.ProcessMessageQueue())
 			PostMessage(*window.handle(), WM_CLOSE, 0, 0);
 	}
+
+	TEST_METHOD(Window_CopyConstructor_CopiedWithoutHandle) {
+		Window window{};
+
+		Window copied(window);
+
+		Assert::IsNull(copied.handle());
+	}
+
+	TEST_METHOD(Window_AddChild_ShowModal_NoAssertions) {
+		Window window{};
+		window.OnCreateEvent = OnCreatePostCloseMsg;
+
+		window.AddChild(new Window(LayoutParam{.window_size = window.window_size() / 2, .exstyle = WS_EX_STATICEDGE}));
+		window.ShowModal();
+	}
+
+	TEST_METHOD(Window_AddChild_CopyConstructor_ShowModal_NoAssertions) {
+		Window window{};
+		window.AddChild(new Window(LayoutParam{.window_size = window.window_size() / 2, .exstyle = WS_EX_STATICEDGE}));
+		Window copied(window);
+		window.OnCreateEvent = OnCreatePostCloseMsg;
+		copied.OnCreateEvent = OnCreatePostCloseMsg;
+
+		window.ShowModal();
+		copied.ShowModal();
+	}
 };
 
-static bool OnCreateSendCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata)
+static bool OnCreatePostCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata)
 {
 	SHOUJIN_ASSERT(window.handle());
 	PostMessage(window.handle()->hwnd(), WM_CLOSE, 0, 0);

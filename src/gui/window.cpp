@@ -15,7 +15,10 @@ Window::Window(const LayoutParam& lp) :
 Window::Window(const Window& rhs) :
 	Layout{rhs}
 {
-	//TODO See if the default copy ctor is enough
+	_childs.reserve(rhs._childs.size());
+	for(auto& child : rhs._childs) {
+		_childs.emplace_back(new Window(*child));
+	}
 }
 
 Window& Window::operator=(const Window& rhs)
@@ -61,6 +64,12 @@ void Window::ShowModal()
 		TranslateAndDispatchMessage(msg);
 }
 
+void Window::AddChild(Window* child)
+{
+	SHOUJIN_ASSERT(child);
+	_childs.emplace_back(child);
+}
+
 void Window::CreateHandle(const WindowHandle* parent)
 {
 	CreateParam cp = OnCreateParam();
@@ -86,7 +95,7 @@ void Window::CreateHandle(const WindowHandle* parent)
 
 	DWORD style = Layout::style();
 	if(parent)
-		style |= WS_CHILD;
+		style |= WS_CHILD | WS_VISIBLE;
 	else if(!style)
 		style = Window::DefaultStyle;
 
@@ -97,6 +106,9 @@ void Window::CreateHandle(const WindowHandle* parent)
 
 	//TODO Do we have a comctrl32 ?
 	SHOUJIN_ASSERT(hwnd && _handle);
+
+	for(auto& child : _childs)
+		child->CreateHandle(_handle.get());
 }
 
 Window::CreateParam Window::OnCreateParam()
@@ -139,7 +151,7 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 	{
 		CREATESTRUCT& createparam = *reinterpret_cast<LPCREATESTRUCT>(lparam);
 		self = SHOUJIN_ASSERT(reinterpret_cast<Window*>(createparam.lpCreateParams));
-		self->_handle = std::make_unique<WindowHandle>(hwnd);
+		self->_handle = std::make_unique<WindowHandle>(hwnd, createparam.hwndParent);
 
 		SetWindowPtr(hwnd, GWLP_USERDATA, self);
 	}

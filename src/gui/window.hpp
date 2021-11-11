@@ -3,11 +3,13 @@
 #include "layout.hpp"
 #include "window_handle.hpp"
 #include <memory>
+#include <vector>
 
 namespace shoujin::gui {
 
 class Window : public Layout {
 	std::unique_ptr<WindowHandle> _handle;
+	std::vector<std::unique_ptr<Window>> _childs;
 
 public:
 	static const bool kMsgHandled;
@@ -30,6 +32,7 @@ public:
 	bool ProcessMessageQueue();
 	void Show();
 	void ShowModal();
+	void AddChild(Window* child);
 
 	Event<bool, const Window&, const CREATESTRUCT&> OnCreateEvent;
 

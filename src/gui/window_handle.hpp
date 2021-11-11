@@ -7,7 +7,7 @@ namespace shoujin::gui {
 
 class WindowHandle {
 	HWND _hwnd;
-	const WindowHandle* _parent;
+	HWND _parent;
 
 public:
 	WindowHandle(HWND hwnd) :
@@ -15,7 +15,7 @@ public:
 		_parent{nullptr}
 	{}
 
-	WindowHandle(HWND hwnd, WindowHandle* parent) :
+	WindowHandle(HWND hwnd, HWND parent) :
 		_hwnd{hwnd},
 		_parent{parent}
 	{}
@@ -30,7 +30,7 @@ public:
 	}
 
 	[[nodiscard]] const HWND& hwnd() const { return _hwnd; }
-	[[nodiscard]] const WindowHandle* parent() const { return _parent; }
+	[[nodiscard]] const HWND& parent() const { return _parent; }
 
 	operator HWND() const { return _hwnd; }
 };
