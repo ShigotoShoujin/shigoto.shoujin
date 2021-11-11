@@ -19,9 +19,12 @@ struct ErrorInfo {
 	std::any result;
 };
 
-extern Event<void, const ErrorInfo&, bool&> OnErrorEvent;
-extern Event<void, tstring, bool&> OnErrorOutputEvent;
-extern Event<void, bool&> OnExitProcessEvent;
+/// <summary>Return true to abort the event or false to continue</summary>
+extern Event<bool, const ErrorInfo&> OnErrorEvent;
+/// <summary>Return true to abort the event or false to continue</summary>
+extern Event<bool, tstring> OnErrorOutputEvent;
+/// <summary>Return true to abort the event or false to continue</summary>
+extern Event<bool> OnExitProcessEvent;
 
 void Abort(const ErrorInfo& ei);
 void AbortCLib(const ErrorInfo& ei);

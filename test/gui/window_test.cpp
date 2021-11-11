@@ -9,7 +9,7 @@ using namespace shoujin;
 using namespace shoujin::gui;
 
 static void OnCreateSendCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata);
-static void OnErrorOutput(tstring message, bool& cancel, void* userdata);
+static bool OnErrorOutput(tstring message, void* userdata);
 
 TEST_CLASS(WindowTest) {
 public:
@@ -69,7 +69,7 @@ static void OnCreateSendCloseMsg(const Window& window, const CREATESTRUCT& creat
 	PostMessage(window.handle()->hwnd(), WM_CLOSE, 0, 0);
 }
 
-static void OnErrorOutput(tstring message, bool& cancel, void* userdata)
+static bool OnErrorOutput(tstring message, void* userdata)
 {
 	Logger::WriteMessage(message.c_str());
 	throw message;

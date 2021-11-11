@@ -19,29 +19,28 @@ TEST_CLASS(AssertTest) {
 		ErrorInfo ei{};
 	};
 
-	static void UpdateEventData(TestData::EventData & event_data, bool& cancel)
+	static bool UpdateEventData(TestData::EventData & event_data)
 	{
-		if(event_data.cancel)
-			cancel = true;
-
 		++event_data.callcount;
+
+		return event_data.cancel;
 	}
 
-	static void OnError(const ErrorInfo& ei, bool& cancel, void* userdata)
+	static bool OnError(const ErrorInfo& ei, void* userdata)
 	{
 		auto testdata = reinterpret_cast<TestData*>(userdata);
 		testdata->ei = ei;
-		UpdateEventData(testdata->onerror, cancel);
+		return UpdateEventData(testdata->onerror);
 	}
 
-	static void OnErrorOutput(tstring error_message, bool& cancel, void* userdata)
+	static bool OnErrorOutput(tstring error_message, void* userdata)
 	{
-		UpdateEventData(reinterpret_cast<TestData*>(userdata)->onerroroutput, cancel);
+		return UpdateEventData(reinterpret_cast<TestData*>(userdata)->onerroroutput);
 	}
 
-	static void OnExitProcess(bool& cancel, void* userdata)
+	static bool OnExitProcess(void* userdata)
 	{
-		UpdateEventData(reinterpret_cast<TestData*>(userdata)->onexitprocess, cancel);
+		return UpdateEventData(reinterpret_cast<TestData*>(userdata)->onexitprocess);
 	}
 
 public:

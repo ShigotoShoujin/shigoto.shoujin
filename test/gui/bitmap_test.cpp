@@ -24,11 +24,11 @@ public:
 		Assert::IsTrue(std::is_move_assignable_v<Bitmap>);
 	}
 
-	static void OnError(const shoujin::assert::ErrorInfo& ei, bool& cancel, void* userdata)
+	static bool OnError(const shoujin::assert::ErrorInfo& ei, void* userdata)
 	{
-		cancel = true;
 		int* count = reinterpret_cast<int*>(userdata);
 		++*count;
+		return true;
 	}
 
 	TEST_METHOD(BitmapTest_CreateWithSizeZero_Assert) {

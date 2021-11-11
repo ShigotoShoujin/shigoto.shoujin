@@ -15,11 +15,11 @@ using namespace shoujin::file;
 
 TEST_CLASS(FileTest) {
 public:
-	static void OnExitProcess(bool& cancel, void* userdata)
+	static bool OnExitProcess(void* userdata)
 	{
 		int* exit_process_call_count = reinterpret_cast<int*>(userdata);
-		cancel = true;
 		++*exit_process_call_count;
+		return true;
 	}
 
 	TEST_CLASS_CLEANUP(TestClassCleanup)

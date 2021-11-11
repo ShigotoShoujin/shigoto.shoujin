@@ -17,18 +17,13 @@ namespace shoujin::assert {
 
 thread_local bool _activate_assert_messagebox_;
 
-Event<void, const ErrorInfo&, bool&> OnErrorEvent;
-Event<void, tstring, bool&> OnErrorOutputEvent;
-Event<void, bool&> OnExitProcessEvent;
+Event<bool, const ErrorInfo&> OnErrorEvent;
+Event<bool, tstring> OnErrorOutputEvent;
+Event<bool> OnExitProcessEvent;
 
 static bool OnError(const ErrorInfo& ei)
 {
-	bool cancel = false;
-
-	if(OnErrorEvent)
-		OnErrorEvent(ei, cancel);
-
-	return !cancel;
+	return OnErrorEvent(ei);
 }
 
 static bool OnErrorOutput(tstring error_message)
@@ -36,7 +31,7 @@ static bool OnErrorOutput(tstring error_message)
 	bool cancel = false;
 
 	if(OnErrorOutputEvent)
-		OnErrorOutputEvent(error_message, cancel);
+		cancel = OnErrorOutputEvent(error_message);
 
 	if(!cancel) {
 		TCERR << error_message;
@@ -46,7 +41,7 @@ static bool OnErrorOutput(tstring error_message)
 		}
 	}
 
-	return !cancel;
+	return cancel;
 }
 
 static void OnExitProcess(UINT exit_code)
@@ -54,7 +49,7 @@ static void OnExitProcess(UINT exit_code)
 	bool cancel = false;
 
 	if(OnExitProcessEvent)
-		OnExitProcessEvent(cancel);
+		cancel = OnExitProcessEvent();
 
 	if(!cancel)
 		::ExitProcess(exit_code);
@@ -76,19 +71,19 @@ static tstring FormatError(const ErrorInfo& ei)
 
 void Abort(const ErrorInfo& ei)
 {
-	if(!OnError(ei))
+	if(OnError(ei))
 		return;
 
 	tstringstream ss;
 	ss << FormatError(ei);
 
-	if(OnErrorOutput(ss.str()))
+	if(!OnErrorOutput(ss.str()))
 		OnExitProcess(1);
 }
 
 void AbortCLib(const ErrorInfo& ei)
 {
-	if(!OnError(ei))
+	if(OnError(ei))
 		return;
 
 	int errcode = std::any_cast<int>(ei.result);
@@ -105,13 +100,13 @@ void AbortCLib(const ErrorInfo& ei)
 			<< TEXT("CLib error message: ") << msg_buffer << std::endl;
 	}
 
-	if(OnErrorOutput(ss.str()))
+	if(!OnErrorOutput(ss.str()))
 		OnExitProcess(errcode ? errcode : 1);
 }
 
 void AbortStdErrorCode(const ErrorInfo& ei)
 {
-	if(!OnError(ei))
+	if(OnError(ei))
 		return;
 
 	auto error_code = std::any_cast<std::error_code>(ei.result);
@@ -123,13 +118,13 @@ void AbortStdErrorCode(const ErrorInfo& ei)
 		<< TEXT("std::error_code::value: ") << error_code.value() << std::endl
 		<< TEXT("std::error_code::message: ") << error_code.message().c_str() << std::endl;
 
-	if(OnErrorOutput(ss.str()))
+	if(!OnErrorOutput(ss.str()))
 		OnExitProcess(error_code.value());
 }
 
 void AbortWin32(const ErrorInfo& ei)
 {
-	if(!OnError(ei))
+	if(OnError(ei))
 		return;
 
 	tstringstream ss;
@@ -146,7 +141,7 @@ void AbortWin32(const ErrorInfo& ei)
 		LocalFree(msg_buffer);
 	}
 
-	if(OnErrorOutput(ss.str()))
+	if(!OnErrorOutput(ss.str()))
 		OnExitProcess(last_error ? last_error : 1);
 }
 
