@@ -93,6 +93,9 @@
     <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp">
       <Filter>src\gui\logging</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\concepts.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">

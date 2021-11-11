@@ -31,19 +31,20 @@ TEST_CLASS(EventTest) {
 
 public:
 	TEST_METHOD(Event_IsCopyConstructible) {
-		Assert::IsTrue(std::is_copy_constructible_v<Event<void*>>);
+
+		Assert::IsTrue(std::is_copy_constructible_v<Event<>>);
 	}
 
 	TEST_METHOD(Event_IsCopyAssignable) {
-		Assert::IsTrue(std::is_copy_assignable_v<Event<void*>>);
+		Assert::IsTrue(std::is_copy_assignable_v<Event<>>);
 	}
 
 	TEST_METHOD(Event_IsMoveConstructible) {
-		Assert::IsTrue(std::is_move_constructible_v<Event<void*>>);
+		Assert::IsTrue(std::is_move_constructible_v<Event<>>);
 	}
 
 	TEST_METHOD(Event_IsMoveAssignable) {
-		Assert::IsTrue(std::is_move_assignable_v<Event<void*>>);
+		Assert::IsTrue(std::is_move_assignable_v<Event<>>);
 	}
 
 	TEST_METHOD(Event_VoidParam_EventRaised) {
@@ -112,3 +113,75 @@ public:
 		Assert::AreEqual(x * y, userdata.mul_result);
 	}
 };
+//
+//
+//
+//template<typename TResult = void, typename... TArguments>
+//requires fundamental<TResult>
+//class Event2 {
+//	using TFunc = TResult (*)(TArguments..., void* userdata);
+//	TFunc _func;
+//	void* _userdata;
+//
+//public:
+//	Event2();
+//	Event2(TFunc func, void* userdata = nullptr);
+//	Event2& operator=(const Event2& rhs);
+//	~Event2();
+//
+//	TResult operator()(TArguments... args) const;
+//	operator bool() const;
+//};
+//
+//template<typename TResult, typename... TArguments>
+//requires fundamental<TResult>
+//Event2<TResult, TArguments...>::Event2() :
+//	_func{},
+//	_userdata{}
+//{}
+//
+//template<typename TResult, typename... TArguments>
+//Event2<TResult, TArguments...>::Event2(TFunc func, void* userdata) :
+//	_func{func},
+//	_userdata{userdata}
+//{}
+//
+//template<typename TResult, typename... TArguments>
+//Event2<TResult, TArguments...>& Event2<TResult, TArguments...>::operator=(const Event2<TResult, TArguments...>& rhs)
+//{
+//	_func = rhs._func;
+//	_userdata = rhs._userdata;
+//	return *this;
+//}
+//
+//template<typename TResult, typename... TArguments>
+//Event2<TResult, TArguments...>::~Event2()
+//{
+//	_func = nullptr;
+//	_userdata = nullptr;
+//}
+//
+//template<typename TResult, typename... TArguments>
+//TResult Event2<TResult, TArguments...>::operator()(TArguments... args) const
+//{
+//	if(_func)
+//		if constexpr(std::is_void_v<TResult>)
+//			_func(args..., _userdata);
+//		else
+//			return _func(args..., _userdata);
+//	else if constexpr(!std::is_void_v<TResult>)
+//		return TResult{};
+//}
+//
+//template<typename TResult, typename... TArguments>
+//Event2<TResult, TArguments...>::operator bool() const
+//{
+//	return _func != nullptr;
+//}
+//
+//void Test()
+//{
+//	//Event2<> e2;
+//	//Event2<void, int> e3;
+//	//Event2<bool, int> e4;
+//}
