@@ -19,30 +19,53 @@ namespace shoujin::gui {
 
 Window::Window(const LayoutParam& lp) :
 	Layout{lp},
-	_default_wndproc{nullptr}
+	_default_wndproc{nullptr},
+	_taborder{}
 {
 }
 
 Window::Window(const Window& rhs) :
 	Layout{rhs},
-	_default_wndproc{nullptr}
+	_default_wndproc{nullptr},
+	_taborder{}
 {
-	_childs.reserve(rhs._childs.size());
-	for(auto& child : rhs._childs) {
-		_childs.emplace_back(new Window(*child));
-	}
+	CopyChilds(rhs);
 }
 
 Window& Window::operator=(const Window& rhs)
 {
-	// TODO Finish this func
+	//TODO Add a test for this function
 
 	if(this != &rhs) {
-		// TODO Trace this
 		Layout::Layout(rhs);
+		_default_wndproc = rhs._default_wndproc;
+		_taborder = rhs._taborder;
+		CopyChilds(rhs);
 	}
 
 	return *this;
+}
+
+/// <summary>
+/// Return null when the specified hwnd is not found or not in the same instance
+/// </summary>
+Window* Window::FindWindowByHandle(HWND hwnd)
+{
+	HINSTANCE hinstance = SHOUJIN_ASSERT_WIN32(GetModuleHandle(nullptr));
+	HINSTANCE hwnd_hinstance = SHOUJIN_ASSERT(GetWindowPtr<HINSTANCE>(hwnd, GWLP_HINSTANCE));
+
+	if(hinstance != hwnd_hinstance)
+		return nullptr;
+
+	Window* window = SHOUJIN_ASSERT(GetWindowPtr<Window*>(hwnd, GWLP_USERDATA));
+
+	return window;
+}
+
+void Window::AddChild(Window* child)
+{
+	SHOUJIN_ASSERT(child);
+	_child_vec.emplace_back(child);
 }
 
 bool Window::ProcessMessageQueue()
@@ -54,6 +77,16 @@ bool Window::ProcessMessageQueue()
 		TranslateAndDispatchMessage(msg);
 
 	return !!_handle;
+}
+
+/// <summary>
+/// If the window has childs, set focus to the first.
+/// Else set focus to itself.
+/// </summary>
+void Window::SetFocus()
+{
+	HWND hwnd = _child_vec.size() ? *_child_vec[0]->_handle : *_handle;
+	SHOUJIN_ASSERT_WIN32(::SetFocus(hwnd));
 }
 
 void Window::Show()
@@ -76,16 +109,66 @@ void Window::ShowModal()
 		TranslateAndDispatchMessage(msg);
 }
 
-void Window::AddChild(Window* child)
-{
-	SHOUJIN_ASSERT(child);
-	_childs.emplace_back(child);
-}
-
 void Window::CreateHandle(const WindowHandle* parent)
 {
+	ConstructWindow(parent);
+	_window_group = std::make_unique<WindowGroup>();
+
+	for(auto& child : _child_vec) {
+		child->CreateHandle(_handle.get());
+		_window_group->AddWindow(&*child, child->_taborder);
+	}
+}
+
+Window::CreateParam Window::OnCreateParam()
+{
+	return {.classname = TEXT("ShoujinWindow")};
+}
+
+bool Window::OnDispatchMessage(const MSG& msg)
+{
+	if(msg.message == WM_KEYDOWN && msg.wParam == VK_TAB) {
+		bool cycle_up = GetAsyncKeyState(VK_SHIFT);
+		_window_group->CycleTab(cycle_up);
+		return kMsgHandled;
+	}
+
+	return kMsgNotHandled;
+}
+
+bool Window::OnWndProc(const WindowMessage& message)
+{
+	switch(message.msg) {
+		case WM_CREATE: {
+			auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
+			return OnCreate(createparam) && OnCreateEvent(*this, createparam);
+		}
+		case WM_DESTROY:
+			_handle.release();
+			_window_group.release();
+			return kMsgHandled;
+	}
+
+	return kMsgNotHandled;
+}
+
+bool Window::OnCreate(const CREATESTRUCT& createparam)
+{
+	return kMsgNotHandled;
+}
+
+void Window::CopyChilds(const Window& rhs)
+{
+	_child_vec.reserve(rhs._child_vec.size());
+	for(auto& child : rhs._child_vec) {
+		_child_vec.emplace_back(new Window(*child));
+	}
+}
+
+void Window::ConstructWindow(const WindowHandle* parent)
+{
 	CreateParam cp = OnCreateParam();
-	HINSTANCE hinstance = GetModuleHandle(nullptr);
+	HINSTANCE hinstance = SHOUJIN_ASSERT_WIN32(GetModuleHandle(nullptr));
 	WNDCLASSEX wc;
 
 	if(!cp.need_subclassing && !GetClassInfoEx(hinstance, cp.classname, &wc)) {
@@ -123,39 +206,6 @@ void Window::CreateHandle(const WindowHandle* parent)
 	}
 
 	SHOUJIN_ASSERT(hwnd && _handle);
-
-	for(auto& child : _childs)
-		child->CreateHandle(_handle.get());
-}
-
-Window::CreateParam Window::OnCreateParam()
-{
-	return {.classname = TEXT("ShoujinWindow")};
-}
-
-bool Window::OnDispatchMessage(const MSG& msg)
-{
-	return true;
-}
-
-bool Window::OnWndProc(const WindowMessage& message)
-{
-	switch(message.msg) {
-		case WM_CREATE: {
-			auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
-			return OnCreate(createparam) && OnCreateEvent(*this, createparam);
-		}
-		case WM_DESTROY:
-			_handle.release();
-			return kMsgHandled;
-	}
-
-	return kMsgNotHandled;
-}
-
-bool Window::OnCreate(const CREATESTRUCT& createparam)
-{
-	return kMsgNotHandled;
 }
 
 LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

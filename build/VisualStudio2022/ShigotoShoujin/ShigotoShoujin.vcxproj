@@ -178,6 +178,7 @@
     <ClInclude Include="..\..\..\src\file\logfile.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\color.hpp" />
+    <ClInclude Include="..\..\..\src\gui\window_group.hpp" />
     <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp" />
     <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp" />
     <ClInclude Include="..\..\..\src\gui\point.hpp" />
@@ -198,6 +199,7 @@
     <ClCompile Include="..\..\..\src\file\logfile.cpp" />
     <ClCompile Include="..\..\..\src\gui\bitmap.cpp" />
     <ClCompile Include="..\..\..\src\gui\color.cpp" />
+    <ClCompile Include="..\..\..\src\gui\window_group.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout.cpp" />
     <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp" />
     <ClCompile Include="..\..\..\src\gui\logging\message_string.cpp" />

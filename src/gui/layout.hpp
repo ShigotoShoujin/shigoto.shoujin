@@ -18,6 +18,7 @@ struct LayoutParam {
 	Size client_size{};
 	DWORD style{};
 	DWORD exstyle{};
+	bool tabstop{true};
 };
 
 class Layout {
@@ -26,6 +27,7 @@ class Layout {
 	Size _client_size;
 	DWORD _style;
 	DWORD _exstyle;
+	bool _tabstop;
 
 public:
 	static constexpr DWORD DefaultStyle = WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
@@ -37,6 +39,7 @@ public:
 	[[nodiscard]] const Size& client_size() const { return _client_size; }
 	[[nodiscard]] const DWORD& style() const { return _style; }
 	[[nodiscard]] const DWORD& exstyle() const { return _exstyle; }
+	[[nodiscard]] const bool& tabstop() const { return _tabstop; }
 };
 
 }

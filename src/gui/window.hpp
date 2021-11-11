@@ -1,7 +1,9 @@
 #pragma once
+#pragma once
 #include "../event.hpp"
 #include "layout.hpp"
 #include "window_handle.hpp"
+#include "window_group.hpp"
 #include <memory>
 #include <vector>
 
@@ -9,8 +11,10 @@ namespace shoujin::gui {
 
 class Window : public Layout {
 	WNDPROC _default_wndproc;
+	int _taborder;
 	std::unique_ptr<WindowHandle> _handle;
-	std::vector<std::unique_ptr<Window>> _childs;
+	std::vector<std::unique_ptr<Window>> _child_vec;
+	std::unique_ptr<WindowGroup> _window_group;
 
 public:
 	static const bool kMsgHandled;
@@ -30,10 +34,15 @@ public:
 	virtual ~Window() = default;
 
 	[[nodiscard]] const WindowHandle* handle() const { return _handle.get(); }
+	[[nodiscard]] const int& taborder() const { return _taborder; }
+
+	static Window* FindWindowByHandle(HWND hwnd);
+
+	void AddChild(Window* child);
 	bool ProcessMessageQueue();
+	void SetFocus();
 	void Show();
 	void ShowModal();
-	void AddChild(Window* child);
 
 	Event<bool, const Window&, const CREATESTRUCT&> OnCreateEvent;
 
@@ -51,6 +60,8 @@ protected:
 	virtual bool OnCreate(const CREATESTRUCT& createparam);
 
 private:
+	void CopyChilds(const Window& rhs);
+	void ConstructWindow(const WindowHandle* parent);
 	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	static LRESULT CALLBACK WndProcSubclassStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	bool ReadMessage(MSG& msg);

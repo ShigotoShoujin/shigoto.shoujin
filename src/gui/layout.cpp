@@ -20,7 +20,8 @@ Layout::Layout(const LayoutParam& lp) :
 	_window_size{lp.window_size},
 	_client_size{lp.client_size},
 	_style{lp.style},
-	_exstyle{lp.exstyle}
+	_exstyle{lp.exstyle},
+	_tabstop{lp.tabstop}
 {
 	HWND hparentwnd = GetDesktopWindow();
 

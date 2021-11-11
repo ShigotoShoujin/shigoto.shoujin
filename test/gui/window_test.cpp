@@ -97,12 +97,11 @@ public:
 				if(!lp.window_size && !lp.client_size)
 					client_size = Size{256, 16};
 
-				return LayoutParam{
-					.position = lp.position,
-					.window_size = lp.window_size,
-					.client_size = client_size,
-					.style = lp.style,
-					.exstyle = WS_EX_CLIENTEDGE};
+				LayoutParam layout = lp;
+				layout.client_size = client_size;
+				layout.exstyle = WS_EX_CLIENTEDGE;
+
+				return layout;
 			}
 
 		public:
@@ -121,8 +120,11 @@ public:
 		//window.OnCreateEvent = OnCreatePostCloseMsg;
 
 		window.AddChild(new EditControl(LayoutParam{.position{11, 11}}));
-		window.AddChild(new EditControl(LayoutParam{.position{11, 42}}));
+		window.AddChild(new EditControl(LayoutParam{.position{11, 42}, .tabstop{false}}));
 		window.AddChild(new EditControl(LayoutParam{.position{11, 73}}));
+		window.AddChild(new EditControl(LayoutParam{.position{11, 106}}));
+		window.AddChild(new EditControl(LayoutParam{.position{11, 139}}));
+
 		window.ShowModal();
 	}
 };

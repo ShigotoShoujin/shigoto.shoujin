@@ -96,6 +96,9 @@
     <ClInclude Include="..\..\..\src\concepts.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\window_group.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
@@ -130,6 +133,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp">
       <Filter>src\gui\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\window_group.cpp">
+      <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
