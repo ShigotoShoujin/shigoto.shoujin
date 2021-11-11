@@ -2,18 +2,30 @@
 #include "logging/message_logger.hpp"
 #include "window.hpp"
 
-template<typename T> static T GetWindowPtr(HWND hWnd, int nIndex);
-static LONG_PTR SetWindowPtr(HWND hWnd, int nIndex, auto dwNewLong);
+template<typename T> static T GetWindowPtr(HWND hwnd, int index)
+{
+	return reinterpret_cast<T>(GetWindowLongPtr(hwnd, index));
+}
+
+static auto SetWindowPtr(HWND hwnd, int index, auto new_value) -> decltype(new_value)
+{
+	SetLastError(0);
+	LONG_PTR previous_value = SetWindowLongPtr(hwnd, index, reinterpret_cast<LONG_PTR>(new_value));
+	SHOUJIN_ASSERT_WIN32(previous_value || !GetLastError());
+	return reinterpret_cast<decltype(new_value)>(previous_value);
+}
 
 namespace shoujin::gui {
 
 Window::Window(const LayoutParam& lp) :
-	Layout{lp}
+	Layout{lp},
+	_default_wndproc{nullptr}
 {
 }
 
 Window::Window(const Window& rhs) :
-	Layout{rhs}
+	Layout{rhs},
+	_default_wndproc{nullptr}
 {
 	_childs.reserve(rhs._childs.size());
 	for(auto& child : rhs._childs) {
@@ -23,7 +35,7 @@ Window::Window(const Window& rhs) :
 
 Window& Window::operator=(const Window& rhs)
 {
-	//TODO See if the default copy assignment operator is enough
+	// TODO Finish this func
 
 	if(this != &rhs) {
 		// TODO Trace this
@@ -76,7 +88,7 @@ void Window::CreateHandle(const WindowHandle* parent)
 	HINSTANCE hinstance = GetModuleHandle(nullptr);
 	WNDCLASSEX wc;
 
-	if(!GetClassInfoEx(hinstance, cp.classname, &wc)) {
+	if(!cp.need_subclassing && !GetClassInfoEx(hinstance, cp.classname, &wc)) {
 		wc.cbSize = sizeof(wc);
 		wc.style = CS_OWNDC;
 		wc.lpfnWndProc = WndProcStatic;
@@ -104,7 +116,12 @@ void Window::CreateHandle(const WindowHandle* parent)
 	auto hwnd_parent = parent ? parent->hwnd() : nullptr;
 	HWND hwnd = SHOUJIN_ASSERT(CreateWindowEx(exstyle(), cp.classname, cp.classname, style, pos.x, pos.y, size.x, size.y, hwnd_parent, nullptr, hinstance, this));
 
-	//TODO Do we have a comctrl32 ?
+	if(cp.need_subclassing) {
+		_handle = std::make_unique<WindowHandle>(hwnd, hwnd_parent);
+		SetWindowPtr(hwnd, GWLP_USERDATA, this);
+		_default_wndproc = SetWindowPtr(hwnd, GWLP_WNDPROC, WndProcSubclassStatic);
+	}
+
 	SHOUJIN_ASSERT(hwnd && _handle);
 
 	for(auto& child : _childs)
@@ -147,15 +164,13 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 
 	logging::LogMessage(hwnd, msg, wparam, lparam);
 
-	if(msg == WM_NCCREATE)
-	{
+	if(msg == WM_NCCREATE) {
 		CREATESTRUCT& createparam = *reinterpret_cast<LPCREATESTRUCT>(lparam);
 		self = SHOUJIN_ASSERT(reinterpret_cast<Window*>(createparam.lpCreateParams));
 		self->_handle = std::make_unique<WindowHandle>(hwnd, createparam.hwndParent);
 
 		SetWindowPtr(hwnd, GWLP_USERDATA, self);
-	}
-	else
+	} else
 		self = GetWindowPtr<Window*>(hwnd, GWLP_USERDATA);
 
 	if(self)
@@ -165,6 +180,17 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 			return kMsgHandled;
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+LRESULT CALLBACK Window::WndProcSubclassStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	logging::LogMessage(hwnd, msg, wparam, lparam);
+	Window* self = SHOUJIN_ASSERT(GetWindowPtr<Window*>(hwnd, GWLP_USERDATA));
+
+	if(self->OnWndProc({msg, wparam, lparam}))
+		return CallWindowProc(self->_default_wndproc, hwnd, msg, wparam, lparam);
+
+	return kMsgHandled;
 }
 
 bool Window::ReadMessage(MSG& msg)
@@ -190,17 +216,4 @@ void Window::TranslateAndDispatchMessage(const MSG& msg)
 const bool Window::kMsgHandled = false;
 const bool Window::kMsgNotHandled = true;
 
-}
-
-template<typename T> static T GetWindowPtr<T>(HWND hWnd, int nIndex)
-{
-	return reinterpret_cast<T>(GetWindowLongPtr(hWnd, nIndex));
-}
-
-static LONG_PTR SetWindowPtr(HWND hWnd, int nIndex, auto dwNewLong)
-{
-	SetLastError(0);
-	LONG_PTR previous_value = SetWindowLongPtr(hWnd, nIndex, reinterpret_cast<LONG_PTR>(dwNewLong));
-	SHOUJIN_ASSERT_WIN32(previous_value || !GetLastError());
-	return previous_value;
 }

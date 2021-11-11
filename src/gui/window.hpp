@@ -8,6 +8,7 @@
 namespace shoujin::gui {
 
 class Window : public Layout {
+	WNDPROC _default_wndproc;
 	std::unique_ptr<WindowHandle> _handle;
 	std::vector<std::unique_ptr<Window>> _childs;
 
@@ -39,6 +40,7 @@ public:
 protected:
 	struct CreateParam {
 		LPCTSTR classname;
+		bool need_subclassing{};
 	};
 
 	void CreateHandle(const WindowHandle* parent = nullptr);
@@ -50,6 +52,7 @@ protected:
 
 private:
 	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	static LRESULT CALLBACK WndProcSubclassStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	bool ReadMessage(MSG& msg);
 	bool ReadMessageAsync(MSG& msg);
 	void TranslateAndDispatchMessage(const MSG& msg);

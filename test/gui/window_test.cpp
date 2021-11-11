@@ -88,6 +88,43 @@ public:
 		window.ShowModal();
 		copied.ShowModal();
 	}
+
+	TEST_METHOD(Window_AddEditControl_NoAssertions) {
+		class EditControl : public Window {
+			LayoutParam AdjustLayout(const LayoutParam& lp)
+			{
+				Size client_size;
+				if(!lp.window_size && !lp.client_size)
+					client_size = Size{256, 16};
+
+				return LayoutParam{
+					.position = lp.position,
+					.window_size = lp.window_size,
+					.client_size = client_size,
+					.style = lp.style,
+					.exstyle = WS_EX_CLIENTEDGE};
+			}
+
+		public:
+			EditControl(const LayoutParam& lp = {}) :
+				Window{AdjustLayout(lp)}
+			{
+			}
+
+			virtual CreateParam OnCreateParam() override
+			{
+				return CreateParam{.classname = TEXT("EDIT"), .need_subclassing = true};
+			}
+		};
+
+		Window window{};
+		//window.OnCreateEvent = OnCreatePostCloseMsg;
+
+		window.AddChild(new EditControl(LayoutParam{.position{11, 11}}));
+		window.AddChild(new EditControl(LayoutParam{.position{11, 42}}));
+		window.AddChild(new EditControl(LayoutParam{.position{11, 73}}));
+		window.ShowModal();
+	}
 };
 
 static bool OnCreatePostCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata)

@@ -28,7 +28,7 @@ class Layout {
 	DWORD _exstyle;
 
 public:
-	static constexpr DWORD DefaultStyle = WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX;
+	static constexpr DWORD DefaultStyle = WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
 
 	Layout(const LayoutParam& = {});
 
