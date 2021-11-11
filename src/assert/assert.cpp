@@ -17,9 +17,9 @@ namespace shoujin::assert {
 
 thread_local bool _activate_assert_messagebox_;
 
-Event<const ErrorInfo&, bool&> OnErrorEvent;
-Event<tstring, bool&> OnErrorOutputEvent;
-Event<bool&> OnExitProcessEvent;
+Event<void, const ErrorInfo&, bool&> OnErrorEvent;
+Event<void, tstring, bool&> OnErrorOutputEvent;
+Event<void, bool&> OnExitProcessEvent;
 
 static bool OnError(const ErrorInfo& ei)
 {

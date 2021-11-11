@@ -12,9 +12,14 @@ TEST_CLASS(EventTest) {
 		int add_result, mul_result;
 	};
 
-	static void OnEventTwoParam(int x, int y, int& out_result, void* userdata)
+	static void OnVoidEvent(int x, int y, int& out_sum, void* userdata)
 	{
-		out_result = x + y;
+		out_sum = x + y;
+	}
+
+	static int OnIntEvent(int x, int y, void* userdata)
+	{
+		return x + y;
 	}
 
 	static void OnEventUserData(void* userdata)
@@ -41,13 +46,25 @@ public:
 		Assert::IsTrue(std::is_move_assignable_v<Event<void*>>);
 	}
 
-	TEST_METHOD(Event_WhenTwoParam_EventRaised) {
+	TEST_METHOD(Event_VoidParam_EventRaised) {
 		//Arrange
-		Event<int, int, int&> event_two_param(OnEventTwoParam);
+		Event<void, int, int, int&> void_event(OnVoidEvent);
 		int x{3}, y{2}, sum;
 
 		//Act
-		event_two_param(x, y, sum);
+		void_event(x, y, sum);
+
+		//Assert
+		Assert::AreEqual(x + y, sum);
+	}
+
+	TEST_METHOD(Event_IntEvent_EventRaised) {
+		//Arrange
+		Event<int, int, int> int_event(OnIntEvent);
+		int x{3}, y{2};
+
+		//Act
+		auto sum = int_event(x, y);
 
 		//Assert
 		Assert::AreEqual(x + y, sum);
@@ -55,13 +72,13 @@ public:
 
 	TEST_METHOD(Event_CopyAssignment_EventRaised) {
 		//Arrange
-		Event<int, int, int&> event_two_param;
+		Event<void, int, int, int&> event_three_param;
 		int x{3}, y{2}, sum;
 
-		event_two_param = {OnEventTwoParam};
+		event_three_param = OnVoidEvent;
 
 		//Act
-		event_two_param(x, y, sum);
+		event_three_param(x, y, sum);
 
 		//Assert
 		Assert::AreEqual(x + y, sum);
@@ -69,12 +86,12 @@ public:
 
 	TEST_METHOD(Event_OperatorBool_EventRaised) {
 		//Arrange
-		Event<int, int, int&> event_two_param;
+		Event<void, int, int, int&> event_three_param;
 
 		//Act
-		bool before = event_two_param;
-		event_two_param = {OnEventTwoParam};
-		bool after = event_two_param;
+		bool before = event_three_param;
+		event_three_param = OnVoidEvent;
+		bool after = event_three_param;
 
 		//Assert
 		Assert::IsFalse(before);

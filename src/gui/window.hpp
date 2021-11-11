@@ -28,7 +28,7 @@ public:
 	void Show();
 	void ShowModal();
 
-	Event<const Window&, const CREATESTRUCT&> OnCreateEvent;
+	Event<void, const Window&, const CREATESTRUCT&> OnCreateEvent;
 
 protected:
 	static const bool kMsgHandled;
