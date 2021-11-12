@@ -2,7 +2,7 @@
 
 namespace shoujin::gui::comctl32 {
 
-const Size EditControl::DefaultClientSize{160, 16};
+const Size EditControl::DefaultSize{160, 23};
 
 EditControl::EditControl(const LayoutParam& lp) :
 	Window{BuildLayout(lp)} {}
@@ -19,12 +19,11 @@ Window* EditControl::Clone() const
 
 LayoutParam EditControl::BuildLayout(const LayoutParam& lp)
 {
-	Size client_size;
-	if(!lp.window_size && !lp.client_size)
-		client_size = DefaultClientSize;
-
 	LayoutParam layout = lp;
-	layout.client_size = client_size;
+
+	if(!lp.window_size && !lp.client_size)
+		layout.window_size = DefaultSize;
+
 	layout.exstyle = WS_EX_CLIENTEDGE;
 
 	return layout;

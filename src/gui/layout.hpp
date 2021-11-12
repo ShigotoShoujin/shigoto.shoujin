@@ -40,6 +40,7 @@ public:
 	[[nodiscard]] const DWORD& style() const { return _style; }
 	[[nodiscard]] const DWORD& exstyle() const { return _exstyle; }
 	[[nodiscard]] const bool& tabstop() const { return _tabstop; }
+	[[nodiscard]] Rect window_rect() const { return Rect{_position, _window_size}; }
 
 	void set_position(const Point& position);
 	void set_size(const Size& window_size, const Size& client_size);

@@ -25,6 +25,12 @@
     <Filter Include="src\gui\comctl32">
       <UniqueIdentifier>{0eccf6fe-9310-4968-8e11-37bf8a5bfcbd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gui\layout">
+      <UniqueIdentifier>{c4d79002-d52d-4de9-b0e7-0906cb61fc6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui\userctl">
+      <UniqueIdentifier>{d146e26e-421a-4765-85a9-9e15c47e0813}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -105,6 +111,15 @@
     <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp">
       <Filter>src\gui\comctl32</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp">
+      <Filter>src\gui\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp">
+      <Filter>src\gui\userctl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
@@ -145,6 +160,15 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp">
       <Filter>src\gui\comctl32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\comctl32\label_control.cpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\layout\layout_stream.cpp">
+      <Filter>src\gui\layout</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp">
+      <Filter>src\gui\userctl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

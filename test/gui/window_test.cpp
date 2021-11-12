@@ -22,14 +22,14 @@ public:
 
 	TEST_METHOD_CLEANUP(TestCleanup)
 	{
-		shoujin::assert::OnExitProcessEvent = nullptr;
+		shoujin::assert::OnErrorOutputEvent = nullptr;
 		shoujin::gui::logging::_activate_wndproc_messagelog_ = false;
 	}
 
 	Window& CreateSampleWindow()
 	{
 		Window* window = new Window{LayoutParam{.layout_mode{LayoutMode::CenterParent}}};
-		//window->OnCreateEvent = OnCreatePostCloseMsg;
+		window->OnCreateEvent = OnCreatePostCloseMsg;
 
 		int y = 11, r = 20 + 7;
 		window->AddChild(new EditControl(LayoutParam{.position{11, y}}));
@@ -109,18 +109,10 @@ public:
 
 		Window copied;
 		copied = window;
-		//copied.OnCreateEvent = OnCreatePostCloseMsg;
+		copied.OnCreateEvent = OnCreatePostCloseMsg;
 
 		window.ShowModal();
 		copied.ShowModal();
-	}
-
-	TEST_METHOD(Window_AddEditControl_NoAssertions) {
-		Window& window = CreateSampleWindow();
-
-		Window subWindow(window);
-
-		window.ShowModal();
 	}
 };
 

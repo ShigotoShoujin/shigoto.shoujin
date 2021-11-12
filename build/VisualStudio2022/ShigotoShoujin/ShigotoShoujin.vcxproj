@@ -179,6 +179,9 @@
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\color.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp" />
+    <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp" />
+    <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp" />
+    <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_group.hpp" />
     <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp" />
     <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp" />
@@ -201,6 +204,9 @@
     <ClCompile Include="..\..\..\src\gui\bitmap.cpp" />
     <ClCompile Include="..\..\..\src\gui\color.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp" />
+    <ClCompile Include="..\..\..\src\gui\comctl32\label_control.cpp" />
+    <ClCompile Include="..\..\..\src\gui\layout\layout_stream.cpp" />
+    <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\window_group.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout.cpp" />
     <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp" />

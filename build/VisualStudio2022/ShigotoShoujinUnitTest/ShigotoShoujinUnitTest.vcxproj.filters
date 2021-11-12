@@ -29,6 +29,12 @@
     <ClCompile Include="..\..\..\test\gui\window_group_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\userctl\color_control_test.cpp">
+      <Filter>gui\userctl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\layout\layout_stream_test.cpp">
+      <Filter>gui\layout</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">
@@ -39,6 +45,12 @@
     </Filter>
     <Filter Include="file">
       <UniqueIdentifier>{d124f70d-dda1-4207-b2cd-00c6028d637d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\userctl">
+      <UniqueIdentifier>{5e288c64-9460-4969-b11e-ea6939c9af18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\layout">
+      <UniqueIdentifier>{cb50b92d-11c3-4049-9af8-b93cb632d300}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

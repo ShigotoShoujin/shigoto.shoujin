@@ -22,7 +22,7 @@ public:
 		return true;
 	}
 
-	TEST_CLASS_CLEANUP(TestClassCleanup)
+	TEST_METHOD_CLEANUP(TestCleanup)
 	{
 		shoujin::assert::OnExitProcessEvent = nullptr;
 	}

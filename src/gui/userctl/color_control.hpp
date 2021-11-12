@@ -3,12 +3,12 @@
 
 namespace shoujin::gui::comctl32 {
 
-class EditControl : public Window {
-public:
-	static const Size DefaultSize;
+class ColorControl : public Window {
+	static const Size DefaultClientSize;
 
-	EditControl(const LayoutParam& lp = {});
-	virtual ~EditControl() = default;
+public:
+	ColorControl(const LayoutParam& lp = {});
+	virtual ~ColorControl() = default;
 
 	virtual CreateParam OnCreateParam() override;
 
