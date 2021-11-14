@@ -159,6 +159,10 @@ bool Window::OnWndProc(const WindowMessage& message)
 			auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
 			return OnCreate(createparam) && OnCreateEvent(*this, createparam);
 		}
+		case WM_CLOSE:
+			return OnClose();
+		case WM_SIZING:
+			return OnSizing(message.wparam, reinterpret_cast<RECT*>(message.lparam));
 		case WM_DESTROY:
 			_handle.release();
 			_window_group.release();
@@ -169,6 +173,16 @@ bool Window::OnWndProc(const WindowMessage& message)
 }
 
 bool Window::OnCreate(const CREATESTRUCT& createparam)
+{
+	return kMsgNotHandled;
+}
+
+bool Window::OnClose()
+{
+	return kMsgNotHandled;
+}
+
+bool Window::OnSizing(WPARAM wparam, RECT* rect)
 {
 	return kMsgNotHandled;
 }

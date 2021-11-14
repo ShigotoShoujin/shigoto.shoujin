@@ -60,6 +60,8 @@ protected:
 	virtual bool OnDispatchMessage(const MSG& msg);
 	virtual bool OnWndProc(const WindowMessage& message);
 	virtual bool OnCreate(const CREATESTRUCT& createparam);
+	virtual bool OnClose();
+	virtual bool OnSizing(WPARAM wparam, RECT* rect);
 
 private:
 	virtual Window* Clone() const;
