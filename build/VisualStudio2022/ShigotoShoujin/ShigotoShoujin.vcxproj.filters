@@ -167,8 +167,5 @@
     <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp">
       <Filter>src\gui\userctl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\rect.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

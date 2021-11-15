@@ -205,7 +205,6 @@
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\label_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout\layout_stream.cpp" />
-    <ClCompile Include="..\..\..\src\gui\rect.cpp" />
     <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\window_taborder.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout.cpp" />

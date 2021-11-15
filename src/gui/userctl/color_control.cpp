@@ -27,7 +27,7 @@ ColorControl::ColorControl(const LayoutParam& lp) :
 		<< create(this, label) << push << after << create(this, edit) << pop << below
 		<< create(this, label) << push << after << create(this, edit) << pop << below;
 
-	AddChild(new EditControl(LayoutParam{.anchor{LayoutAnchor::Right | LayoutAnchor::Bottom}}));
+	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorBottom}}));
 
 }
 

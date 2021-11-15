@@ -40,7 +40,7 @@ void Layout::UpdateWindowSize(const Size& window_size)
 	_client_size = GetClientSizeFromWindowSize(window_size, _style, _exstyle);
 }
 
-void Layout::UpdateSizeFromHandle(HWND hwnd)
+void Layout::UpdateRectFromHandle(HWND hwnd)
 {
 	RECT rect;
 
@@ -55,7 +55,7 @@ void Layout::UpdateSizeFromHandle(HWND hwnd)
 
 void Layout::UpdateFromHandle(HWND hwnd)
 {
-	UpdateSizeFromHandle(hwnd);
+	UpdateRectFromHandle(hwnd);
 
 	auto gwlp = [&hwnd](int index) {
 		auto longptr = GetWindowLongPtr(hwnd, index);

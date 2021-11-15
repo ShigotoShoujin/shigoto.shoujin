@@ -30,8 +30,8 @@ public:
 		MessageResult() :
 			handled{}, ret_code{} {}
 
-		MessageResult(bool handled) :
-			handled{handled}, ret_code{} {}
+		MessageResult(bool handled, LRESULT ret_code = {}) :
+			handled{handled}, ret_code{ret_code} {}
 
 		operator bool() const { return handled; }
 	};
@@ -76,7 +76,7 @@ protected:
 	virtual bool OnWndProc(const WindowMessage& message);
 	virtual bool OnCreate(const CREATESTRUCT& createparam);
 	virtual bool OnClose();
-	virtual bool OnSizing(WPARAM wparam, Rect* rect);
+	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
 	virtual void OnParentSized(const Window& parent);
 	virtual void OnDestroy();
 

@@ -31,20 +31,6 @@ struct Rect {
 	friend bool operator!=(const Rect& lhs, const Rect& rhs) { return !(lhs == rhs); }
 	friend Rect operator*(const Rect& lhs, int rhs) { return {lhs.x1, lhs.y1, lhs.x1 + lhs.width() * rhs, lhs.y1 + lhs.height() * rhs}; }
 	friend Rect operator/(const Rect& lhs, int rhs) { return {lhs.x1, lhs.y1, lhs.x1 + lhs.width() / rhs, lhs.y1 + lhs.height() / rhs}; }
-
-	void SetMaxWidthUsingPosition(int max);
-	void SetMaxHeightUsingPosition(int max);
-	void SetMinWidthUsingPosition(int min);
-	void SetMinHeightUsingPosition(int min);
-	void SetMaxSizeUsingPosition(const Size& max);
-	void SetMinSizeUsingPosition(const Size& min);
-
-	void SetMaxWidthUsingSize(int max);
-	void SetMaxHeightUsingSize(int max);
-	void SetMinWidthUsingSize(int min);
-	void SetMinHeightUsingSize(int min);
-	void SetMaxSizeUsingSize(const Size& max);
-	void SetMinSizeUsingSize(const Size& min);
 };
 
 inline Size RectToSize(const Rect& rect) { return {rect.x2 - rect.x1, rect.y2 - rect.y1}; }

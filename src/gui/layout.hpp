@@ -11,15 +11,11 @@ enum class LayoutMode {
 	FillParent
 };
 
-enum class LayoutAnchor {
-	None = 0,
-	Left = 1,
-	Top = 2,
-	Right = 4,
-	Bottom = 8
-};
-
-DEFINE_ENUM_FLAG_OPERATORS(LayoutAnchor);
+constexpr int AnchorNone = 0;
+constexpr int AnchorLeft = 1;
+constexpr int AnchorTop = 2;
+constexpr int AnchorRight = 4;
+constexpr int AnchorBottom = 8;
 
 struct LayoutParam {
 	LayoutMode layout_mode{};
@@ -28,7 +24,7 @@ struct LayoutParam {
 	Size client_size{};
 	DWORD style{};
 	DWORD exstyle{};
-	LayoutAnchor anchor{};
+	int anchor{};
 	bool tabstop{true};
 };
 
@@ -38,7 +34,7 @@ class Layout {
 	Size _client_size;
 	DWORD _style;
 	DWORD _exstyle;
-	LayoutAnchor _anchor;
+	int _anchor;
 	bool _tabstop;
 
 public:
@@ -51,11 +47,12 @@ public:
 	[[nodiscard]] const Size& client_size() const { return _client_size; }
 	[[nodiscard]] const DWORD& style() const { return _style; }
 	[[nodiscard]] const DWORD& exstyle() const { return _exstyle; }
+	[[nodiscard]] int anchor() const { return _anchor; }
 	[[nodiscard]] const bool& tabstop() const { return _tabstop; }
 	[[nodiscard]] Rect window_rect() const { return Rect{_position, _window_size}; }
 
 	void UpdateWindowSize(const Size& window_size);
-	void UpdateSizeFromHandle(HWND hwnd);
+	void UpdateRectFromHandle(HWND hwnd);
 	void UpdateFromHandle(HWND hwnd);
 };
 

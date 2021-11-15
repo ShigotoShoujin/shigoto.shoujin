@@ -17,6 +17,8 @@ static auto SetWindowPtr(HWND hwnd, int index, auto new_value) -> decltype(new_v
 
 namespace shoujin::gui {
 
+static Rect GetOnSizingMinRect(WPARAM wparam, const Rect& onsizing_rect, const Size& min_size);
+
 Window::Window(const LayoutParam& lp) :
 	Layout{lp},
 	_default_wndproc{nullptr},
@@ -178,30 +180,38 @@ bool Window::OnClose()
 	return false;
 }
 
-bool Window::OnSizing(WPARAM wparam, Rect* rect)
+bool Window::OnSizing(WPARAM wparam, Rect* onsizing_rect)
 {
-	Size min_size{512, 512};
-
-	if(wparam == WMSZ_RIGHT || wparam == WMSZ_BOTTOMRIGHT || wparam == WMSZ_BOTTOM)
-		rect->SetMinSizeUsingSize(min_size);
-	else if(wparam == WMSZ_LEFT || wparam == WMSZ_TOPLEFT || wparam == WMSZ_TOP)
-		rect->SetMinSizeUsingPosition(min_size);
-	else if(wparam == WMSZ_TOPRIGHT) {
-		rect->SetMinWidthUsingSize(min_size.x);
-		rect->SetMinHeightUsingPosition(min_size.y);
-	} else if(wparam == WMSZ_BOTTOMLEFT) {
-		rect->SetMinWidthUsingPosition(min_size.x);
-		rect->SetMinHeightUsingSize(min_size.y);
-	} else
-		SHOUJIN_ASSERT((TEXT("WM_SIZING has an invalid WPARAM value"), 0));
-
-	Layout::UpdateWindowSize(RectToSize(*rect));
-
+	*onsizing_rect = GetOnSizingMinRect(wparam, *onsizing_rect, {512, 512});
+	Layout::UpdateWindowSize(RectToSize(*onsizing_rect));
 	return true;
 }
 
 void Window::OnParentSized(const Window& parent)
 {
+	//Integrate this func in Layout Stream ?
+	constexpr int margin = 11;
+
+	Size ps = parent.client_size();
+	Rect rect = window_rect();
+	Rect new_rect = rect;
+
+	int la = anchor();
+
+	if(la & AnchorRight) {
+		new_rect.x1 = ps.x - rect.width() - margin;
+		new_rect.x2 = new_rect.x1 + rect.width();
+	}
+
+	if(la & AnchorBottom) {
+		new_rect.y1 = ps.y - rect.height() - margin;
+		new_rect.y2 = new_rect.y1 + rect.height();
+	}
+
+	if(new_rect != rect) {
+		MoveWindow(*_handle, new_rect.x1, new_rect.y1, new_rect.width(), new_rect.height(), TRUE);
+		Layout::UpdateFromHandle(*_handle);
+	}
 }
 
 void Window::OnDestroy()
@@ -232,22 +242,18 @@ Window::MessageResult Window::RaiseOnClose()
 
 Window::MessageResult Window::RaiseOnSizing(const WindowMessage& message)
 {
-	RECT* rect_ptr = reinterpret_cast<RECT*>(message.lparam);
-	Rect sizing_rect = *rect_ptr;
+	RECT* sizing_rect = reinterpret_cast<RECT*>(message.lparam);
+	Rect new_rect = *sizing_rect;
 
-	MessageResult msg_result = OnSizingEvent ? OnSizingEvent(message.wparam, &sizing_rect) : OnSizing(message.wparam, &sizing_rect);
+	MessageResult onsizing_handled = OnSizingEvent ? OnSizingEvent(message.wparam, &new_rect) : OnSizing(message.wparam, &new_rect);
 
-	if(msg_result)
-		*rect_ptr = sizing_rect;
+	if(onsizing_handled)
+		*sizing_rect = new_rect;
 
-	/*
-	if(window_rect() != sizing_rect) {
-		UpdateWindowSize(RectToSize(sizing_rect));
-		RaiseOnParentSized();
-	}
-	*/
+	RaiseOnParentSized();
 
-	return false;
+	//WM_SIZING - An application should return TRUE if it processes this message
+	return MessageResult{true, TRUE};
 }
 
 Window::MessageResult Window::RaiseOnDestroy()
@@ -375,6 +381,26 @@ void Window::TranslateAndDispatchMessage(const MSG& msg)
 	TranslateMessage(&msg);
 	if(!RaiseOnDispatchMessage(msg))
 		DispatchMessage(&msg);
+}
+
+static Rect GetOnSizingMinRect(WPARAM wparam, const Rect& onsizing_rect, const Size& min_size)
+{
+	Rect rect = onsizing_rect;
+	Size offset = {rect.width() - min_size.x, rect.height() - min_size.y};
+
+	if(offset.x < 0)
+		if(wparam == WMSZ_LEFT || wparam == WMSZ_TOPLEFT || wparam == WMSZ_BOTTOMLEFT)
+			rect.x1 += offset.x;
+		else
+			rect.x2 -= offset.x;
+
+	if(offset.y < 0)
+		if(wparam == WMSZ_TOP || wparam == WMSZ_TOPLEFT || wparam == WMSZ_TOPRIGHT)
+			rect.y1 += offset.y;
+		else
+			rect.y2 -= offset.y;
+
+	return rect;
 }
 
 }
