@@ -33,7 +33,7 @@
     <ClCompile Include="..\..\..\test\gui\modal_comctrl32.cpp" />
     <ClCompile Include="..\..\..\test\gui\rect_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\userctl\color_control_test.cpp" />
-    <ClCompile Include="..\..\..\test\gui\window_group_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui\window_taborder_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_handle_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_test.cpp" />
   </ItemGroup>

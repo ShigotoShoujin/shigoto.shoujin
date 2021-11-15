@@ -1,11 +1,11 @@
 //#include "../assert/assert.hpp"
 #include "../assert/assert.hpp"
 #include "window.hpp"
-#include "window_group.hpp"
+#include "window_taborder.hpp"
 
 namespace shoujin::gui {
 
-void WindowGroup::AddWindow(Window* window, int& out_taborder)
+void WindowTabOrder::AddWindow(Window* window, int& out_taborder)
 {
 	SHOUJIN_ASSERT(window);
 
@@ -17,7 +17,7 @@ void WindowGroup::AddWindow(Window* window, int& out_taborder)
 		out_taborder = 0;
 }
 
-void WindowGroup::CycleTab(bool cycle_up)
+void WindowTabOrder::CycleTab(bool cycle_up)
 {
 	HWND focus_hwnd = GetFocus();
 	if(!focus_hwnd) {
@@ -36,7 +36,7 @@ void WindowGroup::CycleTab(bool cycle_up)
 		window->SetFocus();
 }
 
-Window* WindowGroup::FindNextWindowInTabOrder(Window* window, bool cycle_up) const
+Window* WindowTabOrder::FindNextWindowInTabOrder(Window* window, bool cycle_up) const
 {
 	if(_taborder_map.size() == 1)
 		return window;
@@ -59,7 +59,7 @@ Window* WindowGroup::FindNextWindowInTabOrder(Window* window, bool cycle_up) con
 	return next->second;
 }
 
-void WindowGroup::SetFocusToFirstWindow()
+void WindowTabOrder::SetFocusToFirstWindow()
 {
 	const auto it = _taborder_map.cbegin();
 	if(it != _taborder_map.cend())

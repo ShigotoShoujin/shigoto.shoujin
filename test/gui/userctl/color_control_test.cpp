@@ -13,11 +13,13 @@ TEST_CLASS(ColorControlTest) {
 public:
 	TEST_METHOD_INITIALIZE(TestInitialize)
 	{
+		shoujin::assert::_activate_assert_messagebox_ = true;
 		shoujin::gui::logging::_activate_wndproc_messagelog_ = true;
 	}
 
 	TEST_METHOD_CLEANUP(TestCleanup)
 	{
+		shoujin::assert::_activate_assert_messagebox_ = false;
 		shoujin::gui::logging::_activate_wndproc_messagelog_ = false;
 	}
 

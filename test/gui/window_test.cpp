@@ -120,7 +120,7 @@ static bool OnCreatePostCloseMsg(const Window& window, const CREATESTRUCT& creat
 {
 	SHOUJIN_ASSERT(window.handle());
 	PostMessage(window.handle()->hwnd(), WM_CLOSE, 0, 0);
-	return Window::kMsgNotHandled;
+	return false;
 }
 
 static bool OnErrorOutput(tstring message, void* userdata)

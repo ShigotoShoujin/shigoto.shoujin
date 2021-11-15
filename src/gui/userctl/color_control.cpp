@@ -8,7 +8,7 @@ using namespace shoujin::gui::layout;
 
 namespace shoujin::gui::comctl32 {
 
-const Size ColorControl::DefaultClientSize{1024, 1024};
+const Size ColorControl::DefaultClientSize{768, 768};
 
 ColorControl::ColorControl(const LayoutParam& lp) :
 	Window{BuildLayout(lp)}
@@ -26,6 +26,9 @@ ColorControl::ColorControl(const LayoutParam& lp) :
 		<< create(this, label) << push << after << create(this, edit) << pop << below
 		<< create(this, label) << push << after << create(this, edit) << pop << below
 		<< create(this, label) << push << after << create(this, edit) << pop << below;
+
+	AddChild(new EditControl(LayoutParam{.anchor{LayoutAnchor::Right | LayoutAnchor::Bottom}}));
+
 }
 
 Window::CreateParam ColorControl::OnCreateParam()

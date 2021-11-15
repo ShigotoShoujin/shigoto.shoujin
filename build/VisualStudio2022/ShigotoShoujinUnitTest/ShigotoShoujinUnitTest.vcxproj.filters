@@ -26,7 +26,7 @@
     <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\gui\window_group_test.cpp">
+    <ClCompile Include="..\..\..\test\gui\window_taborder_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\gui\userctl\color_control_test.cpp">

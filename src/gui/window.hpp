@@ -3,7 +3,7 @@
 #include "../event.hpp"
 #include "layout.hpp"
 #include "window_handle.hpp"
-#include "window_group.hpp"
+#include "window_taborder.hpp"
 #include <memory>
 #include <vector>
 
@@ -14,16 +14,26 @@ class Window : public Layout {
 	int _taborder;
 	std::unique_ptr<WindowHandle> _handle;
 	std::vector<std::unique_ptr<Window>> _child_vec;
-	std::unique_ptr<WindowGroup> _window_group;
+	std::unique_ptr<WindowTabOrder> _window_group;
 
 public:
-	static const bool kMsgHandled;
-	static const bool kMsgNotHandled;
-
 	struct WindowMessage {
 		UINT msg;
 		WPARAM wparam;
 		LPARAM lparam;
+	};
+
+	struct MessageResult {
+		bool handled;
+		LRESULT ret_code;
+
+		MessageResult() :
+			handled{}, ret_code{} {}
+
+		MessageResult(bool handled) :
+			handled{handled}, ret_code{} {}
+
+		operator bool() const { return handled; }
 	};
 
 	explicit Window(const LayoutParam& = {});
@@ -46,7 +56,12 @@ public:
 	void Show();
 	void ShowModal();
 
+	Event<bool, const MSG&> OnDispatchMessageEvent;
+	Event<bool, const WindowMessage&> OnWndProcEvent;
 	Event<bool, const Window&, const CREATESTRUCT&> OnCreateEvent;
+	Event<bool> OnCloseEvent;
+	Event<bool, WPARAM, Rect*> OnSizingEvent;
+	Event<> OnDestroyEvent;
 
 protected:
 	struct CreateParam {
@@ -55,15 +70,25 @@ protected:
 	};
 
 	void CreateHandle(const WindowHandle* parent = nullptr);
-
 	virtual CreateParam OnCreateParam();
+
 	virtual bool OnDispatchMessage(const MSG& msg);
 	virtual bool OnWndProc(const WindowMessage& message);
 	virtual bool OnCreate(const CREATESTRUCT& createparam);
 	virtual bool OnClose();
-	virtual bool OnSizing(WPARAM wparam, RECT* rect);
+	virtual bool OnSizing(WPARAM wparam, Rect* rect);
+	virtual void OnParentSized(const Window& parent);
+	virtual void OnDestroy();
 
 private:
+	MessageResult RaiseOnDispatchMessage(const MSG& msg);
+	MessageResult RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
+	MessageResult RaiseOnCreate(const WindowMessage& message);
+	MessageResult RaiseOnClose();
+	MessageResult RaiseOnSizing(const WindowMessage& message);
+	void RaiseOnParentSized();
+	MessageResult RaiseOnDestroy();
+
 	virtual Window* Clone() const;
 	void CopyChilds(const Window& rhs);
 	void ConstructWindow(const WindowHandle* parent);

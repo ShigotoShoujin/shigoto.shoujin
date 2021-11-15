@@ -7,7 +7,7 @@ namespace shoujin::gui {
 
 class Window;
 
-class WindowGroup {
+class WindowTabOrder {
 public:
 	std::multimap<int, Window*> _taborder_map;
 	int _taborder_max{};

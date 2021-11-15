@@ -11,7 +11,7 @@ using namespace shoujin::gui;
 
 LRESULT CALLBACK WndProcSubClass(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	logging::LogMessage(hwnd, msg, wparam, lparam);
+	logging::LogWndProcMessage(hwnd, msg, wparam, lparam);
 
 	LONG_PTR swlp_result = GetWindowLongPtr(hwnd, GWLP_USERDATA);
 	WNDPROC default_proc = reinterpret_cast<WNDPROC>(swlp_result);

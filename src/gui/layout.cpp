@@ -5,7 +5,6 @@ static constexpr int kDefaultWindowSizeDivider = 3;
 
 using namespace shoujin::gui;
 
-static Size RectToSize(const RECT& rect);
 static Size GetWindowSize(HWND hwnd);
 static Size GetDefaultWindowSize(HWND hwnd);
 static Size GetClientSizeFromWindowSize(const Size& window_size, DWORD style, DWORD exstyle);
@@ -21,6 +20,7 @@ Layout::Layout(const LayoutParam& lp) :
 	_client_size{lp.client_size},
 	_style{lp.style},
 	_exstyle{lp.exstyle},
+	_anchor{lp.anchor},
 	_tabstop{lp.tabstop}
 {
 	HWND hparentwnd = GetDesktopWindow();
@@ -34,23 +34,13 @@ Layout::Layout(const LayoutParam& lp) :
 		_position = GetCenteredPosition(_window_size, hparentwnd);
 }
 
-void Layout::set_position(const Point& position)
+void Layout::UpdateWindowSize(const Size& window_size)
 {
+	_window_size = window_size;
+	_client_size = GetClientSizeFromWindowSize(window_size, _style, _exstyle);
 }
 
-void Layout::set_size(const Size& window_size, const Size& client_size)
-{
-}
-
-void Layout::set_style(DWORD style)
-{
-}
-
-void Layout::set_exstyle(DWORD exstyle)
-{
-}
-
-void Layout::UpdateFromHandle(HWND hwnd)
+void Layout::UpdateSizeFromHandle(HWND hwnd)
 {
 	RECT rect;
 
@@ -61,6 +51,11 @@ void Layout::UpdateFromHandle(HWND hwnd)
 
 	SHOUJIN_ASSERT_WIN32(::GetClientRect(hwnd, &rect));
 	_client_size = RectToSize(rect);
+}
+
+void Layout::UpdateFromHandle(HWND hwnd)
+{
+	UpdateSizeFromHandle(hwnd);
 
 	auto gwlp = [&hwnd](int index) {
 		auto longptr = GetWindowLongPtr(hwnd, index);
@@ -72,8 +67,6 @@ void Layout::UpdateFromHandle(HWND hwnd)
 }
 
 }
-
-static Size RectToSize(const RECT& rect) { return {rect.right - rect.left, rect.bottom - rect.top}; }
 
 static Size GetWindowSize(HWND hwnd)
 {

@@ -102,10 +102,7 @@
     <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp">
       <Filter>src\gui\logging</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\concepts.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window_group.hpp">
+    <ClInclude Include="..\..\..\src\gui\window_taborder.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp">
@@ -155,7 +152,7 @@
     <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp">
       <Filter>src\gui\logging</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\window_group.cpp">
+    <ClCompile Include="..\..\..\src\gui\window_taborder.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp">
@@ -169,6 +166,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp">
       <Filter>src\gui\userctl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\rect.cpp">
+      <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

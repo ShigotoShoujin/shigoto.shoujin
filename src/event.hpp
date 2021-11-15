@@ -1,12 +1,14 @@
 #pragma once
-#include "concepts.hpp"
+#include <type_traits>
 
 // clang does not yet support c++20 concepts
 // clang-format off
 
 namespace shoujin {
 
-template<fundamental TResult = void, typename... TArguments>
+template<typename T> concept event_tresult = std::is_void_v<T> || std::is_default_constructible_v<T>;
+
+template<event_tresult TResult = void, typename... TArguments>
 class Event {
 	using TFunc = TResult (*)(TArguments..., void* userdata);
 	TFunc _func;
@@ -22,19 +24,19 @@ public:
 	operator bool() const;
 };
 
-template<fundamental TResult, typename... TArguments>
+template<event_tresult TResult, typename... TArguments>
 Event<TResult, TArguments...>::Event() :
 	_func{},
 	_userdata{}
 {}
 
-template<fundamental TResult, typename... TArguments>
+template<event_tresult TResult, typename... TArguments>
 Event<TResult, TArguments...>::Event(TFunc func, void* userdata) :
 	_func{func},
 	_userdata{userdata}
 {}
 
-template<fundamental TResult, typename... TArguments>
+template<event_tresult TResult, typename... TArguments>
 Event<TResult, TArguments...>
 &Event<TResult, TArguments...>::operator=(const Event<TResult, TArguments...>& rhs)
 {
@@ -43,14 +45,14 @@ Event<TResult, TArguments...>
 	return *this;
 }
 
-template<fundamental TResult, typename... TArguments>
+template<event_tresult TResult, typename... TArguments>
 Event<TResult, TArguments...>::~Event()
 {
 	_func = nullptr;
 	_userdata = nullptr;
 }
 
-template<fundamental TResult, typename... TArguments>
+template<event_tresult TResult, typename... TArguments>
 TResult Event<TResult, TArguments...>::operator()(TArguments... args) const
 {
 	if(_func)
@@ -62,7 +64,7 @@ TResult Event<TResult, TArguments...>::operator()(TArguments... args) const
 		return TResult{};
 }
 
-template<fundamental TResult, typename... TArguments>
+template<event_tresult TResult, typename... TArguments>
 Event<TResult, TArguments...>::operator bool() const
 {
 	return _func != nullptr;

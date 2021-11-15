@@ -126,7 +126,7 @@ void Window::ShowModal()
 void Window::CreateHandle(const WindowHandle* parent)
 {
 	ConstructWindow(parent);
-	_window_group = std::make_unique<WindowGroup>();
+	_window_group = std::make_unique<WindowTabOrder>();
 
 	for(auto& child : _child_vec) {
 		child->CreateHandle(_handle.get());
@@ -146,45 +146,125 @@ bool Window::OnDispatchMessage(const MSG& msg)
 	if(msg.message == WM_KEYDOWN && msg.wParam == VK_TAB) {
 		bool cycle_up = GetAsyncKeyState(VK_SHIFT);
 		_window_group->CycleTab(cycle_up);
-		return kMsgHandled;
+		return true;
 	}
 
-	return kMsgNotHandled;
+	return false;
 }
 
 bool Window::OnWndProc(const WindowMessage& message)
 {
 	switch(message.msg) {
-		case WM_CREATE: {
-			auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
-			return OnCreate(createparam) && OnCreateEvent(*this, createparam);
-		}
+		case WM_CREATE:
+			return RaiseOnCreate(message);
 		case WM_CLOSE:
-			return OnClose();
+			return RaiseOnClose();
 		case WM_SIZING:
-			return OnSizing(message.wparam, reinterpret_cast<RECT*>(message.lparam));
+			return RaiseOnSizing(message);
 		case WM_DESTROY:
-			_handle.release();
-			_window_group.release();
-			return kMsgHandled;
+			return RaiseOnDestroy();
 	}
 
-	return kMsgNotHandled;
+	return false;
 }
 
 bool Window::OnCreate(const CREATESTRUCT& createparam)
 {
-	return kMsgNotHandled;
+	return false;
 }
 
 bool Window::OnClose()
 {
-	return kMsgNotHandled;
+	return false;
 }
 
-bool Window::OnSizing(WPARAM wparam, RECT* rect)
+bool Window::OnSizing(WPARAM wparam, Rect* rect)
 {
-	return kMsgNotHandled;
+	Size min_size{512, 512};
+
+	if(wparam == WMSZ_RIGHT || wparam == WMSZ_BOTTOMRIGHT || wparam == WMSZ_BOTTOM)
+		rect->SetMinSizeUsingSize(min_size);
+	else if(wparam == WMSZ_LEFT || wparam == WMSZ_TOPLEFT || wparam == WMSZ_TOP)
+		rect->SetMinSizeUsingPosition(min_size);
+	else if(wparam == WMSZ_TOPRIGHT) {
+		rect->SetMinWidthUsingSize(min_size.x);
+		rect->SetMinHeightUsingPosition(min_size.y);
+	} else if(wparam == WMSZ_BOTTOMLEFT) {
+		rect->SetMinWidthUsingPosition(min_size.x);
+		rect->SetMinHeightUsingSize(min_size.y);
+	} else
+		SHOUJIN_ASSERT((TEXT("WM_SIZING has an invalid WPARAM value"), 0));
+
+	Layout::UpdateWindowSize(RectToSize(*rect));
+
+	return true;
+}
+
+void Window::OnParentSized(const Window& parent)
+{
+}
+
+void Window::OnDestroy()
+{
+}
+
+Window::MessageResult Window::RaiseOnCreate(const WindowMessage& message)
+{
+	auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
+	return OnCreateEvent ? OnCreateEvent(*this, createparam) : OnCreate(createparam);
+}
+
+Window::MessageResult Window::RaiseOnDispatchMessage(const MSG& msg)
+{
+	return OnDispatchMessageEvent ? OnDispatchMessageEvent(msg) : OnDispatchMessage(msg);
+}
+
+Window::MessageResult Window::RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	WindowMessage wmsg{msg, wparam, lparam};
+	return OnWndProcEvent ? OnWndProcEvent(wmsg) : OnWndProc(wmsg);
+}
+
+Window::MessageResult Window::RaiseOnClose()
+{
+	return OnCloseEvent ? OnCloseEvent() : OnClose();
+}
+
+Window::MessageResult Window::RaiseOnSizing(const WindowMessage& message)
+{
+	RECT* rect_ptr = reinterpret_cast<RECT*>(message.lparam);
+	Rect sizing_rect = *rect_ptr;
+
+	MessageResult msg_result = OnSizingEvent ? OnSizingEvent(message.wparam, &sizing_rect) : OnSizing(message.wparam, &sizing_rect);
+
+	if(msg_result)
+		*rect_ptr = sizing_rect;
+
+	/*
+	if(window_rect() != sizing_rect) {
+		UpdateWindowSize(RectToSize(sizing_rect));
+		RaiseOnParentSized();
+	}
+	*/
+
+	return false;
+}
+
+Window::MessageResult Window::RaiseOnDestroy()
+{
+	OnDestroy();
+	OnDestroyEvent();
+
+	_handle.release();
+	_window_group.release();
+
+	return true;
+}
+
+void Window::RaiseOnParentSized()
+{
+	for(auto& child : _child_vec)
+		child->OnParentSized(*this);
 }
 
 Window* Window::Clone() const
@@ -249,7 +329,7 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 {
 	Window* self;
 
-	logging::LogMessage(hwnd, msg, wparam, lparam);
+	logging::LogWndProcMessage(hwnd, msg, wparam, lparam);
 
 	if(msg == WM_NCCREATE) {
 		CREATESTRUCT& createparam = *reinterpret_cast<LPCREATESTRUCT>(lparam);
@@ -260,24 +340,21 @@ LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARA
 	} else
 		self = GetWindowPtr<Window*>(hwnd, GWLP_USERDATA);
 
-	if(self)
-		if(self->OnWndProc({msg, wparam, lparam}))
-			return DefWindowProc(hwnd, msg, wparam, lparam);
-		else
-			return kMsgHandled;
+	if(self) {
+		auto message_result = self->RaiseOnWndProc(msg, wparam, lparam);
+		return message_result ? message_result.ret_code : DefWindowProc(hwnd, msg, wparam, lparam);
+	}
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 LRESULT CALLBACK Window::WndProcSubclassStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	logging::LogMessage(hwnd, msg, wparam, lparam);
+	logging::LogWndProcMessage(hwnd, msg, wparam, lparam);
 	Window* self = SHOUJIN_ASSERT(GetWindowPtr<Window*>(hwnd, GWLP_USERDATA));
 
-	if(self->OnWndProc({msg, wparam, lparam}))
-		return CallWindowProc(self->_default_wndproc, hwnd, msg, wparam, lparam);
-
-	return kMsgHandled;
+	auto message_result = self->RaiseOnWndProc(msg, wparam, lparam);
+	return message_result ? message_result.ret_code : CallWindowProc(self->_default_wndproc, hwnd, msg, wparam, lparam);
 }
 
 bool Window::ReadMessage(MSG& msg)
@@ -296,11 +373,8 @@ bool Window::ReadMessageAsync(MSG& msg)
 void Window::TranslateAndDispatchMessage(const MSG& msg)
 {
 	TranslateMessage(&msg);
-	if(OnDispatchMessage(msg))
+	if(!RaiseOnDispatchMessage(msg))
 		DispatchMessage(&msg);
 }
-
-const bool Window::kMsgHandled = false;
-const bool Window::kMsgNotHandled = true;
 
 }
