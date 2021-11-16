@@ -14,7 +14,7 @@ public:
 	TEST_METHOD_INITIALIZE(TestInitialize)
 	{
 		shoujin::assert::_activate_assert_messagebox_ = true;
-		shoujin::gui::logging::_activate_wndproc_messagelog_ = true;
+		shoujin::gui::logging::_activate_wndproc_messagelog_ = false;
 	}
 
 	TEST_METHOD_CLEANUP(TestCleanup)

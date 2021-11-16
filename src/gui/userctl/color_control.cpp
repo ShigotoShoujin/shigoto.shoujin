@@ -28,7 +28,8 @@ ColorControl::ColorControl(const LayoutParam& lp) :
 		<< create(this, label) << push << after << create(this, edit) << pop << below;
 
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorBottom}}));
-
+	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorTop}}));
+	AddChild(new EditControl(LayoutParam{.anchor{AnchorLeft | AnchorBottom}}));
 }
 
 Window::CreateParam ColorControl::OnCreateParam()

@@ -135,6 +135,8 @@ void Window::CreateHandle(const WindowHandle* parent)
 		_window_group->AddWindow(&*child, child->_taborder);
 	}
 
+	RaiseOnParentSized();
+
 	SetFocus();
 }
 
@@ -197,6 +199,16 @@ void Window::OnParentSized(const Window& parent)
 	Rect new_rect = rect;
 
 	int la = anchor();
+
+	if(la & AnchorLeft) {
+		new_rect.x1 = margin;
+		new_rect.x2 = new_rect.x1 + rect.width();
+	}
+
+	if(la & AnchorTop) {
+		new_rect.y1 = margin;
+		new_rect.y2 = new_rect.y1 + rect.height();
+	}
 
 	if(la & AnchorRight) {
 		new_rect.x1 = ps.x - rect.width() - margin;
