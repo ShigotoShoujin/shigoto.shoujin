@@ -49,6 +49,7 @@ public:
 	static Window* FindWindowByHandle(HWND hwnd);
 
 	void AddChild(Window* child);
+	Window* GetChild(int index);
 	void Close();
 	void Destroy();
 	bool ProcessMessageQueue();
@@ -60,6 +61,7 @@ public:
 	Event<bool, const WindowMessage&> OnWndProcEvent;
 	Event<bool, const Window&, const CREATESTRUCT&> OnCreateEvent;
 	Event<bool> OnCloseEvent;
+	Event<bool> OnPaintEvent;
 	Event<bool, WPARAM, Rect*> OnSizingEvent;
 	Event<> OnDestroyEvent;
 
@@ -76,6 +78,7 @@ protected:
 	virtual bool OnWndProc(const WindowMessage& message);
 	virtual bool OnCreate(const CREATESTRUCT& createparam);
 	virtual bool OnClose();
+	virtual bool OnPaint();
 	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
 	virtual void OnParentSized(const Window& parent);
 	virtual void OnDestroy();
@@ -85,6 +88,7 @@ private:
 	MessageResult RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 	MessageResult RaiseOnCreate(const WindowMessage& message);
 	MessageResult RaiseOnClose();
+	MessageResult RaiseOnPaint();
 	MessageResult RaiseOnSizing(const WindowMessage& message);
 	void RaiseOnParentSized();
 	MessageResult RaiseOnDestroy();

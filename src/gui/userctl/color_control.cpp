@@ -1,3 +1,4 @@
+#include "../../assert/assert.hpp"
 #include "../comctl32/edit_control.hpp"
 #include "../comctl32/label_control.hpp"
 #include "../layout/layout_stream.hpp"
@@ -23,13 +24,25 @@ ColorControl::ColorControl(const LayoutParam& lp) :
 		<< Size{client_size() / 2} << layout::exstyle(WS_EX_CLIENTEDGE)
 		<< topleft << create(this, window)
 		<< layout::exstyle(0) << LabelControl::DefaultSize << unrelated << after
-		<< create(this, label) << push << after << create(this, edit) << pop << below
-		<< create(this, label) << push << after << create(this, edit) << pop << below
-		<< create(this, label) << push << after << create(this, edit) << pop << below;
+		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
+		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
+		<< TEXT("Blue") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below;
 
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorBottom}}));
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorTop}}));
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorLeft | AnchorBottom}}));
+}
+
+ColorControl::ColorControl(const ColorControl& rhs)
+{
+	_bitmap = std::make_unique<Bitmap>(*rhs._bitmap);
+}
+
+ColorControl& ColorControl::operator=(const ColorControl& rhs)
+{
+	if(this != &rhs)
+		_bitmap = std::make_unique<Bitmap>(*rhs._bitmap);
+	return *this;
 }
 
 Window::CreateParam ColorControl::OnCreateParam()
@@ -37,9 +50,42 @@ Window::CreateParam ColorControl::OnCreateParam()
 	return CreateParam{.classname = TEXT("SHOUJIN_COLOR_CTRL")};
 }
 
+bool ColorControl::OnCreate(const CREATESTRUCT& createparam)
+{
+	_bitmap = std::make_unique<Bitmap>(client_size());
+	_bitmap->Fill(Color::Lime);
+
+	GetChild(0)->OnPaintEvent = {OnPaintHandler, this};
+	return true;
+}
+
+void ColorControl::OnDestroy()
+{
+	GetChild(0)->OnPaintEvent = nullptr;
+}
+
 Window* ColorControl::Clone() const
 {
 	return new ColorControl(*this);
+}
+
+bool ColorControl::OnPaintHandler(void* userdata)
+{
+	ColorControl* self = SHOUJIN_ASSERT(reinterpret_cast<ColorControl*>(userdata));
+	Window* child = SHOUJIN_ASSERT(self->GetChild(0));
+	HWND hwnd = child->handle()->hwnd();
+	HDC source_hdc = self->_bitmap->hdc();
+
+	PAINTSTRUCT ps;
+	BeginPaint(hwnd, &ps);
+	int x = ps.rcPaint.left;
+	int y = ps.rcPaint.top;
+	int w = ps.rcPaint.right - x;
+	int h = ps.rcPaint.bottom - y;
+	BitBlt(ps.hdc, x, y, w, h, source_hdc, x, y, SRCCOPY);
+	EndPaint(hwnd, &ps);
+
+	return true;
 }
 
 LayoutParam ColorControl::BuildLayout(const LayoutParam& lp)

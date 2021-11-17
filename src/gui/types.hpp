@@ -5,4 +5,3 @@
 #include "rect.hpp"
 #include "size.hpp"
 #include "vector2d.hpp"
-

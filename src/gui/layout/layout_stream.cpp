@@ -70,6 +70,11 @@ LayoutStream& LayoutStream::operator<<(const Size& rhs)
 	_layout.window_size = rhs;
 	return *this;
 }
+LayoutStream& LayoutStream::operator<<(const tstring& text)
+{
+	_layout.text = text;
+	return *this;
+}
 
 LayoutStream::operator LayoutParam()
 {

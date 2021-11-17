@@ -41,6 +41,7 @@ public:
 	LayoutStream& operator<<(const CreateParam&);
 	LayoutStream& operator<<(const Point&);
 	LayoutStream& operator<<(const Size&);
+	LayoutStream& operator<<(const tstring&);
 	operator LayoutParam();
 
 private:

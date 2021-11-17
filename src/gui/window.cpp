@@ -72,6 +72,14 @@ void Window::AddChild(Window* child)
 	_child_vec.emplace_back(child);
 }
 
+Window* Window::GetChild(int index)
+{
+	if(index >= 0 && index < _child_vec.size())
+		return &*_child_vec[index];
+
+	return nullptr;
+}
+
 void Window::Close()
 {
 	if(_handle)
@@ -163,6 +171,8 @@ bool Window::OnWndProc(const WindowMessage& message)
 			return RaiseOnCreate(message);
 		case WM_CLOSE:
 			return RaiseOnClose();
+		case WM_PAINT:
+			return RaiseOnPaint();
 		case WM_SIZING:
 			return RaiseOnSizing(message);
 		case WM_DESTROY:
@@ -178,6 +188,11 @@ bool Window::OnCreate(const CREATESTRUCT& createparam)
 }
 
 bool Window::OnClose()
+{
+	return false;
+}
+
+bool Window::OnPaint()
 {
 	return false;
 }
@@ -250,6 +265,11 @@ Window::MessageResult Window::RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lpa
 Window::MessageResult Window::RaiseOnClose()
 {
 	return OnCloseEvent ? OnCloseEvent() : OnClose();
+}
+
+Window::MessageResult Window::RaiseOnPaint()
+{
+	return OnPaintEvent ? OnPaintEvent() : OnPaint();
 }
 
 Window::MessageResult Window::RaiseOnSizing(const WindowMessage& message)
@@ -331,7 +351,7 @@ void Window::ConstructWindow(const WindowHandle* parent)
 	auto pos = position();
 	auto size = window_size();
 	auto hwnd_parent = parent ? parent->hwnd() : nullptr;
-	HWND hwnd = SHOUJIN_ASSERT(CreateWindowEx(exstyle(), cp.classname, cp.classname, style, pos.x, pos.y, size.x, size.y, hwnd_parent, nullptr, hinstance, this));
+	HWND hwnd = SHOUJIN_ASSERT(CreateWindowEx(exstyle(), cp.classname, text().c_str(), style, pos.x, pos.y, size.x, size.y, hwnd_parent, nullptr, hinstance, this));
 
 	if(cp.need_subclassing) {
 		_handle = std::make_unique<WindowHandle>(hwnd, hwnd_parent);

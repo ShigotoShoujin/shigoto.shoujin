@@ -21,7 +21,8 @@ Layout::Layout(const LayoutParam& lp) :
 	_style{lp.style},
 	_exstyle{lp.exstyle},
 	_anchor{lp.anchor},
-	_tabstop{lp.tabstop}
+	_tabstop{lp.tabstop},
+	_text{lp.text}
 {
 	HWND hparentwnd = GetDesktopWindow();
 

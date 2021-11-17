@@ -1,4 +1,5 @@
 #pragma once
+#include "../tstring.hpp"
 #include "types.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -26,6 +27,7 @@ struct LayoutParam {
 	DWORD exstyle{};
 	int anchor{};
 	bool tabstop{true};
+	tstring text{};
 };
 
 class Layout {
@@ -36,6 +38,7 @@ class Layout {
 	DWORD _exstyle;
 	int _anchor;
 	bool _tabstop;
+	tstring _text;
 
 public:
 	static constexpr DWORD DefaultStyle = WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
@@ -49,6 +52,7 @@ public:
 	[[nodiscard]] const DWORD& exstyle() const { return _exstyle; }
 	[[nodiscard]] int anchor() const { return _anchor; }
 	[[nodiscard]] const bool& tabstop() const { return _tabstop; }
+	[[nodiscard]] const tstring& text() const { return _text; }
 	[[nodiscard]] Rect window_rect() const { return Rect{_position, _window_size}; }
 
 	void UpdateWindowSize(const Size& window_size);
