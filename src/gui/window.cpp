@@ -175,6 +175,8 @@ bool Window::OnWndProc(const WindowMessage& message)
 			return RaiseOnPaint();
 		case WM_SIZING:
 			return RaiseOnSizing(message);
+		case WM_EXITSIZEMOVE:
+			return RaiseOnSizingFinished();
 		case WM_DESTROY:
 			return RaiseOnDestroy();
 	}
@@ -202,6 +204,11 @@ bool Window::OnSizing(WPARAM wparam, Rect* onsizing_rect)
 	*onsizing_rect = GetOnSizingMinRect(wparam, *onsizing_rect, {512, 512});
 	Layout::UpdateWindowSize(RectToSize(*onsizing_rect));
 	return true;
+}
+
+bool Window::OnSizingFinished()
+{
+	return false;
 }
 
 void Window::OnParentSized(const Window& parent)
@@ -288,6 +295,11 @@ Window::MessageResult Window::RaiseOnSizing(const WindowMessage& message)
 	return MessageResult{true, TRUE};
 }
 
+Window::MessageResult Window::RaiseOnSizingFinished()
+{
+	return OnSizingFinishedEvent ? OnSizingFinishedEvent() : OnSizingFinished();
+}
+
 Window::MessageResult Window::RaiseOnDestroy()
 {
 	OnDestroy();
@@ -347,6 +359,8 @@ void Window::ConstructWindow(const WindowHandle* parent)
 		style |= WS_CHILD | WS_VISIBLE;
 	else if(!style)
 		style = Window::DefaultStyle;
+
+	Layout::UpdateStyle(style, exstyle());
 
 	auto pos = position();
 	auto size = window_size();

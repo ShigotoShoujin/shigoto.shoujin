@@ -41,36 +41,36 @@ public:
 		return *window;
 	}
 
-	TEST_METHOD(Window_IsCopyConstructible) {
+	TEST_METHOD(IsCopyConstructible) {
 		Assert::IsTrue(std::is_copy_constructible_v<Window>);
 	}
 
-	TEST_METHOD(Window_IsCopyAssignable) {
+	TEST_METHOD(IsCopyAssignable) {
 		Assert::IsTrue(std::is_copy_assignable_v<Window>);
 	}
 
-	TEST_METHOD(Window_IsMoveConstructible) {
+	TEST_METHOD(IsMoveConstructible) {
 		Assert::IsTrue(std::is_move_constructible_v<Window>);
 	}
 
-	TEST_METHOD(Window_IsMoveAssignable) {
+	TEST_METHOD(IsMoveAssignable) {
 		Assert::IsTrue(std::is_move_assignable_v<Window>);
 	}
 
-	TEST_METHOD(Window_NewInstance_NoHandle) {
+	TEST_METHOD(NewInstance_NoHandle) {
 		Window window;
 		auto handle = window.handle();
 		Assert::IsNull(handle);
 	}
 
-	TEST_METHOD(Window_ShowModal_NoAssertions) {
+	TEST_METHOD(ShowModal_NoAssertions) {
 		Window window{LayoutParam{.layout_mode = LayoutMode::CenterParent}};
 		window.OnCreateEvent = OnCreatePostCloseMsg;
 
 		window.ShowModal();
 	}
 
-	TEST_METHOD(Window_ProcessMessageQueue_NoAssertions) {
+	TEST_METHOD(ProcessMessageQueue_NoAssertions) {
 		Window window{LayoutParam{.layout_mode = LayoutMode::CenterParent}};
 
 		window.Show();
@@ -78,7 +78,7 @@ public:
 			PostMessage(*window.handle(), WM_CLOSE, 0, 0);
 	}
 
-	TEST_METHOD(Window_CopyConstructor_CopiedWithoutHandle) {
+	TEST_METHOD(CopyConstructor_CopiedWithoutHandle) {
 		Window window{};
 
 		Window copied(window);
@@ -86,7 +86,7 @@ public:
 		Assert::IsNull(copied.handle());
 	}
 
-	TEST_METHOD(Window_AddChild_NoAssertions) {
+	TEST_METHOD(AddChild_NoAssertions) {
 		Window window{};
 		window.OnCreateEvent = OnCreatePostCloseMsg;
 
@@ -94,7 +94,7 @@ public:
 		window.ShowModal();
 	}
 
-	TEST_METHOD(Window_CopyConstructor_CopiedProperly) {
+	TEST_METHOD(CopyConstructor_CopiedProperly) {
 		Window& window = CreateSampleWindow();
 
 		Window copied(window);
@@ -104,7 +104,7 @@ public:
 		copied.ShowModal();
 	}
 
-	TEST_METHOD(Window_CopyAssignment_CopiedProperly) {
+	TEST_METHOD(CopyAssignment_CopiedProperly) {
 		Window& window = CreateSampleWindow();
 
 		Window copied;

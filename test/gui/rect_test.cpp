@@ -8,7 +8,7 @@ using namespace shoujin::gui;
 
 TEST_CLASS(RectTest) {
 public:
-	TEST_METHOD(Rect_PositionAndSize_WidthAndHeightOk) {
+	TEST_METHOD(PositionAndSize_WidthAndHeightOk) {
 		int x1 = 10, y1 = 11, x2 = 15, y2 = 16;
 		Rect rect{x1, y1, x2, y2};
 
@@ -16,7 +16,7 @@ public:
 		Assert::AreEqual(y2 - y1, rect.height());
 	}
 
-	TEST_METHOD(Rect_OperatorMul_NewSizeOk) {
+	TEST_METHOD(OperatorMul_NewSizeOk) {
 		Rect rect {10, 11, 16, 20};
 
 		auto actual = rect * 2;
@@ -25,7 +25,7 @@ public:
 		Assert::AreEqual(29, actual.y2);
 	}
 
-	TEST_METHOD(Rect_OperatorDiv_NewSizeOk) {
+	TEST_METHOD(OperatorDiv_NewSizeOk) {
 		Rect rect{10, 11, 16, 20};
 
 		auto actual = rect / 2;
@@ -34,7 +34,7 @@ public:
 		Assert::AreEqual(15, actual.y2);
 	}
 
-	TEST_METHOD(Rect_CtorPointAndSize_RectOk) {
+	TEST_METHOD(CtorPointAndSize_RectOk) {
 		int x = 10, y = 11;
 		int w = 15, h = 16;
 		Rect rect{{x, y}, {w, h}};
@@ -45,7 +45,7 @@ public:
 		Assert::AreEqual(y + h, rect.y2);
 	}
 
-	TEST_METHOD(Rect_CtorRECT_RectOk) {
+	TEST_METHOD(CtorRectOk) {
 		RECT rect{10, 11, 16, 20};
 
 		Assert::AreEqual(10, static_cast<int>(rect.left));

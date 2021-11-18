@@ -55,6 +55,7 @@ public:
 	[[nodiscard]] const tstring& text() const { return _text; }
 	[[nodiscard]] Rect window_rect() const { return Rect{_position, _window_size}; }
 
+	void UpdateStyle(DWORD style, DWORD exstyle);
 	void UpdateWindowSize(const Size& window_size);
 	void UpdateRectFromHandle(HWND hwnd);
 	void UpdateFromHandle(HWND hwnd);

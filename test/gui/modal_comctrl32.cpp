@@ -37,7 +37,7 @@ public:
 		shoujin::gui::logging::_activate_wndproc_messagelog_ = false;
 	}
 
-	TEST_METHOD(ModalComctrl32_ShowModalTextBox) {
+	TEST_METHOD(ShowModalTextBox) {
 		HWND hwnd = CreateWindowEx(0, L"EDIT", L"Hello", WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE | ES_MULTILINE, 780, 310, 1000, 720, 0, 0, GetModuleHandle(0), 0);
 
 		LONG_PTR default_proc = SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(WndProcSubClass));

@@ -35,6 +35,16 @@ Layout::Layout(const LayoutParam& lp) :
 		_position = GetCenteredPosition(_window_size, hparentwnd);
 }
 
+void Layout::UpdateStyle(DWORD style, DWORD exstyle)
+{
+	if(_style == style && _exstyle == exstyle)
+		return;
+
+	_style = style;
+	_exstyle = exstyle;
+	AdjustSizes(_window_size, _client_size, _style, _exstyle);
+}
+
 void Layout::UpdateWindowSize(const Size& window_size)
 {
 	_window_size = window_size;

@@ -30,24 +30,24 @@ TEST_CLASS(EventTest) {
 	}
 
 public:
-	TEST_METHOD(Event_IsCopyConstructible) {
+	TEST_METHOD(IsCopyConstructible) {
 
 		Assert::IsTrue(std::is_copy_constructible_v<Event<>>);
 	}
 
-	TEST_METHOD(Event_IsCopyAssignable) {
+	TEST_METHOD(IsCopyAssignable) {
 		Assert::IsTrue(std::is_copy_assignable_v<Event<>>);
 	}
 
-	TEST_METHOD(Event_IsMoveConstructible) {
+	TEST_METHOD(IsMoveConstructible) {
 		Assert::IsTrue(std::is_move_constructible_v<Event<>>);
 	}
 
-	TEST_METHOD(Event_IsMoveAssignable) {
+	TEST_METHOD(IsMoveAssignable) {
 		Assert::IsTrue(std::is_move_assignable_v<Event<>>);
 	}
 
-	TEST_METHOD(Event_VoidParam_EventRaised) {
+	TEST_METHOD(VoidParam_EventRaised) {
 		//Arrange
 		Event<void, int, int, int&> void_event(OnVoidEvent);
 		int x{3}, y{2}, sum;
@@ -59,7 +59,7 @@ public:
 		Assert::AreEqual(x + y, sum);
 	}
 
-	TEST_METHOD(Event_IntEvent_EventRaised) {
+	TEST_METHOD(IntEventRaised) {
 		//Arrange
 		Event<int, int, int> int_event(OnIntEvent);
 		int x{3}, y{2};
@@ -71,35 +71,35 @@ public:
 		Assert::AreEqual(x + y, sum);
 	}
 
-	TEST_METHOD(Event_CopyAssignment_EventRaised) {
+	TEST_METHOD(CopyAssignment_EventRaised) {
 		//Arrange
-		Event<void, int, int, int&> event_three_param;
+		Event<void, int, int, int&> three_param;
 		int x{3}, y{2}, sum;
 
-		event_three_param = OnVoidEvent;
+		three_param = OnVoidEvent;
 
 		//Act
-		event_three_param(x, y, sum);
+		three_param(x, y, sum);
 
 		//Assert
 		Assert::AreEqual(x + y, sum);
 	}
 
-	TEST_METHOD(Event_OperatorBool_EventRaised) {
+	TEST_METHOD(OperatorBool_EventRaised) {
 		//Arrange
-		Event<void, int, int, int&> event_three_param;
+		Event<void, int, int, int&> three_param;
 
 		//Act
-		bool before = event_three_param;
-		event_three_param = OnVoidEvent;
-		bool after = event_three_param;
+		bool before = three_param;
+		three_param = OnVoidEvent;
+		bool after = three_param;
 
 		//Assert
 		Assert::IsFalse(before);
 		Assert::IsTrue(after);
 	}
 
-	TEST_METHOD(Event_UserData_UserDataUpdated) {
+	TEST_METHOD(UserData_UserDataUpdated) {
 		//Arrange
 		int x{5}, y{3};
 		UserData userdata{x, y};

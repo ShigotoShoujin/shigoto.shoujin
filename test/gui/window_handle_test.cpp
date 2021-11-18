@@ -8,19 +8,19 @@ using namespace shoujin::gui;
 
 TEST_CLASS(WindowHandleTest) {
 public:
-	TEST_METHOD(WindowHandle_IsNotCopyConstructible) {
+	TEST_METHOD(IsNotCopyConstructible) {
 		Assert::IsFalse(std::is_copy_constructible_v<WindowHandle>);
 	}
 
-	TEST_METHOD(WindowHandle_IsNotCopyAssignable) {
+	TEST_METHOD(IsNotCopyAssignable) {
 		Assert::IsFalse(std::is_copy_assignable_v<WindowHandle>);
 	}
 
-	TEST_METHOD(WindowHandle_IsMoveConstructible) {
+	TEST_METHOD(IsMoveConstructible) {
 		Assert::IsTrue(std::is_move_constructible_v<WindowHandle>);
 	}
 
-	TEST_METHOD(WindowHandle_IsMoveAssignable) {
+	TEST_METHOD(IsMoveAssignable) {
 		Assert::IsTrue(std::is_move_assignable_v<WindowHandle>);
 	}
 };

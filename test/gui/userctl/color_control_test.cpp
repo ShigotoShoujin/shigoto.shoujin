@@ -23,23 +23,23 @@ public:
 		shoujin::gui::logging::_activate_wndproc_messagelog_ = false;
 	}
 
-	TEST_METHOD(ColorControl_IsCopyConstructible) {
+	TEST_METHOD(IsCopyConstructible) {
 		Assert::IsTrue(std::is_copy_constructible_v<ColorControl>);
 	}
 
-	TEST_METHOD(ColorControl_IsCopyAssignable) {
+	TEST_METHOD(IsCopyAssignable) {
 		Assert::IsTrue(std::is_copy_assignable_v<ColorControl>);
 	}
 
-	TEST_METHOD(ColorControl_IsMoveConstructible) {
+	TEST_METHOD(IsMoveConstructible) {
 		Assert::IsTrue(std::is_move_constructible_v<ColorControl>);
 	}
 
-	TEST_METHOD(ColorControl_IsMoveAssignable) {
+	TEST_METHOD(IsMoveAssignable) {
 		Assert::IsTrue(std::is_move_assignable_v<ColorControl>);
 	}
 
-	TEST_METHOD(ColorControl_WIP_Test) {
+	TEST_METHOD(WIP_Test) {
 		ColorControl cc{LayoutParam{.layout_mode{LayoutMode::CenterParent}}};
 		cc.ShowModal();
 	}

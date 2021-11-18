@@ -27,23 +27,23 @@ public:
 		shoujin::assert::OnExitProcessEvent = nullptr;
 	}
 
-	TEST_METHOD(StreamToFileRedirector_IsNotCopyConstructible) {
+	TEST_METHOD(IsNotCopyConstructible) {
 		Assert::IsFalse(std::is_copy_constructible_v<StreamToFileRedirector>);
 	}
 
-	TEST_METHOD(StreamToFileRedirector_IsNotCopyAssignable) {
+	TEST_METHOD(IsNotCopyAssignable) {
 		Assert::IsFalse(std::is_copy_assignable_v<StreamToFileRedirector>);
 	}
 
-	TEST_METHOD(StreamToFileRedirector_IsMoveConstructible) {
+	TEST_METHOD(IsMoveConstructible) {
 		Assert::IsTrue(std::is_move_constructible_v<StreamToFileRedirector>);
 	}
 
-	TEST_METHOD(StreamToFileRedirector_IsMoveAssignable) {
+	TEST_METHOD(IsMoveAssignable) {
 		Assert::IsTrue(std::is_move_assignable_v<StreamToFileRedirector>);
 	}
 
-	TEST_METHOD(StreamToFileRedirector_ErrorOutputRedirectedToFile) {
+	TEST_METHOD(ErrorOutputRedirectedToFile) {
 		//Arrange
 		const TCHAR* kErrFile = TEXT("err_file.txt");
 		auto temp_path = std::filesystem::temp_directory_path();

@@ -8,19 +8,19 @@ using namespace shoujin::gui;
 
 TEST_CLASS(BitmapTest) {
 public:
-	TEST_METHOD(BitmapTest_IsCopyConstructible) {
+	TEST_METHOD(IsCopyConstructible) {
 		Assert::IsTrue(std::is_copy_constructible_v<Bitmap>);
 	}
 
-	TEST_METHOD(BitmapTest_IsCopyAssignable) {
+	TEST_METHOD(IsCopyAssignable) {
 		Assert::IsTrue(std::is_copy_assignable_v<Bitmap>);
 	}
 
-	TEST_METHOD(BitmapTest_IsMoveConstructible) {
+	TEST_METHOD(IsMoveConstructible) {
 		Assert::IsTrue(std::is_move_constructible_v<Bitmap>);
 	}
 
-	TEST_METHOD(BitmapTest_IsMoveAssignable) {
+	TEST_METHOD(IsMoveAssignable) {
 		Assert::IsTrue(std::is_move_assignable_v<Bitmap>);
 	}
 
@@ -31,7 +31,7 @@ public:
 		return true;
 	}
 
-	TEST_METHOD(BitmapTest_CreateWithSizeZero_Assert) {
+	TEST_METHOD(CreateWithSizeZero_Assert) {
 		//Arrange
 		int count{};
 		shoujin::assert::OnErrorEvent = {OnError, &count};
@@ -46,7 +46,7 @@ public:
 		shoujin::assert::OnErrorEvent = nullptr;
 	}
 
-	TEST_METHOD(BitmapTest_CopyConstructor) {
+	TEST_METHOD(CopyConstructor) {
 		//Arrange
 		Size size{32, 32};
 		Bitmap source(size);
@@ -63,7 +63,7 @@ public:
 		Assert::IsTrue(size == copy.size());
 	}
 
-	TEST_METHOD(BitmapTest_CopyAssignment) {
+	TEST_METHOD(CopyAssignment) {
 		//Arrange
 		Bitmap first({16, 16});
 		Bitmap second({32, 32});
@@ -81,7 +81,7 @@ public:
 		Assert::IsTrue(Size{16, 16} == second.size());
 	}
 
-	TEST_METHOD(BitmapTest_MoveConstructor) {
+	TEST_METHOD(MoveConstructor) {
 		//Arrange
 		Size size{32, 32};
 		Bitmap source(size);
@@ -98,7 +98,7 @@ public:
 		Assert::IsTrue(size == moved.size());
 	}
 
-	TEST_METHOD(BitmapTest_MoveAssignment) {
+	TEST_METHOD(MoveAssignment) {
 		//Arrange
 		Bitmap first({16, 16});
 		Bitmap second({32, 32});

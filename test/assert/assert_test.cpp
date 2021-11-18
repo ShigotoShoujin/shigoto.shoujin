@@ -51,7 +51,7 @@ public:
 		OnExitProcessEvent = nullptr;
 	}
 
-	TEST_METHOD(Assert_OnErrorCancelled_DoesNotRaiseOutputErrorEvent) {
+	TEST_METHOD(OnErrorCancelled_DoesNotRaiseOutputErrorEvent) {
 		TestData testdata{.onerror{.cancel = true}};
 		OnErrorEvent = {OnError, &testdata};
 		OnErrorOutputEvent = {OnErrorOutput, &testdata};
@@ -64,7 +64,7 @@ public:
 		Assert::AreEqual(0, testdata.onexitprocess.callcount);
 	}
 
-	TEST_METHOD(Assert_OnErrorOutputCancelled_DoesNotRaiseExitProcessEvent) {
+	TEST_METHOD(OnErrorOutputCancelled_DoesNotRaiseExitProcessEvent) {
 		TestData testdata{.onerroroutput{.cancel = true}};
 		OnErrorEvent = {OnError, &testdata};
 		OnErrorOutputEvent = {OnErrorOutput, &testdata};
@@ -77,7 +77,7 @@ public:
 		Assert::AreEqual(0, testdata.onexitprocess.callcount);
 	}
 
-	TEST_METHOD(Assert_OnExitProcessCancelled_DoesNotActuallyExitProcess) {
+	TEST_METHOD(OnExitProcessCancelled_DoesNotActuallyExitProcess) {
 		TestData testdata{.onexitprocess{.cancel = true}};
 		OnErrorEvent = {OnError, &testdata};
 		OnErrorOutputEvent = {OnErrorOutput, &testdata};
@@ -90,7 +90,7 @@ public:
 		Assert::AreEqual(1, testdata.onexitprocess.callcount);
 	}
 
-	TEST_METHOD(Assert_OnErrorRaised_ParametersOk) {
+	TEST_METHOD(OnErrorRaised_ParametersOk) {
 		TestData testdata{.onerror{.cancel = true}};
 		ErrorInfo& ei = testdata.ei;
 		OnErrorEvent = {OnError, &testdata};
@@ -99,8 +99,8 @@ public:
 		auto line = __LINE__ + 1;
 		SHOUJIN_ASSERT_EXPLICIT(("This assertion will fail", kFailCode), [kFailCode](int ret_code) { return ret_code != kFailCode; });
 
-		Assert::IsTrue(ei.file.ends_with(TEXT("assert_test.cpp")));
-		Assert::IsTrue(ei.function.starts_with(TEXT("AssertTest::Assert_OnErrorRaised_ParametersOk::")));
+		Assert::IsTrue(ei.file.ends_with(TEXT("test.cpp")));
+		Assert::IsTrue(ei.function.starts_with(TEXT("AssertTest::OnErrorRaised_ParametersOk::")));
 		Assert::IsTrue(line == ei.line);
 		Assert::IsTrue(ei.expression == TEXT("(\"This assertion will fail\", kFailCode)"));
 		Assert::IsTrue(any_cast<int>(ei.result) == kFailCode);
