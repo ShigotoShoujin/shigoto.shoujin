@@ -35,6 +35,8 @@ public:
 	virtual void Fill(Color color);
 	virtual void Draw(HDC source, Point position, Size size, Point src_position = {});
 	virtual void Draw(const Bitmap& source);
+
+	void TestDiBits();
 };
 
 }

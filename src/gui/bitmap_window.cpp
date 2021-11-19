@@ -27,7 +27,8 @@ Window::CreateParam BitmapWindow::OnCreateParam()
 bool BitmapWindow::OnCreate(const CREATESTRUCT& createparam)
 {
 	_bitmap = std::make_unique<Bitmap>(client_size());
-	_bitmap->Fill(Color::Lime);
+	//_bitmap->Fill(Color::Lime);
+	_bitmap->TestDiBits();
 	return true;
 }
 

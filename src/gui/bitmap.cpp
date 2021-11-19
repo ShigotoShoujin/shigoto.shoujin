@@ -115,6 +115,50 @@ void Bitmap::Draw(const Bitmap& source)
 	Draw(source._hdc, {}, {w, h});
 }
 
+void Bitmap::TestDiBits()
+{
+	constexpr size_t bytes_per_pixel = 3;
+	constexpr size_t bits_per_pixel = bytes_per_pixel * 8;
+
+	struct Pixel {
+		uint8_t b, g, r;
+	};
+
+	BITMAPINFO bi{};
+	BITMAPINFOHEADER& bih = bi.bmiHeader;
+	bih.biSize = sizeof(bih);
+	auto getdibits_result = GetDIBits(_hdc, _hbitmap, 0, 0, nullptr, &bi, DIB_RGB_COLORS);
+	SHOUJIN_ASSERT_WIN32(getdibits_result && getdibits_result != ERROR_INVALID_PARAMETER);
+
+	auto width = bih.biWidth;
+	auto height = bih.biHeight;
+	auto size = bih.biWidth * bih.biHeight;
+	auto pixels = new Pixel[size];
+
+	bih.biHeight = -height;
+	bih.biBitCount = bits_per_pixel;
+	bih.biCompression = BI_RGB;
+	getdibits_result = GetDIBits(_hdc, _hbitmap, 0, height, pixels, &bi, DIB_RGB_COLORS);
+	SHOUJIN_ASSERT_WIN32(getdibits_result && getdibits_result != ERROR_INVALID_PARAMETER);
+
+	auto step = 255.0 / width;
+
+	auto it = pixels;
+	auto end = it + size;
+	while(it < end) {
+		auto line_end = it + width;
+		auto c = 0.0;
+		while(it < line_end) {
+			it->r = static_cast<uint8_t>(c += step);
+			it->g = 0;
+			it->b = 0;
+			++it;
+		}
+	}
+
+	SHOUJIN_ASSERT_WIN32(SetDIBits(_hdc, _hbitmap, 0, height, pixels, &bi, DIB_RGB_COLORS));
+}
+
 }
 
 static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hbitmap)
