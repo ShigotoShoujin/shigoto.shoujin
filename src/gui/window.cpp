@@ -255,28 +255,28 @@ void Window::OnDestroy()
 Window::MessageResult Window::RaiseOnCreate(const WindowMessage& message)
 {
 	auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
-	return OnCreateEvent ? OnCreateEvent(*this, createparam) : OnCreate(createparam);
+	return OnCreate(createparam) | (OnCreateEvent ? OnCreateEvent(*this, createparam) : false);
 }
 
 Window::MessageResult Window::RaiseOnDispatchMessage(const MSG& msg)
 {
-	return OnDispatchMessageEvent ? OnDispatchMessageEvent(msg) : OnDispatchMessage(msg);
+	return OnDispatchMessage(msg) | (OnDispatchMessageEvent ? OnDispatchMessageEvent(msg) : false);
 }
 
 Window::MessageResult Window::RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	WindowMessage wmsg{msg, wparam, lparam};
-	return OnWndProcEvent ? OnWndProcEvent(wmsg) : OnWndProc(wmsg);
+	return OnWndProc(wmsg) | (OnWndProcEvent ? OnWndProcEvent(wmsg) : false);
 }
 
 Window::MessageResult Window::RaiseOnClose()
 {
-	return OnCloseEvent ? OnCloseEvent() : OnClose();
+	return OnClose() | (OnCloseEvent ? OnCloseEvent() : false);
 }
 
 Window::MessageResult Window::RaiseOnPaint()
 {
-	return OnPaintEvent ? OnPaintEvent() : OnPaint();
+	return OnPaint() | (OnPaintEvent ? OnPaintEvent() : false);
 }
 
 Window::MessageResult Window::RaiseOnSizing(const WindowMessage& message)
@@ -284,7 +284,7 @@ Window::MessageResult Window::RaiseOnSizing(const WindowMessage& message)
 	RECT* sizing_rect = reinterpret_cast<RECT*>(message.lparam);
 	Rect new_rect = *sizing_rect;
 
-	MessageResult onsizing_handled = OnSizingEvent ? OnSizingEvent(message.wparam, &new_rect) : OnSizing(message.wparam, &new_rect);
+	MessageResult onsizing_handled = OnSizing(message.wparam, &new_rect) | (OnSizingEvent ? OnSizingEvent(message.wparam, &new_rect) : false);
 
 	if(onsizing_handled)
 		*sizing_rect = new_rect;
@@ -297,7 +297,7 @@ Window::MessageResult Window::RaiseOnSizing(const WindowMessage& message)
 
 Window::MessageResult Window::RaiseOnSizingFinished()
 {
-	return OnSizingFinishedEvent ? OnSizingFinishedEvent() : OnSizingFinished();
+	return OnSizingFinished() | (OnSizingFinishedEvent ? OnSizingFinishedEvent() : false);
 }
 
 Window::MessageResult Window::RaiseOnDestroy()

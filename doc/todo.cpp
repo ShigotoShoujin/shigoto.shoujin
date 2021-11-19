@@ -1,7 +1,3 @@
-// TODO Rethink event VS virtual method, both should be called and working with each others
-
-// TODO class BitmapWindow : public Window, public Bitmap
-
 // TODO Layout, Min/Max WindowSize and Min/Max ClientSize
 
 // TODO Try to make WindowHandle Parent a WindowHandle* instead of HWND, or remove WindowHandle class to replate with direct HWND
