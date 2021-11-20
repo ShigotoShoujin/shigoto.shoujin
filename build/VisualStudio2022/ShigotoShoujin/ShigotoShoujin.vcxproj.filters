@@ -120,7 +120,7 @@
     <ClInclude Include="..\..\..\src\gui\bitmap_window.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap_memory.hpp">
+    <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -176,7 +176,7 @@
     <ClCompile Include="..\..\..\src\gui\bitmap_window.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap_memory.cpp">
+    <ClCompile Include="..\..\..\src\gui\bitmap_bits.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
   </ItemGroup>

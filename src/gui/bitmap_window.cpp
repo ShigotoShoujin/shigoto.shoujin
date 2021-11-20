@@ -27,8 +27,32 @@ Window::CreateParam BitmapWindow::OnCreateParam()
 bool BitmapWindow::OnCreate(const CREATESTRUCT& createparam)
 {
 	_bitmap = std::make_unique<Bitmap>(client_size());
-	//_bitmap->Fill(Color::Lime);
-	_bitmap->TestDiBits();
+
+	auto bits = _bitmap->GetBits();
+
+	auto width = _bitmap->size().x;
+	auto step = 255.0 / width;
+
+	auto it = bits.begin();
+	auto end = bits.end();
+	while(it < end) {
+		auto line_end = it + width;
+		auto c = 0.0;
+		while(it < line_end) {
+			it->r = 0;
+			it->g = static_cast<uint8_t>(c += step);
+			it->b = 0;
+			++it;
+		}
+	}
+
+	//auto z = bits.PixelRows();
+	//for(auto& row : bits.PixelRows())
+	//	for(auto& p : row)
+	//		p.r = 100;
+
+	_bitmap->SetBits(bits);
+
 	return true;
 }
 

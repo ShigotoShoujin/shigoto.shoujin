@@ -1,4 +1,5 @@
 #pragma once
+#include "bitmap_bits.hpp"
 #include "types.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -36,7 +37,8 @@ public:
 	virtual void Draw(HDC source, Point position, Size size, Point src_position = {});
 	virtual void Draw(const Bitmap& source);
 
-	void TestDiBits();
+	BitmapBits GetBits() const;
+	void SetBits(const BitmapBits&);
 };
 
 }
