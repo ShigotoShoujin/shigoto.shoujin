@@ -37,6 +37,7 @@
     <ClCompile Include="..\..\..\test\gui\window_taborder_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_handle_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_test.cpp" />
+    <ClCompile Include="grid_test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -38,6 +38,7 @@
     <ClCompile Include="..\..\..\test\gui\bitmap_window_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
+    <ClCompile Include="grid_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">

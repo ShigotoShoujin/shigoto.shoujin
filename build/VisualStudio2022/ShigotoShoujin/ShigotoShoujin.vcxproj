@@ -195,6 +195,7 @@
     <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
+    <ClInclude Include="grid_wip.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\doc\todo.cpp" />

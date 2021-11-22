@@ -123,6 +123,9 @@
     <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="grid_wip.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
