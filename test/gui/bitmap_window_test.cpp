@@ -30,7 +30,7 @@ public:
 
 	TEST_METHOD(ShowWindow_Paint_OK) {
 		BitmapWindow bitmap_window;
-		bitmap_window.OnCreateEvent = OnCreatePostCloseMsg;
+		//bitmap_window.OnCreateEvent = OnCreatePostCloseMsg;
 		bitmap_window.ShowModal();
 	}
 };

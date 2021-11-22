@@ -175,6 +175,8 @@
     <ClInclude Include="..\..\..\src\event.hpp" />
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\file\logfile.hpp" />
+    <ClInclude Include="..\..\..\src\grid.hpp" />
+    <ClInclude Include="..\..\..\src\grid_wip.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap_window.hpp" />
@@ -195,7 +197,6 @@
     <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
     <ClInclude Include="..\..\..\src\tstring.hpp" />
-    <ClInclude Include="grid_wip.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\doc\todo.cpp" />
