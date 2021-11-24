@@ -53,7 +53,7 @@ public:
 };
 
 template<Cell T>
-class Grid {
+class Grid : public Iterable<T*> {
 public:
 	Grid(int width, int height);
 	Grid(const Grid&) = delete;
@@ -65,18 +65,12 @@ public:
 	[[nodiscard]] int width() const { return _width; }
 	[[nodiscard]] int height() const { return _height; }
 
-	[[nodiscard]] T* begin() { return _begin; }
-	[[nodiscard]] T* end() { return _end; }
-	[[nodiscard]] const T* begin() const { return _begin; }
-	[[nodiscard]] const T* end() const { return _end; }
-	[[nodiscard]] const T* cbegin() const { return _begin; }
-	[[nodiscard]] const T* cend() const { return _end; }
-
 	[[nodiscard]] Iterable<RowIterator<T>> Rows();
 
 private:
 	T *_begin, *_end;
 	int _width, _height;
+	T* _construct(T*& end);
 	void _move(Grid&) noexcept;
 	void _destroy() noexcept;
 };
@@ -107,12 +101,10 @@ template<Cell T> CellIterator<T> CellIterator<T>::operator++(int)
 
 template<Cell T> Grid<T>::Grid(int width, int height) :
 	_width{width},
-	_height{height}
+	_height{height},
+	_begin{_construct(_end)},
+	Iterable<T*>{_begin, _end}
 {
-	auto size = width * height;
-	_begin = new T[size];
-	_end = _begin + size;
-
 	for(auto& it = _begin; it != _end; ++it)
 		*it = {};
 }
@@ -134,6 +126,14 @@ template<Cell T> Grid<T>::~Grid() { _destroy(); }
 template<Cell T> [[nodiscard]] Iterable<RowIterator<T>> Grid<T>::Rows()
 {
 	return {_begin, _end, _width};
+}
+
+template<Cell T> T* Grid<T>::_construct(T*& end)
+{
+	auto size = _width * _height;
+	_begin = new T[size];
+	_end = _begin + size;
+	return _begin;
 }
 
 template<Cell T> void Grid<T>::_move(Grid& rhs) noexcept
