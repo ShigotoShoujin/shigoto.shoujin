@@ -31,6 +31,9 @@
     <Filter Include="src\gui\userctl">
       <UniqueIdentifier>{d146e26e-421a-4765-85a9-9e15c47e0813}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\grid">
+      <UniqueIdentifier>{57eeb460-dbf1-4927-ac71-47615ced8fa0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -126,8 +129,23 @@
     <ClInclude Include="..\..\..\src\grid_wip.hpp">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grid.hpp">
+    <ClInclude Include="..\..\..\src\grid_old.hpp">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\grid\iterable.hpp">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\grid\iterable_iterator.hpp">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\grid\forward_step_iterator.hpp">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\grid\grid.hpp">
+      <Filter>src\grid</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\grid\grid_rows.hpp">
+      <Filter>src\grid</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

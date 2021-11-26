@@ -28,6 +28,8 @@
     <ClCompile Include="..\..\..\test\assert\stream_to_file_redirector_test.cpp" />
     <ClCompile Include="..\..\..\test\event_test.cpp" />
     <ClCompile Include="..\..\..\test\file\file_test.cpp" />
+    <ClCompile Include="..\..\..\test\grid\forward_step_iterator_test.cpp" />
+    <ClCompile Include="..\..\..\test\grid\iterable_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap_window_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\layout\layout_stream_test.cpp" />
@@ -37,7 +39,6 @@
     <ClCompile Include="..\..\..\test\gui\window_taborder_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_handle_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_test.cpp" />
-    <ClCompile Include="grid_test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

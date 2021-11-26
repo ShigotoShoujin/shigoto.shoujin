@@ -31,7 +31,6 @@ TEST_CLASS(EventTest) {
 
 public:
 	TEST_METHOD(IsCopyConstructible) {
-
 		Assert::IsTrue(std::is_copy_constructible_v<Event<>>);
 	}
 

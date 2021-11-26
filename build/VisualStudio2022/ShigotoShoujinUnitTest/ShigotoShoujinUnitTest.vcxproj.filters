@@ -38,7 +38,12 @@
     <ClCompile Include="..\..\..\test\gui\bitmap_window_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="grid_test.cpp" />
+    <ClCompile Include="..\..\..\test\grid\iterable_test.cpp">
+      <Filter>grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\grid\forward_step_iterator_test.cpp">
+      <Filter>grid</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">
@@ -55,6 +60,9 @@
     </Filter>
     <Filter Include="gui\layout">
       <UniqueIdentifier>{cb50b92d-11c3-4049-9af8-b93cb632d300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="grid">
+      <UniqueIdentifier>{82843378-44bb-4999-95f1-5a2a87851edf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
