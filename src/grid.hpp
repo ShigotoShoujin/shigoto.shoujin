@@ -15,45 +15,78 @@ public:
 	using pointer = T*;
 	using reference = T&;
 
-	CellIterator(T* begin, int step);
+	CellIterator(T* begin, T* end, int step);
 	T& operator*();
 	T* operator->();
 	CellIterator& operator++();
 	CellIterator operator++(int);
 	friend bool operator==(const CellIterator&, const CellIterator&) = default;
 
+	int* begin()
+	{
+		return _it;
+	}
+
+	int* end()
+	{
+		return _end;
+	}
+
 private:
-	T* _it;
+	T *_it, *_end;
 	int _step;
 };
 
-template<typename IteratorType>
-class Iterable {
+template<Cell T>
+class RowIterator {
 public:
-	Iterable(const IteratorType& begin, const IteratorType& end) : _begin{begin}, _end{end} {}
+	using iterator_category = std::forward_iterator_tag;
+	using difference_type = std::ptrdiff_t;
+	using value_type = T;
+	using pointer = T*;
+	using reference = T&;
+
+	RowIterator(T* begin, int step);
+	T& operator*();
+	T* operator->();
+	RowIterator& operator++();
+	RowIterator operator++(int);
+	friend bool operator==(const RowIterator&, const RowIterator&) = default;
+
+	[[nodiscard]] CellIterator<T> begin() { return _cell_begin; }
+	[[nodiscard]] CellIterator<T> end() { return _cell_end; }
+	[[nodiscard]] const CellIterator<T> begin() const { return _cell_begin; }
+	[[nodiscard]] const CellIterator<T> end() const { return _cell_end; }
+	[[nodiscard]] const CellIterator<T> cbegin() const { return _cell_begin; }
+	[[nodiscard]] const CellIterator<T> cend() const { return _cell_end; }
 
 private:
-	IteratorType _begin, _end;
-
-	[[nodiscard]] IteratorType* begin() { return _begin; }
-	[[nodiscard]] IteratorType* end() { return _end; }
-	[[nodiscard]] const IteratorType* begin() const { return _begin; }
-	[[nodiscard]] const IteratorType* end() const { return _end; }
-	[[nodiscard]] const IteratorType* cbegin() const { return _begin; }
-	[[nodiscard]] const IteratorType* cend() const { return _end; }
+	T *_it, *_end;
+	int _step;
+	CellIterator<T> _cell_begin, _cell_end;
 };
 
 template<Cell T>
-class RowIterator : public CellIterator<T>, public Iterable<CellIterator<T>> {
+class GridRows {
 public:
-	RowIterator(T* begin, T* end, int step) :
-		CellIterator{begin, step},
-		Iterable{begin, end}
-		{}
+	GridRows(T* begin, T* end, int step) :
+		_begin{begin, step},
+		_end{end, step}
+	{}
+
+	[[nodiscard]] RowIterator<T> begin() { return _begin; }
+	[[nodiscard]] RowIterator<T> end() { return _end; }
+	[[nodiscard]] const RowIterator<T> begin() const { return _begin; }
+	[[nodiscard]] const RowIterator<T> end() const { return _end; }
+	[[nodiscard]] const RowIterator<T> cbegin() const { return _begin; }
+	[[nodiscard]] const RowIterator<T> cend() const { return _end; }
+
+private:
+	RowIterator<T> _begin, _end;
 };
 
 template<Cell T>
-class Grid : public Iterable<T*> {
+class Grid {
 public:
 	Grid(int width, int height);
 	Grid(const Grid&) = delete;
@@ -65,12 +98,11 @@ public:
 	[[nodiscard]] int width() const { return _width; }
 	[[nodiscard]] int height() const { return _height; }
 
-	[[nodiscard]] Iterable<RowIterator<T>> Rows();
+	[[nodiscard]] GridRows<T> Rows();
 
 private:
 	T *_begin, *_end;
 	int _width, _height;
-	T* _construct(T*& end);
 	void _move(Grid&) noexcept;
 	void _destroy() noexcept;
 };
@@ -79,8 +111,11 @@ private:
 
 namespace shoujin {
 
-template<Cell T> CellIterator<T>::CellIterator(T* begin, int step) :
-	_it{begin}, _step{step} {}
+template<Cell T> CellIterator<T>::CellIterator(T* begin, T* end, int step) :
+	_it{begin},
+	_end{end},
+	_step{step}
+{}
 
 template<Cell T> T& CellIterator<T>::operator*() { return *_it; }
 
@@ -99,12 +134,39 @@ template<Cell T> CellIterator<T> CellIterator<T>::operator++(int)
 	return self;
 }
 
+template<Cell T> RowIterator<T>::RowIterator(T* begin, int step) :
+	_it{begin},
+	_end{begin + step},
+	_step{step},
+	_cell_begin{_it, _end, step},
+	_cell_end{_end, _end, step}
+{}
+
+template<Cell T> T& RowIterator<T>::operator*() { return *_it; }
+
+template<Cell T> T* RowIterator<T>::operator->() { return _it; }
+
+template<Cell T> RowIterator<T>& RowIterator<T>::operator++()
+{
+	_it += _step;
+	return *this;
+}
+
+template<Cell T> RowIterator<T> RowIterator<T>::operator++(int)
+{
+	auto self = *this;
+	++*this;
+	return self;
+}
+
 template<Cell T> Grid<T>::Grid(int width, int height) :
 	_width{width},
-	_height{height},
-	_begin{_construct(_end)},
-	Iterable<T*>{_begin, _end}
+	_height{height}
 {
+	auto size = _width * _height;
+	_begin = new T[size];
+	_end = _begin + size;
+
 	for(auto& it = _begin; it != _end; ++it)
 		*it = {};
 }
@@ -123,17 +185,9 @@ template<Cell T> Grid<T>& Grid<T>::operator=(Grid&& rhs) noexcept
 
 template<Cell T> Grid<T>::~Grid() { _destroy(); }
 
-template<Cell T> [[nodiscard]] Iterable<RowIterator<T>> Grid<T>::Rows()
+template<Cell T> [[nodiscard]] GridRows<T> Grid<T>::Rows()
 {
-	return {_begin, _end, _width};
-}
-
-template<Cell T> T* Grid<T>::_construct(T*& end)
-{
-	auto size = _width * _height;
-	_begin = new T[size];
-	_end = _begin + size;
-	return _begin;
+	return GridRows<T>{_begin, _end, _width};
 }
 
 template<Cell T> void Grid<T>::_move(Grid& rhs) noexcept

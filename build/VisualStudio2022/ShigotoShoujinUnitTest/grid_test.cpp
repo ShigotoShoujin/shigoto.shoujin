@@ -6,6 +6,19 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace shoujin;
 
+#include <iostream>
+#include <iomanip>
+static void IterateUsingRangeFor(Grid<int>& grid)
+{
+	std::cout << "Iterate though all rows cells\n";
+	for(auto&& row_it : grid.Rows()) {
+		//for(auto&& cell : row_it)
+		//	std::cout << std::setw(2) << std::setfill('0') << cell << ',';
+		std::cout << '\n';
+	}
+	std::cout << '\n';
+}
+
 TEST_CLASS(GridTest) {
 public:
 	TEST_METHOD(IsNotCopyConstructible) {
@@ -26,8 +39,8 @@ public:
 
 	TEST_METHOD(Grid_WIP_Test)
 	{
-		Grid<int> grid(8, 8);
+		Grid<int> grid(8, 5);
 		//IterateWithFor(grid);
-		//IterateWithRangeFor(grid);
+		IterateUsingRangeFor(grid);
 	}
 };
