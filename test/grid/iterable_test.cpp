@@ -101,10 +101,11 @@ public:
 		}
 
 		//Assert
-		auto compare_row =
-			[&width](int* actual, int* expected) -> bool {
+		auto compare_row = [&width](int* actual, int* expected) -> bool {
+			bool result = false;
 			for(int i = 0; i < width; ++i, ++actual, ++expected)
-				return *actual == *expected;
+				result |= *actual == *expected;
+			return result;
 		};
 
 		Assert::AreEqual<size_t>(height, result.size());
