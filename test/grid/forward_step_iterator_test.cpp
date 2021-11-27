@@ -4,8 +4,6 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include "../../src/grid/forward_step_iterator.hpp"
 #include <array>
-#include <iostream>
-#include <iomanip>
 
 using namespace shoujin;
 
@@ -119,9 +117,8 @@ public:
 
 	TEST_METHOD(IterateStepTwo_OK) {
 		//Arrange
-		constexpr int kStep = 2;
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data(), kStep};
+		ForwardStepIterator<int> fsi{arr.data(), 2};
 
 		//Assert
 		Assert::AreEqual(1, *fsi++);
@@ -131,13 +128,11 @@ public:
 
 	TEST_METHOD(ObjectIterateStepTwo_OK) {
 		//Arrange
-		constexpr int kStep = 2;
-		constexpr int kSize = 10;
-		auto arr = std::array<Pixel, kSize>();
+		auto arr = std::array<Pixel, 10>();
 
 		//Act
-		auto begin = ForwardStepIterator<Pixel>{arr.data(), kStep};
-		auto end = ForwardStepIterator<Pixel>{arr.data() + kSize, kStep};
+		auto begin = ForwardStepIterator<Pixel>{arr.data(), 2};
+		auto end = ForwardStepIterator<Pixel>{arr.data() + arr.size(), 2};
 		for(auto it = begin; it != end; ++it)
 			it->r = 50;
 

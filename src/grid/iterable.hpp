@@ -18,7 +18,7 @@ public:
 	[[nodiscard]] const T* cbegin() const { return _begin; }
 	[[nodiscard]] const T* cend() const { return _end; }
 
-	void MoveRange(T* begin)
+	void SetBegin(T* begin)
 	{
 		_end = begin + (_end - _begin);
 		_begin = begin;
