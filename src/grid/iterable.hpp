@@ -6,6 +6,11 @@ template<typename T>
 class Iterable
 {
 public:
+	Iterable() :
+		_begin{},
+		_end{}
+	{}
+
 	Iterable(T* begin, T* end) :
 		_begin{begin},
 		_end{end}
@@ -22,6 +27,12 @@ public:
 	{
 		_end = begin + (_end - _begin);
 		_begin = begin;
+	}
+
+	void SetBeginEnd(T* begin, T* end)
+	{
+		_begin = begin;
+		_end = end;
 	}
 
 private:

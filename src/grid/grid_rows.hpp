@@ -3,7 +3,7 @@
 //#include "iterable_iterator.hpp"
 //
 //template<typename T>
-//class GridRows : public Iterable<IterableIterator<ForwardIterator<T>>>
+//class GridRows : public Iterable<IterableIterator<ForwardStepIterator<T>>>
 //{
 //public:
 //	GridRows(T* begin, T* end, int width) :
