@@ -50,7 +50,51 @@ public:
 
 		//Assert
 		Assert::AreEqual(grid.size(), result.size());
-		for(int i = 0, end = grid.size(); i < end; ++i)
+		size_t end = grid.size();
+		for(int i = 0; i < end; ++i)
 			Assert::AreEqual(grid[i], result[i]);
+	}
+
+	TEST_METHOD(RowIterateRangeFor_OK) {
+		//Arrange
+		const int kWidth = 7, kHeight = 5;
+		auto grid = _make_grid(kWidth, kHeight);
+		std::vector<std::vector<int>> result(kHeight);
+
+		//Act
+		int y = 0;
+		for(auto&& row : grid.Rows()) {
+			for(auto&& cell : row) {
+				result[y].push_back(*cell);
+			}
+		}
+	}
+
+	TEST_METHOD(RowIterateBeginEnd_OK) {
+		//Arrange
+		const int kWidth = 7, kHeight = 5;
+		auto grid = _make_grid(kWidth, kHeight);
+		std::vector<std::vector<int>> result(kHeight);
+
+		//Act
+		int y = 0;
+
+		auto&& row_begin = grid.Rows().begin();
+		auto&& row_end = grid.Rows().end();
+		for(auto&& row_it = row_begin; row_it != row_end; ++row_it) {
+			auto&& cell_begin = row_it->begin();
+			auto&& cell_end = row_it->end();
+			for(auto&& cell_it = cell_begin; cell_it != cell_end; ++cell_it) {
+				result[y].push_back(**cell_it);
+			}
+		}
+	}
+
+	Grid<int> _make_grid(int width, int height)
+	{
+		Grid<int> grid(width, height);
+		for(int i = 0; auto&& it : grid)
+			it = ++i;
+		return grid;
 	}
 };

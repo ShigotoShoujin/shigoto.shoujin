@@ -12,6 +12,11 @@ public:
 	using pointer = value_type*;
 	using reference = value_type&;
 
+	ForwardStepIterator() :
+		_it{},
+		_step{}
+	{}
+
 	ForwardStepIterator(pointer begin, int step = 1) :
 		_it{begin},
 		_step{step}
@@ -34,7 +39,17 @@ public:
 		return self;
 	}
 
-	[[nodiscard]] friend bool operator==(const ForwardStepIterator&, const ForwardStepIterator&) = default;
+	//[[nodiscard]] friend bool operator==(const ForwardStepIterator&, const ForwardStepIterator&) = default;
+	
+	[[nodiscard]] friend bool operator==(const ForwardStepIterator& lhs, const ForwardStepIterator& rhs)
+	{
+		return lhs._it == rhs._it;
+	}
+	
+	[[nodiscard]] friend bool operator!=(const ForwardStepIterator& lhs, const ForwardStepIterator& rhs)
+	{
+		return lhs._it != rhs._it;
+	}
 
 private:
 	pointer _it;

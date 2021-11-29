@@ -7,6 +7,8 @@ namespace shoujin {
 template<typename T>
 class IterableIterator : public ForwardStepIterator<T>, public Iterable<T> {
 public:
+	IterableIterator() {}
+
 	IterableIterator(T* begin, T* end, int step) :
 		ForwardStepIterator<T>{begin, step},
 		Iterable<T>{begin, end}
