@@ -1,0 +1,19 @@
+int
+
+class Rows : Iterable<Row>, Iterator<Row>
+	Row* begin
+	Row* end
+
+class Row : Iterable<int>
+	int* begin
+	int* end
+
+for(auto&& row : grid.Rows())
+	//grid.Rows has Row* begin
+	//row is *grid.Rows.begin is Row
+	//++row is Row operator++
+
+for(auto&& cell : row)
+	//row has int* begin
+	//cell is *row.begin is int
+	//++row is int pointer arithmetic

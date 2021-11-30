@@ -3,8 +3,7 @@
 namespace shoujin {
 
 template<typename T>
-class Iterable
-{
+class Iterable {
 public:
 	Iterable() :
 		_begin{},
@@ -23,13 +22,13 @@ public:
 	[[nodiscard]] const T* cbegin() const { return _begin; }
 	[[nodiscard]] const T* cend() const { return _end; }
 
-	void SetBegin(T* begin)
+	void Reset(T* begin)
 	{
 		_end = begin + (_end - _begin);
 		_begin = begin;
 	}
 
-	void SetBeginEnd(T* begin, T* end)
+	void Reset(T* begin, T* end)
 	{
 		_begin = begin;
 		_end = end;

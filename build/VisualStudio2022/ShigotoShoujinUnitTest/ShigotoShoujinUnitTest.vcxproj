@@ -30,7 +30,7 @@
     <ClCompile Include="..\..\..\test\file\file_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\forward_step_iterator_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\grid_test.cpp" />
-    <ClCompile Include="..\..\..\test\grid\iterable_iterator_test.cpp" />
+    <ClCompile Include="..\..\..\test\grid\row_iterator_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\iterable_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap_window_test.cpp" />

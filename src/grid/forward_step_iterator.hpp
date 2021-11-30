@@ -22,6 +22,12 @@ public:
 		_step{step}
 	{}
 
+	void Reset(pointer begin, int step = 1)
+	{
+		_it = begin;
+		_step = step;
+	}
+
 	[[nodiscard]] reference operator*() { return *_it; }
 
 	[[nodiscard]] pointer operator->() { return _it; }
@@ -40,12 +46,12 @@ public:
 	}
 
 	//[[nodiscard]] friend bool operator==(const ForwardStepIterator&, const ForwardStepIterator&) = default;
-	
+
 	[[nodiscard]] friend bool operator==(const ForwardStepIterator& lhs, const ForwardStepIterator& rhs)
 	{
 		return lhs._it == rhs._it;
 	}
-	
+
 	[[nodiscard]] friend bool operator!=(const ForwardStepIterator& lhs, const ForwardStepIterator& rhs)
 	{
 		return lhs._it != rhs._it;

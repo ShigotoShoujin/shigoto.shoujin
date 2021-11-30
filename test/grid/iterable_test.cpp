@@ -62,7 +62,7 @@ public:
 			Assert::AreEqual(i + 1, result[i]);
 	}
 
-	TEST_METHOD(SetBegin_OK) {
+	TEST_METHOD(Reset_OK) {
 		//Arrange
 		auto arr = _array_of_int<5>();
 		auto iterable = Iterable<int>{arr.data(), arr.data() + 2};
@@ -73,7 +73,7 @@ public:
 		for(auto&& it : iterable)
 			result.push_back(it);
 
-		iterable.SetBegin(arr.data() + 3);
+		iterable.Reset(arr.data() + 3);
 
 		for(auto&& it : iterable)
 			result.push_back(it);
@@ -97,7 +97,7 @@ public:
 		for(int y = 0; y < height; ++y) {
 			for(int i = 0; auto&& it : iterable)
 				result[y].push_back(it);
-			iterable.SetBegin(arr.data() + (y + 1) * width);
+			iterable.Reset(arr.data() + (y + 1) * width);
 		}
 
 		//Assert

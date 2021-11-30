@@ -6,7 +6,7 @@
 namespace shoujin {
 
 template<typename T>
-class Grid : public Iterable<T> {
+class Grid : public Iterable<T*> {
 public:
 	Grid(int width, int height);
 
@@ -17,7 +17,7 @@ public:
 	[[nodiscard]] T& operator[](int index) const { return _data[index]; }
 	[[nodiscard]] T* data() { return _data.data(); }
 	[[nodiscard]] T& operator[](int index) { return _data[index]; }
-	Iterable<IterableIterator<ForwardStepIterator<T>>> Rows();
+	//Iterable<IterableIterator<ForwardStepIterator<T>, ForwardStepIterator<T>>*> Rows();
 
 private:
 	int _width, _height;
@@ -32,7 +32,7 @@ Grid<T>::Grid(int width, int height) :
 	_height{height}
 {
 	_data.resize(width * height);
-	Iterable<T>::SetBeginEnd(_data.data(), _data.data() + _data.size());
+	Iterable<T*>::SetBeginEnd(_data.data(), _data.data() + _data.size());
 
 	auto* begin = data();
 	auto* end = data() + size();
@@ -44,11 +44,11 @@ Grid<T>::Grid(int width, int height) :
 	_iterableiterator_begin = {&a, &b, 1};
 	_iterableiterator_end = {&c, &d, 1};
 }
-
-template<typename T>
-Iterable<IterableIterator<ForwardStepIterator<T>>> Grid<T>::Rows()
-{
-	return { &_iterableiterator_begin, &_iterableiterator_end };
-}
+//
+//template<typename T>
+//Iterable<IterableIterator<ForwardStepIterator<T>, ForwardStepIterator<T>>*> Grid<T>::Rows()
+//{
+//	return { &_iterableiterator_begin, &_iterableiterator_end };
+//}
 
 }

@@ -126,25 +126,16 @@
     <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grid_wip.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\grid_old.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\grid\iterable.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\iterable_iterator.hpp">
+    <ClInclude Include="..\..\..\src\grid\row_iterator.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\grid\forward_step_iterator.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\grid\grid.hpp">
-      <Filter>src\grid</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\grid_rows.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
   </ItemGroup>
@@ -203,5 +194,10 @@
     <ClCompile Include="..\..\..\src\gui\bitmap_bits.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\..\src\grid\Rows&amp;&amp;Row.txt">
+      <Filter>src\grid</Filter>
+    </Text>
   </ItemGroup>
 </Project>
