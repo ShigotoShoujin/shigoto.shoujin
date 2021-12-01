@@ -17,3 +17,28 @@ for(auto&& cell : row)
 	//row has int* begin
 	//cell is *row.begin is int
 	//++row is int pointer arithmetic
+
+
+class Row : Iterable<T>
+	int* begin
+	int* end
+
+class Rows : Iterable<Iterator<Iterable<T>>>
+{
+	Iterator<Iterable<T>> begin();
+	Iterator<Iterable<T>> end();
+}
+
+class Rows : Iterable<Iterator<Row>>
+{
+	Iterator<Row> begin();
+	Iterator<Row> end();
+}
+
+for(auto&& row : grid.Rows())
+	for(auto&& cell : row)
+		cell is int
+		int* row.begin
+		operator++ is on int*
+		row is Iterable<int>
+		row is Iterable<T>

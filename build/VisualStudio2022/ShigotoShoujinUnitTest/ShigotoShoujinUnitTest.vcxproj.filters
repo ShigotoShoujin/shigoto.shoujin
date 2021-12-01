@@ -41,14 +41,17 @@
     <ClCompile Include="..\..\..\test\grid\iterable_test.cpp">
       <Filter>grid</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\grid\forward_step_iterator_test.cpp">
+    <ClCompile Include="..\..\..\test\grid\iterator_test.cpp">
       <Filter>grid</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\grid\row_iterator_test.cpp">
+    <ClCompile Include="..\..\..\test\grid\rows_test.cpp">
       <Filter>grid</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\grid\grid_test.cpp">
       <Filter>grid</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\grid\assist\grid_assist.cpp">
+      <Filter>grid\assist</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,5 +73,13 @@
     <Filter Include="grid">
       <UniqueIdentifier>{82843378-44bb-4999-95f1-5a2a87851edf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="grid\assist">
+      <UniqueIdentifier>{60d56a6a-20e0-4430-87fc-5ea5f1ba7499}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\grid\assist\grid_assist.hpp">
+      <Filter>grid\assist</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

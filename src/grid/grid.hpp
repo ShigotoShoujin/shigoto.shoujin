@@ -17,13 +17,13 @@ public:
 	[[nodiscard]] T& operator[](int index) const { return _data[index]; }
 	[[nodiscard]] T* data() { return _data.data(); }
 	[[nodiscard]] T& operator[](int index) { return _data[index]; }
-	//Iterable<IterableIterator<ForwardStepIterator<T>, ForwardStepIterator<T>>*> Rows();
+	//Iterable<IterableIterator<Iterator<T>, Iterator<T>>*> Rows();
 
 private:
 	int _width, _height;
 	std::vector<T> _data;
-	IterableIterator<ForwardStepIterator<T>> _iterableiterator_begin, _iterableiterator_end;
-	ForwardStepIterator<T> a, b, c, d;
+	IterableIterator<Iterator<T>> _iterableiterator_begin, _iterableiterator_end;
+	Iterator<T> a, b, c, d;
 };
 
 template<typename T>
@@ -46,7 +46,7 @@ Grid<T>::Grid(int width, int height) :
 }
 //
 //template<typename T>
-//Iterable<IterableIterator<ForwardStepIterator<T>, ForwardStepIterator<T>>*> Grid<T>::Rows()
+//Iterable<IterableIterator<Iterator<T>, Iterator<T>>*> Grid<T>::Rows()
 //{
 //	return { &_iterableiterator_begin, &_iterableiterator_end };
 //}

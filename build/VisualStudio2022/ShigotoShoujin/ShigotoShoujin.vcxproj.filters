@@ -129,10 +129,10 @@
     <ClInclude Include="..\..\..\src\grid\iterable.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\row_iterator.hpp">
+    <ClInclude Include="..\..\..\src\grid\rows.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\forward_step_iterator.hpp">
+    <ClInclude Include="..\..\..\src\grid\iterator.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\grid\grid.hpp">

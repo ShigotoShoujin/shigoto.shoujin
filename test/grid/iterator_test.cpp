@@ -2,37 +2,37 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-#include "../../src/grid/forward_step_iterator.hpp"
+#include "../../src/grid/iterator.hpp"
 #include <array>
 
 using namespace shoujin;
 
-TEST_CLASS(ForwardStepIteratorTest) {
+TEST_CLASS(IteratorTest) {
 	struct Pixel {
 		uint8_t r{160}, g{80}, b{255};
 	};
 
 public:
 	TEST_METHOD(IsCopyConstructible) {
-		Assert::IsTrue(std::is_copy_constructible_v<ForwardStepIterator<int>>);
+		Assert::IsTrue(std::is_copy_constructible_v<Iterator<int>>);
 	}
 
 	TEST_METHOD(IsCopyAssignable) {
-		Assert::IsTrue(std::is_copy_assignable_v<ForwardStepIterator<int>>);
+		Assert::IsTrue(std::is_copy_assignable_v<Iterator<int>>);
 	}
 
 	TEST_METHOD(IsMoveConstructible) {
-		Assert::IsTrue(std::is_move_constructible_v<ForwardStepIterator<int>>);
+		Assert::IsTrue(std::is_move_constructible_v<Iterator<int>>);
 	}
 
 	TEST_METHOD(IsMoveAssignable) {
-		Assert::IsTrue(std::is_move_assignable_v<ForwardStepIterator<int>>);
+		Assert::IsTrue(std::is_move_assignable_v<Iterator<int>>);
 	}
 
 	TEST_METHOD(DeferenceOperator_OK) {
 		//Arrange
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data()};
+		Iterator<int> fsi{arr.data()};
 
 		//Act
 		int result = fsi.operator*();
@@ -44,7 +44,7 @@ public:
 	TEST_METHOD(AccessOperator_OK) {
 		//Arrange
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data()};
+		Iterator<int> fsi{arr.data()};
 
 		//Act
 		int* result = fsi.operator->();
@@ -56,7 +56,7 @@ public:
 	TEST_METHOD(IncrementOperator_OK) {
 		//Arrange
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data()};
+		Iterator<int> fsi{arr.data()};
 
 		//Act
 		int result_a = *++fsi;
@@ -70,7 +70,7 @@ public:
 	TEST_METHOD(PostIncrementOperator_OK) {
 		//Arrange
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data()};
+		Iterator<int> fsi{arr.data()};
 
 		//Act
 		int result_a = *fsi++;
@@ -84,7 +84,7 @@ public:
 	TEST_METHOD(EqualityOperator_OK) {
 		//Arrange
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data()};
+		Iterator<int> fsi{arr.data()};
 
 		//Assert
 		Assert::IsTrue(fsi == fsi);
@@ -93,7 +93,7 @@ public:
 	TEST_METHOD(InequalityOperator_OK) {
 		//Arrange
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data()};
+		Iterator<int> fsi{arr.data()};
 
 		//Act
 		auto next = ++fsi;
@@ -105,7 +105,7 @@ public:
 	TEST_METHOD(IterateStepOne_OK) {
 		//Arrange
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data()};
+		Iterator<int> fsi{arr.data()};
 
 		//Assert
 		Assert::AreEqual(1, *fsi++);
@@ -118,7 +118,7 @@ public:
 	TEST_METHOD(IterateStepTwo_OK) {
 		//Arrange
 		auto arr = _array_of_five_int();
-		ForwardStepIterator<int> fsi{arr.data(), 2};
+		Iterator<int> fsi{arr.data(), 2};
 
 		//Assert
 		Assert::AreEqual(1, *fsi++);
@@ -131,8 +131,8 @@ public:
 		auto arr = std::array<Pixel, 10>();
 
 		//Act
-		auto begin = ForwardStepIterator<Pixel>{arr.data(), 2};
-		auto end = ForwardStepIterator<Pixel>{arr.data() + arr.size(), 2};
+		auto begin = Iterator<Pixel>{arr.data(), 2};
+		auto end = Iterator<Pixel>{arr.data() + arr.size(), 2};
 		for(auto it = begin; it != end; ++it)
 			it->r = 50;
 
