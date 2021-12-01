@@ -57,13 +57,13 @@ public:
 		auto&& row_begin = rows.begin();
 		auto&& row_end = rows.end();
 		auto&& row_it = row_begin;
-		auto&& row = *row_begin;
 		while(row_it != row_end) {
+			auto&& row = *row_begin;
 			auto&& cell_begin = row.begin();
 			auto&& cell_end = row.end();
 			auto&& cell_it = cell_begin;
-			auto&& cell = *cell_begin;
 			while(cell_it != cell_end) {
+				auto&& cell = *cell_begin;
 				grid_vec.Push(y, cell);
 				++cell_it;
 			}
