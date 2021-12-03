@@ -5,68 +5,85 @@
 namespace shoujin {
 
 template<typename T>
-class RowIterator : public Iterable<T*> {
+class RowIterator {
 public:
-	RowIterator(T* begin, T* end) :
-		Iterable<T*>{begin, end}
+	RowIterator() {}
+
+	RowIterator(T* begin, T* end)
 	{}
 
-	void NextRow()
+	T* begin() { return _begin; }
+	T* end() { return _end; }
+
+	void Reset(T* begin, T* end)
 	{
-		size_t size = Iterable<T*>::end() - Iterable<T*>::begin();
-		Iterable<T*>::Reset(Iterable<T*>::begin() + size, Iterable<T*>::end() + size);
+		_begin = begin;
+		_end = end;
 	}
+
+private:
+	T *_begin, *_end;
 };
 
 template<typename T>
-class RowsIterator : public Iterator<RowIterator<T>> {
+class RowsIterator {
 public:
 	RowsIterator() {}
 
-	RowsIterator(RowIterator<T>* begin, int step) :
-		Iterator<RowIterator<T>>{begin, step}
+	RowsIterator(T* begin, T* end, int step) :
+		_it{begin},
+		_begin{begin},
+		_end{end},
+		_step{step}
 	{}
 
-	Iterator<RowIterator<T>>& operator++()
+	[[nodiscard]] RowIterator<T>& operator*()
 	{
-		Iterator<RowIterator<T>>::operator->()->NextRow();
-		Iterator<RowIterator<T>>::operator++();
+		_row_iterator.Reset(_it, _it + _step);
+		return _row_iterator;
+	}
+
+	[[nodiscard]] RowIterator<T>* operator->()
+	{
+		return &_row_iterator;
+	}
+
+	RowsIterator& operator++()
+	{
+		_it += _step;
 		return *this;
 	}
 
-	Iterator<RowIterator<T>> operator++(int)
+	RowsIterator operator++(int)
 	{
 		auto self = *this;
 		++*this;
 		return self;
 	}
+
+	[[nodiscard]] friend bool operator==(const RowsIterator<T>& lhs, const RowsIterator<T>& rhs)
+	{
+		return lhs._it == rhs._it;
+	}
+
+	[[nodiscard]] friend bool operator!=(const RowsIterator<T>& lhs, const RowsIterator<T>& rhs)
+	{
+		return lhs._it != rhs._it;
+	}
+
+private:
+	T *_begin, *_end;
+	T* _it;
+	int _step;
+	RowIterator<T> _row_iterator;
 };
 
 template<typename T>
 class Rows : public Iterable<RowsIterator<T>> {
 public:
 	Rows(T* begin, T* end, int step) :
-		_cell_begin{begin, begin + step},
-		_cell_end{end, end},
-		_row_begin{&_cell_begin, step},
-		_row_end{&_cell_end, step}
-	{
-		Iterable<RowsIterator<T>>::Reset(_row_begin, _row_end);
-	}
-
-	RowsIterator<T> begin()
-	{
-		return Iterable<RowsIterator<T>>::begin();
-	}
-
-	RowsIterator<T> end()
-	{
-		return Iterable<RowsIterator<T>>::end();
-	}
-
-private:
-	RowIterator<T> _cell_begin, _cell_end;
-	RowsIterator<T> _row_begin, _row_end;
+		Iterable<RowsIterator<T>>{{begin, end, step}, {end, end, step}}
+	{}
 };
 
 }
