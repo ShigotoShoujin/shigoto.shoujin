@@ -72,7 +72,7 @@ public:
 		}
 
 		//Assert
-		grid_vec.AssertSameAsArray<array_size>(arr);
+		grid_vec.AssertSameAsArray(arr);
 	}
 
 	TEST_METHOD(IterateBeginEnd_OK) {
@@ -104,7 +104,7 @@ public:
 		}
 
 		//Assert
-		grid_vec.AssertSameAsArray<array_size>(arr);
+		grid_vec.AssertSameAsArray(arr);
 	}
 
 	Grid<int> _make_grid(int width, int height)
