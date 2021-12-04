@@ -44,9 +44,6 @@
     <ClCompile Include="..\..\..\test\grid\iterator_test.cpp">
       <Filter>grid</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\grid\rows_test.cpp">
-      <Filter>grid</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\grid\grid_test.cpp">
       <Filter>grid</Filter>
     </ClCompile>

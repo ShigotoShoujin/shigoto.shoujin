@@ -1,6 +1,5 @@
 #pragma once
 #include "iterable.hpp"
-#include "iterable_iterator.hpp"
 #include <vector>
 
 namespace shoujin {
@@ -8,7 +7,24 @@ namespace shoujin {
 template<typename T>
 class Grid : public Iterable<T*> {
 public:
-	Grid(int width, int height);
+#include "grid.inc"
+
+	Grid(int width, int height) :
+		_width{width},
+		_height{height}
+	{
+		_construct();
+	}
+
+	template<int width, int height>
+	static Grid<T> CreateFromArray(const std::array<T, width * height>& array)
+	{
+		Grid<T> grid(width, height);
+		auto* data = grid.data();
+		for(int i = 0, size = width * height; i < size; ++i)
+			data[i] = array[i];
+		return grid;
+	}
 
 	[[nodiscard]] int width() const { return _width; }
 	[[nodiscard]] int height() const { return _height; }
@@ -17,38 +33,23 @@ public:
 	[[nodiscard]] T& operator[](int index) const { return _data[index]; }
 	[[nodiscard]] T* data() { return _data.data(); }
 	[[nodiscard]] T& operator[](int index) { return _data[index]; }
-	//Iterable<IterableIterator<Iterator<T>, Iterator<T>>*> Rows();
+
+	Iterable<RowsIterator<T>> Rows()
+	{
+		T* begin = _data.data();
+		T* end = begin + _data.size();
+		return Iterable<RowsIterator<T>>{{begin, _width}, {end, _width}};
+	}
 
 private:
 	int _width, _height;
 	std::vector<T> _data;
-	IterableIterator<Iterator<T>> _iterableiterator_begin, _iterableiterator_end;
-	Iterator<T> a, b, c, d;
+
+	void _construct()
+	{
+		_data.resize(_width * _height);
+		Iterable<T*>::Reset(_data.data(), _data.data() + _data.size());
+	}
 };
-
-template<typename T>
-Grid<T>::Grid(int width, int height) :
-	_width{width},
-	_height{height}
-{
-	_data.resize(width * height);
-	Iterable<T*>::SetBeginEnd(_data.data(), _data.data() + _data.size());
-
-	auto* begin = data();
-	auto* end = data() + size();
-	a = {begin, 1};
-	b = {begin + _width, 1};
-	c = {end, 1};
-	d = {end, 1};
-
-	_iterableiterator_begin = {&a, &b, 1};
-	_iterableiterator_end = {&c, &d, 1};
-}
-//
-//template<typename T>
-//Iterable<IterableIterator<Iterator<T>, Iterator<T>>*> Grid<T>::Rows()
-//{
-//	return { &_iterableiterator_begin, &_iterableiterator_end };
-//}
 
 }

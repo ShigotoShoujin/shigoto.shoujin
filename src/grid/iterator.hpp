@@ -45,17 +45,7 @@ public:
 		return self;
 	}
 
-	//[[nodiscard]] friend bool operator==(const Iterator&, const Iterator&) = default;
-
-	[[nodiscard]] friend bool operator==(const Iterator& lhs, const Iterator& rhs)
-	{
-		return lhs._it == rhs._it;
-	}
-
-	[[nodiscard]] friend bool operator!=(const Iterator& lhs, const Iterator& rhs)
-	{
-		return lhs._it != rhs._it;
-	}
+	[[nodiscard]] friend bool operator==(const Iterator&, const Iterator&) = default;
 
 private:
 	pointer _it;

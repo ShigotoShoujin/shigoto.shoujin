@@ -103,6 +103,6 @@ public:
 		}
 
 		//Assert
-		grid_vec.AssertSameAsArray<array_size>(arr);
+		grid_vec.AssertSameAsArray(arr);
 	}
 };

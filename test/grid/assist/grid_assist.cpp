@@ -25,9 +25,9 @@ void GridVectorAsserter::_assert_all_rows_same_size()
 
 bool GridVectorAsserter::_compare_row(const int* actual, const int* expected)
 {
-	bool result = false;
+	bool result = true;
 	for(int i = 0; i < _width; ++i, ++actual, ++expected)
-		result |= *actual == *expected;
+		result &= *actual == *expected;
 	return result;
 }
 

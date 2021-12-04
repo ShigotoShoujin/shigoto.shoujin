@@ -178,7 +178,6 @@
     <ClInclude Include="..\..\..\src\grid\iterator.hpp" />
     <ClInclude Include="..\..\..\src\grid\grid.hpp" />
     <ClInclude Include="..\..\..\src\grid\iterable.hpp" />
-    <ClInclude Include="..\..\..\src\grid\rows.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap_window.hpp" />
@@ -221,7 +220,7 @@
     <ClCompile Include="..\..\..\src\gui\window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\src\grid\Rows&amp;&amp;Row.txt" />
+    <None Include="..\..\..\src\grid\grid.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

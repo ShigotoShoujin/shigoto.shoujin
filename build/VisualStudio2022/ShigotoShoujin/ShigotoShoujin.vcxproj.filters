@@ -129,9 +129,6 @@
     <ClInclude Include="..\..\..\src\grid\iterable.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\rows.hpp">
-      <Filter>src\grid</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\grid\iterator.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
@@ -196,8 +193,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\src\grid\Rows&amp;&amp;Row.txt">
+    <None Include="..\..\..\src\grid\grid.inc">
       <Filter>src\grid</Filter>
-    </Text>
+    </None>
   </ItemGroup>
 </Project>

@@ -31,7 +31,6 @@
     <ClCompile Include="..\..\..\test\grid\assist\grid_assist.cpp" />
     <ClCompile Include="..\..\..\test\grid\iterator_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\grid_test.cpp" />
-    <ClCompile Include="..\..\..\test\grid\rows_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\iterable_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap_window_test.cpp" />
