@@ -14,19 +14,19 @@ TEST_CLASS(IteratorTest) {
 
 public:
 	TEST_METHOD(IsCopyConstructible) {
-		Assert::IsTrue(std::is_copy_constructible_v<Iterator<int>>);
+		static_assert(std::is_copy_constructible_v<Iterator<int>>);
 	}
 
 	TEST_METHOD(IsCopyAssignable) {
-		Assert::IsTrue(std::is_copy_assignable_v<Iterator<int>>);
+		static_assert(std::is_copy_assignable_v<Iterator<int>>);
 	}
 
 	TEST_METHOD(IsMoveConstructible) {
-		Assert::IsTrue(std::is_move_constructible_v<Iterator<int>>);
+		static_assert(std::is_move_constructible_v<Iterator<int>>);
 	}
 
 	TEST_METHOD(IsMoveAssignable) {
-		Assert::IsTrue(std::is_move_assignable_v<Iterator<int>>);
+		static_assert(std::is_move_assignable_v<Iterator<int>>);
 	}
 
 	TEST_METHOD(DeferenceOperator_OK) {

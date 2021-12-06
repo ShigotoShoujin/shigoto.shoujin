@@ -31,19 +31,19 @@ TEST_CLASS(EventTest) {
 
 public:
 	TEST_METHOD(IsCopyConstructible) {
-		Assert::IsTrue(std::is_copy_constructible_v<Event<>>);
+		static_assert(std::is_copy_constructible_v<Event<>>);
 	}
 
 	TEST_METHOD(IsCopyAssignable) {
-		Assert::IsTrue(std::is_copy_assignable_v<Event<>>);
+		static_assert(std::is_copy_assignable_v<Event<>>);
 	}
 
 	TEST_METHOD(IsMoveConstructible) {
-		Assert::IsTrue(std::is_move_constructible_v<Event<>>);
+		static_assert(std::is_move_constructible_v<Event<>>);
 	}
 
 	TEST_METHOD(IsMoveAssignable) {
-		Assert::IsTrue(std::is_move_assignable_v<Event<>>);
+		static_assert(std::is_move_assignable_v<Event<>>);
 	}
 
 	TEST_METHOD(VoidParam_EventRaised) {
