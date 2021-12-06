@@ -24,19 +24,19 @@ public:
 	}
 
 	TEST_METHOD(IsCopyConstructible) {
-		static_assert(std::is_copy_constructible_v<ColorControl>);
+		Assert::IsTrue(std::is_copy_constructible_v<ColorControl>);
 	}
 
 	TEST_METHOD(IsCopyAssignable) {
-		static_assert(std::is_copy_assignable_v<ColorControl>);
+		Assert::IsTrue(std::is_copy_assignable_v<ColorControl>);
 	}
 
 	TEST_METHOD(IsMoveConstructible) {
-		static_assert(std::is_move_constructible_v<ColorControl>);
+		Assert::IsTrue(std::is_move_constructible_v<ColorControl>);
 	}
 
 	TEST_METHOD(IsMoveAssignable) {
-		static_assert(std::is_move_assignable_v<ColorControl>);
+		Assert::IsTrue(std::is_move_assignable_v<ColorControl>);
 	}
 
 	TEST_METHOD(WIP_Test) {

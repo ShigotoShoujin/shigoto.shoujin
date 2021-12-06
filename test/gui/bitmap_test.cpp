@@ -9,19 +9,19 @@ using namespace shoujin::gui;
 TEST_CLASS(BitmapTest) {
 public:
 	TEST_METHOD(IsCopyConstructible) {
-		static_assert(std::is_copy_constructible_v<Bitmap>);
+		Assert::IsTrue(std::is_copy_constructible_v<Bitmap>);
 	}
 
 	TEST_METHOD(IsCopyAssignable) {
-		static_assert(std::is_copy_assignable_v<Bitmap>);
+		Assert::IsTrue(std::is_copy_assignable_v<Bitmap>);
 	}
 
 	TEST_METHOD(IsMoveConstructible) {
-		static_assert(std::is_move_constructible_v<Bitmap>);
+		Assert::IsTrue(std::is_move_constructible_v<Bitmap>);
 	}
 
 	TEST_METHOD(IsMoveAssignable) {
-		static_assert(std::is_move_assignable_v<Bitmap>);
+		Assert::IsTrue(std::is_move_assignable_v<Bitmap>);
 	}
 
 	static bool OnError(const shoujin::assert::ErrorInfo& ei, void* userdata)

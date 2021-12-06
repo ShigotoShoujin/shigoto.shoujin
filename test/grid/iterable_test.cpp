@@ -10,19 +10,19 @@ using namespace shoujin;
 TEST_CLASS(IterableTest) {
 public:
 	TEST_METHOD(IsCopyConstructible) {
-		static_assert(std::is_copy_constructible_v<Iterable<int*>>);
+		Assert::IsTrue(std::is_copy_constructible_v<Iterable<int*>>);
 	}
 
 	TEST_METHOD(IsCopyAssignable) {
-		static_assert(std::is_copy_assignable_v<Iterable<int*>>);
+		Assert::IsTrue(std::is_copy_assignable_v<Iterable<int*>>);
 	}
 
 	TEST_METHOD(IsMoveConstructible) {
-		static_assert(std::is_move_constructible_v<Iterable<int*>>);
+		Assert::IsTrue(std::is_move_constructible_v<Iterable<int*>>);
 	}
 
 	TEST_METHOD(IsMoveAssignable) {
-		static_assert(std::is_move_assignable_v<Iterable<int*>>);
+		Assert::IsTrue(std::is_move_assignable_v<Iterable<int*>>);
 	}
 
 	TEST_METHOD(IterateOver5_OK) {

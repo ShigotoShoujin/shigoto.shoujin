@@ -18,19 +18,19 @@ TEST_CLASS(LayoutStreamTest) {
 
 public:
 	TEST_METHOD(IsCopyConstructible) {
-		static_assert(std::is_copy_constructible_v<LayoutStream>);
+		Assert::IsTrue(std::is_copy_constructible_v<LayoutStream>);
 	}
 
 	TEST_METHOD(IsCopyAssignable) {
-		static_assert(std::is_copy_assignable_v<LayoutStream>);
+		Assert::IsTrue(std::is_copy_assignable_v<LayoutStream>);
 	}
 
 	TEST_METHOD(IsMoveConstructible) {
-		static_assert(std::is_move_constructible_v<LayoutStream>);
+		Assert::IsTrue(std::is_move_constructible_v<LayoutStream>);
 	}
 
 	TEST_METHOD(IsMoveAssignable) {
-		static_assert(std::is_move_assignable_v<LayoutStream>);
+		Assert::IsTrue(std::is_move_assignable_v<LayoutStream>);
 	}
 
 	TEST_METHOD(GivenNoOps_EmptyLayout) {
