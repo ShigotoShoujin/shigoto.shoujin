@@ -135,6 +135,9 @@
     <ClInclude Include="..\..\..\src\grid\grid.hpp">
       <Filter>src\grid</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\grid\grid2.hpp">
+      <Filter>src\grid</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">

@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\..\test\event_test.cpp" />
     <ClCompile Include="..\..\..\test\file\file_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\assist\grid_assist.cpp" />
+    <ClCompile Include="..\..\..\test\grid\grid2_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\iterator_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\grid_test.cpp" />
     <ClCompile Include="..\..\..\test\grid\iterable_test.cpp" />

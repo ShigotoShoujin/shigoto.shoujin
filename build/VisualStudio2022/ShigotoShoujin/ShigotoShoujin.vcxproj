@@ -175,6 +175,7 @@
     <ClInclude Include="..\..\..\src\event.hpp" />
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\file\logfile.hpp" />
+    <ClInclude Include="..\..\..\src\grid\grid2.hpp" />
     <ClInclude Include="..\..\..\src\grid\iterator.hpp" />
     <ClInclude Include="..\..\..\src\grid\grid.hpp" />
     <ClInclude Include="..\..\..\src\grid\iterable.hpp" />

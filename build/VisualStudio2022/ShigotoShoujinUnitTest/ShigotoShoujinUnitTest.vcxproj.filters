@@ -50,6 +50,9 @@
     <ClCompile Include="..\..\..\test\grid\assist\grid_assist.cpp">
       <Filter>grid\assist</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\grid\grid2_test.cpp">
+      <Filter>grid</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">
