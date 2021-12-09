@@ -4,11 +4,25 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include "../../src/grid/grid2.hpp"
 #include <iterator>
+#include <utility>
 #include <vector>
 
 using namespace shoujin;
 
 TEST_CLASS(Grid2Test) {
+	Grid2 CreateFilledGrid(size_t width, size_t height)
+	{
+		Grid2 grid(width, height);
+
+		auto&& it = grid.data();
+		auto&& end = it + grid.size();
+		auto i = 0;
+		while(it != end)
+			*it++ = i++;
+
+		return grid;
+	}
+
 public:
 	TEST_METHOD(HasAlias_ValueType_IsType) {
 		Assert::IsTrue(std::is_same_v<Grid2::value_type, int>);
@@ -62,10 +76,71 @@ public:
 		Assert::IsTrue(std::is_destructible_v<Grid2>);
 	}
 
-	//TEST_METHOD(begin_IteratorToFirstElement) {
+	TEST_METHOD(Width_ReturnWidth) {
+		Grid2 grid(5, 3);
+		Assert::AreEqual<size_t>(5, grid.width());
+	}
 
-	//}
+	TEST_METHOD(Height_ReturnHeight) {
+		Grid2 grid(5, 3);
+		Assert::AreEqual<size_t>(3, grid.height());
+	}
 
+	TEST_METHOD(Size_ReturnWidthTimesHeight) {
+		Grid2 grid(5, 3);
+		Assert::AreEqual<size_t>(15, grid.size());
+	}
+
+	TEST_METHOD(Data_ReturnSameAsBegin) {
+		Grid2 grid(5, 3);
+		Assert::IsTrue(*grid.data() == *grid.begin());
+	}
+
+	TEST_METHOD(BeginEnd_DifferenceIsSameAsSize) {
+		Grid2 grid(5, 3);
+		auto diff = grid.end() - grid.begin();
+		Assert::IsTrue(diff == grid.size());
+	}
+
+	TEST_METHOD(RangeFor_EnumerateEachValue) {
+		auto grid = CreateFilledGrid(5, 3);
+		auto i = 0;
+
+		for(auto&& it : grid)
+			Assert::AreEqual(i++, it);
+	}
+
+	TEST_METHOD(RangeForConst_EnumerateEachValue) {
+		auto grid = CreateFilledGrid(5, 3);
+		auto i = 0;
+
+		for(auto&& it : std::as_const(grid))
+			Assert::AreEqual(i++, it);
+	}
+
+	TEST_METHOD(ComparisonOperator_WhenSizeMismatch_ReturnFalse) {
+		auto a = CreateFilledGrid(5, 3);
+		auto b = CreateFilledGrid(3, 5);
+
+		Assert::IsFalse(a == b);
+		Assert::IsTrue(a != b);
+	}
+
+	TEST_METHOD(ComparisonOperator_WhenDataMismatch_ReturnFalse) {
+		auto a = CreateFilledGrid(2, 3);
+		auto b = Grid2(2, 3);
+
+		Assert::IsFalse(a == b);
+		Assert::IsTrue(a != b);
+	}
+
+	TEST_METHOD(ComparisonOperator_WhenDataMatch_ReturnTrue) {
+		auto a = CreateFilledGrid(2, 3);
+		auto b = CreateFilledGrid(2, 3);
+
+		Assert::IsTrue(a == b);
+		Assert::IsFalse(a != b);
+	}
 
 	//TEST_METHOD(ConstLinearIterate_OK) {
 	//	//Arrange

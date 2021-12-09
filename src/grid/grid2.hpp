@@ -32,18 +32,19 @@ public:
 	[[nodiscard]] constexpr const_iterator end() const noexcept { return _vector.end(); };
 	[[nodiscard]] constexpr const_iterator cbegin() const noexcept { return _vector.cbegin(); }
 	[[nodiscard]] constexpr const_iterator cend() const noexcept { return _vector.cend(); };
+	[[nodiscard]] constexpr std::vector<int>::pointer data() noexcept { return _vector.data(); }
 	[[nodiscard]] constexpr size_t size() const noexcept { return _vector.size(); }
 	[[nodiscard]] constexpr size_t width() const noexcept { return _width; }
 	[[nodiscard]] constexpr size_t height() const noexcept { return _height; }
 
 	[[nodiscard]] constexpr friend bool operator==(Grid2 const& lhs, Grid2 const& rhs)
 	{
-		if(lhs.size() != rhs.size())
+		if(lhs.width() != rhs.width() || lhs.height() != rhs.height())
 			return false;
 
 		auto&& a = lhs.cbegin();
-		auto&& b = lhs.cbegin();
-		auto&& end = rhs.cend();
+		auto&& b = rhs.cbegin();
+		auto&& end = lhs.cend();
 		while(a < end) {
 			if(*a != *b)
 				return false;
