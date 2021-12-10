@@ -3,7 +3,9 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include "../../src/grid/grid2.hpp"
+#include <algorithm>
 #include <iterator>
+#include <ranges>
 #include <utility>
 #include <vector>
 
@@ -96,6 +98,25 @@ public:
 		Assert::IsTrue(*grid.data() == *grid.begin());
 	}
 
+	TEST_METHOD(SubscriptOperator_ReturnValue) {
+		Grid2 grid(2, 2);
+		*(grid.data() + 2) = 53;
+
+		auto actual = grid[2];
+
+		Assert::AreEqual(53, actual);
+	}
+
+	TEST_METHOD(SubscriptOperatorConst_ReturnValue) {
+		Grid2 grid(2, 2);
+		*(grid.data() + 2) = 53;
+		auto& const_grid = std::as_const(grid);
+
+		auto actual = const_grid[2];
+
+		Assert::AreEqual(53, actual);
+	}
+
 	TEST_METHOD(BeginEnd_DifferenceIsSameAsSize) {
 		Grid2 grid(5, 3);
 		auto diff = grid.end() - grid.begin();
@@ -142,21 +163,60 @@ public:
 		Assert::IsFalse(a != b);
 	}
 
-	//TEST_METHOD(ConstLinearIterate_OK) {
-	//	//Arrange
-	//	const Grid2 grid(2, 3);
-	//	std::vector<int> result;
+	TEST_METHOD(Swap_MemberFunction_Swapped) {
+		Grid2 a(2, 3);
+		Grid2 b(3, 2);
 
-	//	//Act
-	//	for(auto&& it : grid)
-	//		result.push_back(it);
+		a.swap(b);
 
-	//	//Assert
-	//	Assert::AreEqual(grid.size(), result.size());
-	//	for(int i : {1, 2, 3, 4, 5, 6})
-	//		Assert::AreEqual(i, result[i]);
-	//}
+		Assert::AreEqual<size_t>(3, a.width());
+		Assert::AreEqual<size_t>(2, b.width());
+	}
 
-	//TEST_METHOD(ConstIterateRangeFor_OK) {
-	//}
+	TEST_METHOD(Swap_GlobalFunction_Swapped) {
+		Grid2 a(2, 3);
+		Grid2 b(3, 2);
+
+		swap(a, b);
+
+		Assert::AreEqual<size_t>(3, a.width());
+		Assert::AreEqual<size_t>(2, b.width());
+	}
+
+	TEST_METHOD(Initializer_Width_ReturnWidth) {
+		Grid2 grid{1, 2, {}};
+		Assert::AreEqual<size_t>(1, grid.width());
+	}
+
+	TEST_METHOD(Initializer_Height_ReturnHeight) {
+		Grid2 grid{1, 2, {}};
+		Assert::AreEqual<size_t>(2, grid.height());
+	}
+
+	TEST_METHOD(Initializer_Empty_AllItemsHaveDefaultValue) {
+		Grid2 grid{1, 2, {}};
+		Assert::IsTrue(std::all_of(grid.begin(), grid.end(), [](int i) { return i == 0; }));
+	}
+
+	TEST_METHOD(Initializer_AllItemsInitialized) {
+		auto values = {4, 3, 2, 6, 4, 1};
+
+		Grid2 grid{3, 2, values};
+
+		Assert::IsTrue(std::equal(grid.begin(), grid.end(), values.begin()));
+	}
+
+	TEST_METHOD(Initializer_TooManyItems_ExtraItemsIgnored) {
+		Grid2 grid{1, 2, {4, 5, 6, 7}};
+
+		auto expected = {4, 5, 6};
+		Assert::IsTrue(std::equal(grid.begin(), grid.end(), expected.begin()));
+	}
+
+	TEST_METHOD(Initializer_NotEnoughItems_RemainingItemsHaveDefaultValue) {
+		Grid2 grid{1, 2, {1, 2}};
+
+		auto expected = {1, 2, 0, 0};
+		Assert::IsTrue(std::equal(grid.begin(), grid.end(), expected.begin()));
+	}
 };
