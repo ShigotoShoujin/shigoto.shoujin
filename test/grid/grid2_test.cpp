@@ -4,10 +4,12 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include "../../src/grid/grid2.hpp"
 #include <algorithm>
+#include <cstdint>
 #include <iterator>
 #include <ranges>
 #include <utility>
 #include <vector>
+#include <limits>
 
 using namespace shoujin;
 
@@ -26,31 +28,31 @@ TEST_CLASS(Grid2Test) {
 	}
 
 public:
-	TEST_METHOD(HasAlias_ValueType_IsType) {
+	TEST_METHOD(Alias_ValueType_IsType) {
 		Assert::IsTrue(std::is_same_v<Grid2::value_type, int>);
 	}
 
-	TEST_METHOD(HasAlias_Reference_IsTypeRef) {
+	TEST_METHOD(Alias_Reference_IsTypeRef) {
 		Assert::IsTrue(std::is_same_v<Grid2::reference, int&>);
 	}
 
-	TEST_METHOD(HasAlias_ConstReference_IsConstTypeRef) {
+	TEST_METHOD(Alias_ConstReference_IsConstTypeRef) {
 		Assert::IsTrue(std::is_same_v<Grid2::const_reference, int const&>);
 	}
 
-	TEST_METHOD(HasAlias_Iterator_IsVectorTypeIterator) {
+	TEST_METHOD(Alias_Iterator_IsVectorTypeIterator) {
 		Assert::IsTrue(std::is_same_v<Grid2::iterator, std::vector<int>::iterator>);
 	}
 
-	TEST_METHOD(HasAlias_ConstIterator_IsVectorTypeConstIterator) {
+	TEST_METHOD(Alias_ConstIterator_IsVectorTypeConstIterator) {
 		Assert::IsTrue(std::is_same_v<Grid2::const_iterator, std::vector<int>::const_iterator>);
 	}
 
-	TEST_METHOD(HasAlias_DifferenceType_IsVectorTypeDifferenceType) {
+	TEST_METHOD(Alias_DifferenceType_IsVectorTypeDifferenceType) {
 		Assert::IsTrue(std::is_same_v<Grid2::difference_type, std::vector<int>::difference_type>);
 	}
 
-	TEST_METHOD(HasAlias_SizeType_IsVectorTypeSizeType) {
+	TEST_METHOD(Alias_SizeType_IsVectorTypeSizeType) {
 		Assert::IsTrue(std::is_same_v<Grid2::size_type, std::vector<int>::size_type>);
 	}
 
@@ -93,9 +95,33 @@ public:
 		Assert::AreEqual<size_t>(15, grid.size());
 	}
 
+	TEST_METHOD(MaxSize_GreaterThanOne) {
+		Grid2 grid(5, 3);
+
+		auto actual = grid.max_size();
+
+		Assert::IsTrue(actual > 0);
+	}
+
 	TEST_METHOD(Data_ReturnSameAsBegin) {
 		Grid2 grid(5, 3);
 		Assert::IsTrue(*grid.data() == *grid.begin());
+	}
+
+	TEST_METHOD(DataConst_ReturnSameAsBegin) {
+		Grid2 grid(5, 3);
+		auto& const_grid = std::as_const(grid);
+		Assert::IsTrue(*const_grid.data() == *const_grid.begin());
+	}
+
+	TEST_METHOD(Empty_GridIsEmpty_ReturnTrue) {
+		Grid2 grid;
+		Assert::IsTrue(grid.empty());
+	}
+
+	TEST_METHOD(Empty_GridIsNotEmpty_ReturnFalse) {
+		Grid2 grid(3, 3);
+		Assert::IsFalse(grid.empty());
 	}
 
 	TEST_METHOD(SubscriptOperator_ReturnValue) {

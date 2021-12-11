@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <initializer_list>
+#include <utility>
 #include <vector>
 
 namespace shoujin {
@@ -43,9 +44,12 @@ public:
 	[[nodiscard]] constexpr const_iterator cbegin() const noexcept { return _vector.cbegin(); }
 	[[nodiscard]] constexpr const_iterator cend() const noexcept { return _vector.cend(); };
 	[[nodiscard]] constexpr value_type* data() noexcept { return _vector.data(); }
+	[[nodiscard]] constexpr value_type const* data() const noexcept { return const_cast<value_type const*>(_vector.data()); }
+	[[nodiscard]] constexpr bool empty() const noexcept { return _vector.empty(); }
 	[[nodiscard]] constexpr reference operator[](size_type idx) noexcept { return _vector[idx]; }
 	[[nodiscard]] constexpr const_reference operator[](size_type idx) const noexcept { return _vector[idx]; }
 	[[nodiscard]] constexpr size_type size() const noexcept { return _vector.size(); }
+	[[nodiscard]] constexpr size_type max_size() const noexcept { return _vector.max_size(); }
 	[[nodiscard]] constexpr size_type width() const noexcept { return _width; }
 	[[nodiscard]] constexpr size_type height() const noexcept { return _height; }
 
