@@ -4,16 +4,168 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include "../../src/grid/grid2.hpp"
 #include <algorithm>
-#include <cstdint>
 #include <iterator>
-#include <ranges>
+#include <type_traits>
 #include <utility>
 #include <vector>
-#include <limits>
 
 using namespace shoujin;
 
-TEST_CLASS(Grid2Test) {
+TEST_CLASS(Grid_Row2Test) {
+	TEST_METHOD(Alias_ValueType_IsType) {
+		Assert::IsTrue(std::is_same_v<Row2::value_type, int>);
+	}
+
+	TEST_METHOD(Alias_Pointer_IsTypePointer) {
+		Assert::IsTrue(std::is_same_v<Row2::pointer, int*>);
+	}
+
+	TEST_METHOD(Alias_ConstPointer_IsTypeConstPointer) {
+		Assert::IsTrue(std::is_same_v<Row2::const_pointer, int const*>);
+	}
+
+	TEST_METHOD(Alias_Iterator_IsTypePointer) {
+		Assert::IsTrue(std::is_same_v<Row2::iterator, Row2::pointer>);
+	}
+
+	TEST_METHOD(Alias_ConstIterator_IsTypeConstPointer) {
+		Assert::IsTrue(std::is_same_v<Row2::const_iterator, Row2::const_pointer>);
+	}
+
+	TEST_METHOD(IsCopyConstructible) {
+		Assert::IsTrue(std::is_copy_constructible_v<Row2>);
+	}
+
+	TEST_METHOD(IsCopyAssignable) {
+		Assert::IsTrue(std::is_copy_assignable_v<Row2>);
+	}
+
+	TEST_METHOD(IsMoveConstructible) {
+		Assert::IsTrue(std::is_move_constructible_v<Row2>);
+	}
+
+	TEST_METHOD(IsMoveAssignable) {
+		Assert::IsTrue(std::is_move_assignable_v<Row2>);
+	}
+
+	TEST_METHOD(RangeFor_EnumerateEachValue) {
+		int data[]{1, 2, 3};
+		Row2 row{data, data + 3};
+		auto i = 0;
+
+		for(auto&& it : row)
+			Assert::AreEqual(++i, it);
+	}
+
+	TEST_METHOD(RangeForConst_EnumerateEachValue) {
+		int data[]{1, 2, 3};
+		Row2 row{data, data + 3};
+		auto& const_row = std::as_const(row);
+		auto i = 0;
+
+		for(auto&& it : const_row)
+			Assert::AreEqual(++i, it);
+	}
+};
+
+TEST_CLASS(Grid_ConstRowIterator2Test) {
+	TEST_METHOD(Alias_ValueType_IsType) {
+		Assert::IsTrue(std::is_same_v<ConstRowIterator2::value_type, Row2>);
+	}
+
+	TEST_METHOD(Alias_Reference_IsTypeRef) {
+		Assert::IsTrue(std::is_same_v<ConstRowIterator2::reference, ConstRowIterator2::value_type&>);
+	}
+
+	TEST_METHOD(Alias_Pointer_IsTypePointer) {
+		Assert::IsTrue(std::is_same_v<ConstRowIterator2::pointer, ConstRowIterator2::value_type*>);
+	}
+
+	TEST_METHOD(Alias_DifferenceType_IsPtrDiffT) {
+		Assert::IsTrue(std::is_same_v<ConstRowIterator2::difference_type, ptrdiff_t>);
+	}
+
+	TEST_METHOD(Alias_IteratorCategory_IsRandomAccessIterator) {
+		Assert::IsTrue(std::is_same_v<ConstRowIterator2::iterator_category, std::random_access_iterator_tag>);
+	}
+
+	TEST_METHOD(IsCopyConstructible) {
+		Assert::IsTrue(std::is_copy_constructible_v<ConstRowIterator2>);
+	}
+
+	TEST_METHOD(IsCopyAssignable) {
+		Assert::IsTrue(std::is_copy_assignable_v<ConstRowIterator2>);
+	}
+
+	TEST_METHOD(IsMoveConstructible) {
+		Assert::IsTrue(std::is_move_constructible_v<ConstRowIterator2>);
+	}
+
+	TEST_METHOD(IsMoveAssignable) {
+		Assert::IsTrue(std::is_move_assignable_v<ConstRowIterator2>);
+	}
+
+	TEST_METHOD(IsDestructible) {
+		Assert::IsTrue(std::is_destructible_v<ConstRowIterator2>);
+	}
+
+	TEST_METHOD(Size_ReturnRowLength) {
+		ConstRowIterator2 row_c_it{nullptr, 3};
+		Assert::AreEqual<size_t>(3, row_c_it.size());
+	}
+
+	TEST_METHOD(IsSwappable) {
+		ConstRowIterator2 a{nullptr, 1};
+		ConstRowIterator2 b{nullptr, 2};
+
+		using std::swap;
+		swap(a, b);
+
+		Assert::AreEqual<ConstRowIterator2::difference_type>(2, a.size());
+		Assert::AreEqual<ConstRowIterator2::difference_type>(1, b.size());
+	}
+
+	TEST_METHOD(OperatorIndirection_ReturnCurrentRow) {
+		int data[]{1, 2, 3};
+		ConstRowIterator2 row_c_it{data, 3};
+
+		auto&& actual = *row_c_it;
+
+		Assert::AreEqual(*(data + 0), *actual.begin());
+		Assert::AreEqual(*(data + 3), *actual.end());
+	}
+
+	TEST_METHOD(OperatorDereference_ReturnCurrentRow) {
+		int data[]{1, 2, 3};
+		ConstRowIterator2 row_c_it{data, 3};
+
+		auto&& actual = row_c_it.operator->();
+
+		Assert::AreEqual(*(data + 0), *actual->begin());
+		Assert::AreEqual(*(data + 3), *actual->end());
+	}
+
+	TEST_METHOD(OperatorIncrementPrefix_MoveToNextRowAndReturnIt) {
+		int data[]{1, 2, 3, 4};
+		ConstRowIterator2 row_c_it{data, 2};
+
+		auto&& actual = ++row_c_it;
+
+		Assert::AreEqual(*(data + 2), *actual->begin());
+	}
+
+	TEST_METHOD(OperatorIncrementPostfix_MoveToNextRowAndReturnPreviousRow) {
+		int data[]{1, 2, 3, 4};
+		ConstRowIterator2 row_c_it{data, 2};
+
+		auto&& actual = row_c_it++;
+
+		Assert::AreEqual(*data, *(*actual).begin());
+		Assert::AreEqual(*(data + 2), *row_c_it->begin());
+	}
+};
+
+TEST_CLASS(Grid_Grid2Test) {
 	Grid2 CreateFilledGrid(size_t width, size_t height)
 	{
 		Grid2 grid(width, height);
@@ -124,7 +276,7 @@ public:
 		Assert::IsFalse(grid.empty());
 	}
 
-	TEST_METHOD(SubscriptOperator_ReturnValue) {
+	TEST_METHOD(OperatorSubscript_ReturnValue) {
 		Grid2 grid(2, 2);
 		*(grid.data() + 2) = 53;
 
@@ -133,7 +285,7 @@ public:
 		Assert::AreEqual(53, actual);
 	}
 
-	TEST_METHOD(SubscriptOperatorConst_ReturnValue) {
+	TEST_METHOD(OperatorSubscriptConst_ReturnValue) {
 		Grid2 grid(2, 2);
 		*(grid.data() + 2) = 53;
 		auto& const_grid = std::as_const(grid);
@@ -165,7 +317,7 @@ public:
 			Assert::AreEqual(i++, it);
 	}
 
-	TEST_METHOD(ComparisonOperator_WhenSizeMismatch_ReturnFalse) {
+	TEST_METHOD(OperatorComparison_WhenSizeMismatch_ReturnFalse) {
 		auto a = CreateFilledGrid(5, 3);
 		auto b = CreateFilledGrid(3, 5);
 
@@ -173,7 +325,7 @@ public:
 		Assert::IsTrue(a != b);
 	}
 
-	TEST_METHOD(ComparisonOperator_WhenDataMismatch_ReturnFalse) {
+	TEST_METHOD(OperatorComparison_WhenDataMismatch_ReturnFalse) {
 		auto a = CreateFilledGrid(2, 3);
 		auto b = Grid2(2, 3);
 
@@ -181,7 +333,7 @@ public:
 		Assert::IsTrue(a != b);
 	}
 
-	TEST_METHOD(ComparisonOperator_WhenDataMatch_ReturnTrue) {
+	TEST_METHOD(OperatorComparison_WhenDataMatch_ReturnTrue) {
 		auto a = CreateFilledGrid(2, 3);
 		auto b = CreateFilledGrid(2, 3);
 
