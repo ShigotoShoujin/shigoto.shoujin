@@ -7,7 +7,7 @@
 
 namespace shoujin {
 
-class Row2 {
+class Row {
 public:
 	using value_type = int;
 	using pointer = value_type*;
@@ -17,9 +17,9 @@ public:
 	using iterator = pointer;
 	using const_iterator = const_pointer;
 
-	constexpr Row2() = default;
+	constexpr Row() = default;
 
-	constexpr Row2(pointer begin, pointer end) :
+	constexpr Row(pointer begin, pointer end) :
 		_begin{begin},
 		_end{end} {}
 
@@ -34,7 +34,7 @@ public:
 	[[nodiscard]] constexpr reference operator[](size_t idx) noexcept { return *(_begin + idx); };
 	[[nodiscard]] constexpr const_reference operator[](size_t idx) const noexcept { return *(_begin + idx); };
 
-	[[nodiscard]] constexpr friend bool operator==(Row2 const& lhs, Row2 const& rhs)
+	[[nodiscard]] constexpr friend bool operator==(Row const& lhs, Row const& rhs)
 	{
 		return lhs._begin == rhs._begin && lhs._end == rhs._end;
 	}
@@ -45,27 +45,27 @@ private:
 };
 
 /// <summary>
-/// ConstRowIterator is a LegacyRandomAccessIterator
-/// https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator
+/// ConstRowIterator is a LegacyBidirectionalIterator
+/// https://en.cppreference.com/w/cpp/named_req/BidirectionalIterator
 /// </summary>
-class ConstRowIterator2 {
+class ConstRowIterator {
 public:
 	using T = int;
-	using value_type = Row2;
+	using value_type = Row;
 	using pointer = value_type const*;
 	using reference = value_type const&;
 	using difference_type = ptrdiff_t;
 	using iterator_category = std::random_access_iterator_tag;
 
-	constexpr ConstRowIterator2() = default;
+	constexpr ConstRowIterator() = default;
 
-	constexpr ConstRowIterator2(T* begin, size_t row_length) :
+	constexpr ConstRowIterator(T* begin, size_t row_length) :
 		_begin{begin},
 		_row{begin, begin + row_length},
 		_row_length{row_length}
 	{}
 
-	constexpr void swap(ConstRowIterator2& right) noexcept
+	constexpr void swap(ConstRowIterator& right) noexcept
 	{
 		if(this != &right) {
 			using std::swap;
@@ -74,7 +74,7 @@ public:
 		}
 	}
 
-	constexpr friend void swap(ConstRowIterator2& left, ConstRowIterator2& right) noexcept
+	constexpr friend void swap(ConstRowIterator& left, ConstRowIterator& right) noexcept
 	{
 		left.swap(right);
 	}
@@ -83,111 +83,111 @@ public:
 	[[nodiscard]] constexpr reference operator*() const noexcept { return _row; }
 	[[nodiscard]] constexpr pointer operator->() const noexcept { return &_row; }
 
-	constexpr ConstRowIterator2& operator++() noexcept
+	constexpr ConstRowIterator& operator++() noexcept
 	{
 		_row = {_row.begin() + _row_length, _row.end() + _row_length};
 		return *this;
 	}
 
-	[[nodiscard]] constexpr ConstRowIterator2 operator++(int) noexcept
+	[[nodiscard]] constexpr ConstRowIterator operator++(int) noexcept
 	{
-		ConstRowIterator2 previous{*this};
+		ConstRowIterator previous{*this};
 		++*this;
 		return previous;
 	}
 
-	constexpr ConstRowIterator2& operator--() noexcept
+	constexpr ConstRowIterator& operator--() noexcept
 	{
 		_row = {_row.begin() - _row_length, _row.end() - _row_length};
 		return *this;
 	}
 
-	[[nodiscard]] constexpr ConstRowIterator2 operator--(int) noexcept
+	[[nodiscard]] constexpr ConstRowIterator operator--(int) noexcept
 	{
-		ConstRowIterator2 previous{*this};
+		ConstRowIterator previous{*this};
 		--*this;
 		return previous;
 	}
 
-	[[nodiscard]] constexpr friend bool operator==(ConstRowIterator2 const& lhs, ConstRowIterator2 const& rhs)
+	[[nodiscard]] constexpr friend bool operator==(ConstRowIterator const& lhs, ConstRowIterator const& rhs)
 	{
 		return lhs._row == rhs._row;
 	}
 
 private:
 	T* _begin{};
-	Row2 _row;
+	Row _row;
 	size_t _row_length{};
 };
 
 /// <summary>
-/// ConstRowIterator is a LegacyRandomAccessIterator
-/// https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator
+/// ConstRowIterator is a LegacyBidirectionalIterator
+/// https://en.cppreference.com/w/cpp/named_req/BidirectionalIterator
 /// </summary>
-class RowIterator2 : public ConstRowIterator2 {
+class RowIterator : public ConstRowIterator {
 public:
 	using pointer = value_type*;
 	using reference = value_type&;
 
-	constexpr RowIterator2() = default;
+	constexpr RowIterator() = default;
 
-	constexpr RowIterator2(int* begin, size_t row_length) :
-		ConstRowIterator2{begin, row_length} {}
+	constexpr RowIterator(int* begin, size_t row_length) :
+		ConstRowIterator{begin, row_length} {}
 
 	[[nodiscard]] constexpr reference operator*() const noexcept
 	{
-		return const_cast<reference>(ConstRowIterator2::operator*());
+		return const_cast<reference>(ConstRowIterator::operator*());
 	}
 
 	[[nodiscard]] constexpr pointer operator->() const noexcept
 	{
-		return const_cast<pointer>(ConstRowIterator2::operator->());
+		return const_cast<pointer>(ConstRowIterator::operator->());
 	}
 
-	constexpr RowIterator2& operator++() noexcept
+	constexpr RowIterator& operator++() noexcept
 	{
-		ConstRowIterator2::operator++();
+		ConstRowIterator::operator++();
 		return *this;
 	}
 
-	[[nodiscard]] constexpr RowIterator2 operator++(int) noexcept
+	[[nodiscard]] constexpr RowIterator operator++(int) noexcept
 	{
-		RowIterator2 previous{*this};
+		RowIterator previous{*this};
 		++*this;
 		return previous;
 	}
 
-	constexpr RowIterator2& operator--() noexcept
+	constexpr RowIterator& operator--() noexcept
 	{
-		ConstRowIterator2::operator--();
+		ConstRowIterator::operator--();
 		return *this;
 	}
 
-	[[nodiscard]] constexpr RowIterator2 operator--(int) noexcept
+	[[nodiscard]] constexpr RowIterator operator--(int) noexcept
 	{
-		RowIterator2 previous{*this};
+		RowIterator previous{*this};
 		--*this;
 		return previous;
 	}
 };
 
-class Rows2 {
+class GridRows {
 public:
 	using T = int;
-	constexpr Rows2() {}
+	constexpr GridRows() {}
 
-	constexpr Rows2(T* begin, T* end, size_t row_length) :
+	constexpr GridRows(T* begin, T* end, size_t row_length) :
 		_begin{begin},
 		_end{end},
 		_row_length{row_length}
 	{}
 
-	[[nodiscard]] constexpr RowIterator2 begin() noexcept { return {_begin, _row_length}; }
-	[[nodiscard]] constexpr RowIterator2 end() noexcept { return {_end, _row_length}; }
-	[[nodiscard]] constexpr ConstRowIterator2 begin() const noexcept { return {_begin, _row_length}; }
-	[[nodiscard]] constexpr ConstRowIterator2 end() const noexcept { return {_end, _row_length}; }
-	[[nodiscard]] constexpr ConstRowIterator2 cbegin() const noexcept { return {_begin, _row_length}; }
-	[[nodiscard]] constexpr ConstRowIterator2 cend() const noexcept { return {_end, _row_length}; }
+	[[nodiscard]] constexpr RowIterator begin() noexcept { return {_begin, _row_length}; }
+	[[nodiscard]] constexpr RowIterator end() noexcept { return {_end, _row_length}; }
+	[[nodiscard]] constexpr ConstRowIterator begin() const noexcept { return {_begin, _row_length}; }
+	[[nodiscard]] constexpr ConstRowIterator end() const noexcept { return {_end, _row_length}; }
+	[[nodiscard]] constexpr ConstRowIterator cbegin() const noexcept { return {_begin, _row_length}; }
+	[[nodiscard]] constexpr ConstRowIterator cend() const noexcept { return {_end, _row_length}; }
 
 private:
 	T* _begin{};
@@ -196,10 +196,10 @@ private:
 };
 
 /// <summary>
-/// Grid2 is a Container
+/// Grid is a Container
 /// https://en.cppreference.com/w/cpp/named_req/Container
 /// </summary>
-class Grid2 {
+class Grid {
 public:
 	using value_type = int;
 	using reference = value_type&;
@@ -209,15 +209,15 @@ public:
 	using difference_type = std::vector<int>::difference_type;
 	using size_type = std::vector<int>::size_type;
 
-	constexpr Grid2() = default;
+	constexpr Grid() = default;
 
-	constexpr Grid2(size_type width, size_type height) :
+	constexpr Grid(size_type width, size_type height) :
 		_vector(width * height),
 		_width{width},
 		_height{height}
 	{}
 
-	constexpr Grid2(size_type width, size_type height, std::initializer_list<int> il) :
+	constexpr Grid(size_type width, size_type height, std::initializer_list<int> il) :
 		_vector(width * height),
 		_width{width},
 		_height{height}
@@ -243,14 +243,14 @@ public:
 	[[nodiscard]] constexpr size_type width() const noexcept { return _width; }
 	[[nodiscard]] constexpr size_type height() const noexcept { return _height; }
 
-	[[nodiscard]] constexpr friend bool operator==(Grid2 const& lhs, Grid2 const& rhs) noexcept
+	[[nodiscard]] constexpr friend bool operator==(Grid const& lhs, Grid const& rhs) noexcept
 	{
 		return lhs.width() == rhs.width() &&
 			lhs.height() == rhs.height() &&
 			std::equal(lhs.begin(), lhs.end(), rhs.begin());
 	}
 
-	constexpr void swap(Grid2& right) noexcept
+	constexpr void swap(Grid& right) noexcept
 	{
 		if(this != &right) {
 			using std::swap;
@@ -260,19 +260,20 @@ public:
 		}
 	}
 
-	constexpr friend void swap(Grid2& left, Grid2& right) noexcept
+	constexpr friend void swap(Grid& left, Grid& right) noexcept
 	{
 		left.swap(right);
 	}
 
-	[[nodiscard]] constexpr Rows2 Rows() noexcept
+	[[nodiscard]] constexpr GridRows Rows() noexcept
 	{
-		return Rows2{data(), data() + size(), _width};
+		return GridRows{data(), data() + size(), _width};
 	}
 
-	//[[nodiscard]] constexpr Rows2 Rows() const noexcept
+	//TODO
+	//[[nodiscard]] constexpr GridRows Rows() const noexcept
 	//{
-	//	return Rows2{data(), data() + size(), _width};
+	//	return GridRows{data(), data() + size(), _width};
 	//}
 
 private:

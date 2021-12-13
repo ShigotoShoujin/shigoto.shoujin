@@ -175,10 +175,7 @@
     <ClInclude Include="..\..\..\src\event.hpp" />
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\file\logfile.hpp" />
-    <ClInclude Include="..\..\..\src\grid\grid2.hpp" />
-    <ClInclude Include="..\..\..\src\grid\iterator.hpp" />
-    <ClInclude Include="..\..\..\src\grid\grid.hpp" />
-    <ClInclude Include="..\..\..\src\grid\iterable.hpp" />
+    <ClInclude Include="..\..\..\src\grid.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap_window.hpp" />
@@ -219,9 +216,6 @@
     <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp" />
     <ClCompile Include="..\..\..\src\gui\logging\message_string.cpp" />
     <ClCompile Include="..\..\..\src\gui\window.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\src\grid\grid.inc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -31,9 +31,6 @@
     <Filter Include="src\gui\userctl">
       <UniqueIdentifier>{d146e26e-421a-4765-85a9-9e15c47e0813}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\grid">
-      <UniqueIdentifier>{57eeb460-dbf1-4927-ac71-47615ced8fa0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -126,17 +123,8 @@
     <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\iterable.hpp">
-      <Filter>src\grid</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\iterator.hpp">
-      <Filter>src\grid</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\grid.hpp">
-      <Filter>src\grid</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\grid\grid2.hpp">
-      <Filter>src\grid</Filter>
+    <ClInclude Include="..\..\..\src\grid.hpp">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,10 +182,5 @@
     <ClCompile Include="..\..\..\src\gui\bitmap_bits.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\src\grid\grid.inc">
-      <Filter>src\grid</Filter>
-    </None>
   </ItemGroup>
 </Project>
