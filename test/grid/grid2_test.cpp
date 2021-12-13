@@ -17,11 +17,19 @@ TEST_CLASS(Grid_Row2Test) {
 	}
 
 	TEST_METHOD(Alias_Pointer_IsTypePointer) {
-		Assert::IsTrue(std::is_same_v<Row2::pointer, int*>);
+		Assert::IsTrue(std::is_same_v<Row2::pointer, Row2::value_type*>);
 	}
 
 	TEST_METHOD(Alias_ConstPointer_IsTypeConstPointer) {
-		Assert::IsTrue(std::is_same_v<Row2::const_pointer, int const*>);
+		Assert::IsTrue(std::is_same_v<Row2::const_pointer, Row2::value_type const*>);
+	}
+
+	TEST_METHOD(Alias_Reference_IsTypeReference) {
+		Assert::IsTrue(std::is_same_v<Row2::reference, Row2::value_type&>);
+	}
+
+	TEST_METHOD(Alias_ConstReference_IsTypeConstReference) {
+		Assert::IsTrue(std::is_same_v<Row2::const_reference, Row2::value_type const&>);
 	}
 
 	TEST_METHOD(Alias_Iterator_IsTypePointer) {
@@ -48,13 +56,60 @@ TEST_CLASS(Grid_Row2Test) {
 		Assert::IsTrue(std::is_move_assignable_v<Row2>);
 	}
 
+	TEST_METHOD(IsDefaultConstructible) {
+		Assert::IsTrue(std::is_default_constructible_v<Row2>);
+	}
+
+	TEST_METHOD(RangeFor_EnumerateEachValue) {
+		int data[]{1, 2, 3};
+		Row2 row{data, data + 3};
+		int i = 0;
+
+		for(int& it : row)
+			Assert::AreEqual(++i, it);
+	}
+
+	TEST_METHOD(RangeForConst_EnumerateEachValue) {
+		int data[]{1, 2, 3};
+		Row2 row{data, data + 3};
+		const Row2 const_row = std::as_const(row);
+		int i = 0;
+
+		for(int const& it : const_row)
+			Assert::AreEqual(++i, it);
+	}
+
+	TEST_METHOD(Size_ReturnSize) {
+		int data[]{1, 2, 3};
+		const Row2 const_row{data, data + 3};
+		Assert::AreEqual<size_t>(3, const_row.size());
+	}
+
+	TEST_METHOD(OperatorSubscript_ReturnValue) {
+		int data[]{1, 2, 3};
+		const Row2 const_row{data, data + 3};
+		Assert::AreEqual(2, const_row[1]);
+	}
+
+	TEST_METHOD(OperatorSubscript_WriteToIt_Compiles) {
+		int data[]{1, 2, 3};
+		Row2 row{data, data + 3};
+		row[1] = 5;
+	}
+
+	TEST_METHOD(OperatorSubscriptConst_ReturnValue) {
+		int data[]{1, 2, 3};
+		Row2 row{data, data + 3};
+		Assert::AreEqual(2, row[1]);
+	}
+
 	TEST_METHOD(OperatorComparison_WhenBeginEndMismatch_ReturnFalse) {
 		int data1[]{1, 2};
 		int data2[]{1, 2};
 		Row2 row1{data1, data1 + 2};
 		Row2 row2{data2, data2 + 2};
 
-		auto actual = row1 == row2;
+		bool actual = row1 == row2;
 
 		Assert::IsFalse(actual);
 	}
@@ -64,28 +119,9 @@ TEST_CLASS(Grid_Row2Test) {
 		Row2 row1{data, data + 2};
 		Row2 row2{data, data + 2};
 
-		auto actual = row1 == row2;
+		bool actual = row1 == row2;
 
 		Assert::IsTrue(actual);
-	}
-
-	TEST_METHOD(RangeFor_EnumerateEachValue) {
-		int data[]{1, 2, 3};
-		Row2 row{data, data + 3};
-		auto i = 0;
-
-		for(auto&& it : row)
-			Assert::AreEqual(++i, it);
-	}
-
-	TEST_METHOD(RangeForConst_EnumerateEachValue) {
-		int data[]{1, 2, 3};
-		Row2 row{data, data + 3};
-		auto& const_row = std::as_const(row);
-		auto i = 0;
-
-		for(auto&& it : const_row)
-			Assert::AreEqual(++i, it);
 	}
 };
 
@@ -126,63 +162,94 @@ TEST_CLASS(Grid_ConstRowIterator2Test) {
 		Assert::IsTrue(std::is_move_assignable_v<ConstRowIterator2>);
 	}
 
+	TEST_METHOD(IsDefaultConstructible) {
+		Assert::IsTrue(std::is_default_constructible_v<ConstRowIterator2>);
+	}
+
 	TEST_METHOD(IsDestructible) {
 		Assert::IsTrue(std::is_destructible_v<ConstRowIterator2>);
 	}
 
-	TEST_METHOD(Size_ReturnRowLength) {
-		ConstRowIterator2 c_row_it{nullptr, 3};
-		Assert::AreEqual<size_t>(3, c_row_it.size());
+	TEST_METHOD(IsSwappable) {
+		Assert::IsTrue(std::is_swappable_v<ConstRowIterator2>);
 	}
 
-	TEST_METHOD(IsSwappable) {
-		ConstRowIterator2 a{nullptr, 1};
-		ConstRowIterator2 b{nullptr, 2};
+	TEST_METHOD(OperatorSubscript_ReturnSpecifiedRow) {
+		int data[]{1, 2, 3};
+		ConstRowIterator2 c_row_it{data, 3};
 
-		using std::swap;
-		swap(a, b);
+		Row2 actual = c_row_it[1];
 
-		Assert::AreEqual<ConstRowIterator2::difference_type>(2, a.size());
-		Assert::AreEqual<ConstRowIterator2::difference_type>(1, b.size());
+		Assert::AreEqual(1, actual[0]);
 	}
 
 	TEST_METHOD(OperatorIndirection_ReturnCurrentRow) {
 		int data[]{1, 2, 3};
 		ConstRowIterator2 c_row_it{data, 3};
 
-		auto&& actual = *c_row_it;
+		Row2 const actual = *c_row_it;
 
-		Assert::AreEqual(*(data + 0), *actual.begin());
-		Assert::AreEqual(*(data + 3), *actual.end());
+		Assert::AreEqual(1, *actual.begin());
 	}
 
 	TEST_METHOD(OperatorDereference_ReturnCurrentRow) {
 		int data[]{1, 2, 3};
 		ConstRowIterator2 c_row_it{data, 3};
 
-		auto&& actual = c_row_it.operator->();
+		ConstRowIterator2::pointer actual = c_row_it.operator->();
 
-		Assert::AreEqual(*(data + 0), *actual->begin());
-		Assert::AreEqual(*(data + 3), *actual->end());
+		Assert::AreEqual(1, *actual->begin());
 	}
 
 	TEST_METHOD(OperatorIncrementPrefix_MoveToNextRowAndReturnIt) {
 		int data[]{1, 2, 3, 4};
 		ConstRowIterator2 c_row_it{data, 2};
 
-		auto&& actual = ++c_row_it;
+		ConstRowIterator2& actual = ++c_row_it;
 
-		Assert::AreEqual(*(data + 2), *actual->begin());
+		Assert::AreEqual(3, *actual->begin());
 	}
 
-	TEST_METHOD(OperatorIncrementPostfix_MoveToNextRowAndReturnPreviousRow) {
+	TEST_METHOD(OperatorIncrementPostfix_MoveToNextRowAndReturnOriginalRow) {
 		int data[]{1, 2, 3, 4};
 		ConstRowIterator2 c_row_it{data, 2};
 
-		auto&& actual = c_row_it++;
+		ConstRowIterator2 actual = c_row_it++;
 
-		Assert::AreEqual(*data, *(*actual).begin());
-		Assert::AreEqual(*(data + 2), *c_row_it->begin());
+		Assert::AreEqual(1, *(*actual).begin());
+		Assert::AreEqual(3, *c_row_it->begin());
+	}
+
+	TEST_METHOD(OperatorIncrementPrefix_WhenUsedOnACopy_DoNotIncrementSource) {
+		int data[]{1, 2, 3, 4};
+		auto c_row_it = ConstRowIterator2{data, 2};
+		auto c_row_it_copy = c_row_it;
+
+		++c_row_it_copy;
+
+		Assert::AreEqual(1, *c_row_it->begin());
+		Assert::AreEqual(3, *c_row_it_copy->begin());
+	}
+
+	TEST_METHOD(OperatorDecrementPrefix_MoveToPreviousRowAndReturnIt) {
+		int data[]{1, 2, 3, 4, 5, 6};
+		ConstRowIterator2 c_row_it{data, 2};
+		++++c_row_it;
+
+		ConstRowIterator2& actual = --c_row_it;
+
+		Assert::AreEqual(3, *actual->begin());
+	}
+
+	TEST_METHOD(OperatorDecrementPostfix_MoveToPreviousRowAndReturnOriginalRow) {
+		int data[]{1, 2, 3, 4, 5, 6};
+		ConstRowIterator2 c_row_it{data, 2};
+		++++c_row_it;
+
+		ConstRowIterator2 actual = c_row_it--;
+
+		Assert::AreEqual(5, *(*actual).begin());
+		Assert::AreEqual(3, *c_row_it->begin());
 	}
 
 	TEST_METHOD(OperatorComparison_WhenReferencingOtherRow_ReturnFalse) {
@@ -191,7 +258,7 @@ TEST_CLASS(Grid_ConstRowIterator2Test) {
 		ConstRowIterator2 c_row_it1{data1, 2};
 		ConstRowIterator2 c_row_it2{data2, 2};
 
-		auto actual = c_row_it1 == c_row_it2;
+		bool actual = c_row_it1 == c_row_it2;
 
 		Assert::IsFalse(actual);
 	}
@@ -201,7 +268,7 @@ TEST_CLASS(Grid_ConstRowIterator2Test) {
 		ConstRowIterator2 c_row_it1{data, 2};
 		ConstRowIterator2 c_row_it2{data, 2};
 
-		auto actual = c_row_it1 == c_row_it2;
+		bool actual = c_row_it1 == c_row_it2;
 
 		Assert::IsTrue(actual);
 	}
@@ -244,63 +311,91 @@ TEST_CLASS(Grid_RowIterator2Test) {
 		Assert::IsTrue(std::is_move_assignable_v<RowIterator2>);
 	}
 
+	TEST_METHOD(IsDefaultConstructible) {
+		Assert::IsTrue(std::is_default_constructible_v<RowIterator2>);
+	}
+
 	TEST_METHOD(IsDestructible) {
 		Assert::IsTrue(std::is_destructible_v<RowIterator2>);
 	}
 
-	TEST_METHOD(Size_ReturnRowLength) {
-		RowIterator2 row_it{nullptr, 3};
-		Assert::AreEqual<size_t>(3, row_it.size());
+	TEST_METHOD(IsSwappable) {
+		Assert::IsTrue(std::is_swappable_v<RowIterator2>);
 	}
 
-	TEST_METHOD(IsSwappable) {
-		RowIterator2 a{nullptr, 1};
-		RowIterator2 b{nullptr, 2};
+	TEST_METHOD(OperatorSubscript_ReturnSpecifiedRow) {
+		int data[]{1, 2, 3};
+		RowIterator2 row_it{data, 3};
 
-		using std::swap;
-		swap(a, b);
+		Row2 actual = row_it[1];
 
-		Assert::AreEqual<RowIterator2::difference_type>(2, a.size());
-		Assert::AreEqual<RowIterator2::difference_type>(1, b.size());
+		Assert::AreEqual(1, actual[0]);
 	}
 
 	TEST_METHOD(OperatorIndirection_ReturnCurrentRow) {
 		int data[]{1, 2, 3};
 		RowIterator2 row_it{data, 3};
-
-		auto&& actual = *row_it;
-
-		Assert::AreEqual(*(data + 0), *actual.begin());
-		Assert::AreEqual(*(data + 3), *actual.end());
+		Row2& actual = *row_it;
 	}
 
 	TEST_METHOD(OperatorDereference_ReturnCurrentRow) {
 		int data[]{1, 2, 3};
 		RowIterator2 row_it{data, 3};
 
-		auto&& actual = row_it.operator->();
+		Row2* actual = row_it.operator->();
 
-		Assert::AreEqual(*(data + 0), *actual->begin());
-		Assert::AreEqual(*(data + 3), *actual->end());
+		Assert::AreEqual(1, *actual->begin());
 	}
 
 	TEST_METHOD(OperatorIncrementPrefix_MoveToNextRowAndReturnIt) {
 		int data[]{1, 2, 3, 4};
 		RowIterator2 row_it{data, 2};
 
-		auto&& actual = ++row_it;
+		RowIterator2& actual = ++row_it;
 
-		Assert::AreEqual(*(data + 2), *actual->begin());
+		Assert::AreEqual(3, *actual->begin());
 	}
 
-	TEST_METHOD(OperatorIncrementPostfix_MoveToNextRowAndReturnPreviousRow) {
+	TEST_METHOD(OperatorIncrementPostfix_MoveToNextRowAndReturnOriginalRow) {
 		int data[]{1, 2, 3, 4};
 		RowIterator2 row_it{data, 2};
 
-		auto&& actual = row_it++;
+		RowIterator2 actual = row_it++;
 
-		Assert::AreEqual(*data, *(*actual).begin());
-		Assert::AreEqual(*(data + 2), *row_it->begin());
+		Assert::AreEqual(1, *(*actual).begin());
+		Assert::AreEqual(3, *row_it->begin());
+	}
+
+	TEST_METHOD(OperatorIncrementPrefix_WhenUsedOnACopy_DoNotIncrementSource) {
+		int data[]{1, 2, 3, 4};
+		auto row_it = RowIterator2{data, 2};
+		auto row_it_copy = row_it;
+
+		++row_it_copy;
+
+		Assert::AreEqual(1, *row_it->begin());
+		Assert::AreEqual(3, *row_it_copy->begin());
+	}
+
+	TEST_METHOD(OperatorDecrementPrefix_MoveToPreviousRowAndReturnIt) {
+		int data[]{1, 2, 3, 4, 5, 6};
+		RowIterator2 row_it{data, 2};
+		++++row_it;
+
+		RowIterator2& actual = --row_it;
+
+		Assert::AreEqual(3, *actual->begin());
+	}
+
+	TEST_METHOD(OperatorDecrementPostfix_MoveToPreviousRowAndReturnOriginalRow) {
+		int data[]{1, 2, 3, 4, 5, 6};
+		RowIterator2 row_it{data, 2};
+		++++row_it;
+
+		RowIterator2 actual = row_it--;
+
+		Assert::AreEqual(5, *(*actual).begin());
+		Assert::AreEqual(3, *row_it->begin());
 	}
 
 	TEST_METHOD(OperatorComparison_WhenReferencingOtherRow_ReturnFalse) {
@@ -309,7 +404,7 @@ TEST_CLASS(Grid_RowIterator2Test) {
 		RowIterator2 row_it1{data1, 2};
 		RowIterator2 row_it2{data2, 2};
 
-		auto actual = row_it1 == row_it2;
+		bool actual = row_it1 == row_it2;
 
 		Assert::IsFalse(actual);
 	}
@@ -319,7 +414,7 @@ TEST_CLASS(Grid_RowIterator2Test) {
 		RowIterator2 row_it1{data, 2};
 		RowIterator2 row_it2{data, 2};
 
-		auto actual = row_it1 == row_it2;
+		bool actual = row_it1 == row_it2;
 
 		Assert::IsTrue(actual);
 	}
@@ -410,7 +505,7 @@ public:
 	TEST_METHOD(MaxSize_GreaterThanOne) {
 		Grid2 grid(5, 3);
 
-		auto actual = grid.max_size();
+		Grid2::size_type actual = grid.max_size();
 
 		Assert::IsTrue(actual > 0);
 	}
@@ -422,7 +517,7 @@ public:
 
 	TEST_METHOD(DataConst_ReturnSameAsBegin) {
 		Grid2 grid(5, 3);
-		auto& const_grid = std::as_const(grid);
+		Grid2 const& const_grid = std::as_const(grid);
 		Assert::IsTrue(*const_grid.data() == *const_grid.begin());
 	}
 
@@ -440,40 +535,46 @@ public:
 		Grid2 grid(2, 2);
 		*(grid.data() + 2) = 53;
 
-		auto actual = grid[2];
+		int& actual = grid[2];
 
 		Assert::AreEqual(53, actual);
+	}
+
+	TEST_METHOD(OperatorSubscript_WriteToIt_Compiles) {
+		Grid2 grid(2, 2);
+		grid[2] = 50;
+		Assert::AreEqual(50, grid[2]);
 	}
 
 	TEST_METHOD(OperatorSubscriptConst_ReturnValue) {
 		Grid2 grid(2, 2);
 		*(grid.data() + 2) = 53;
-		auto& const_grid = std::as_const(grid);
+		Grid2 const& const_grid = std::as_const(grid);
 
-		auto actual = const_grid[2];
+		const int& actual = const_grid[2];
 
 		Assert::AreEqual(53, actual);
 	}
 
 	TEST_METHOD(BeginEnd_DifferenceIsSameAsSize) {
 		Grid2 grid(5, 3);
-		auto diff = grid.end() - grid.begin();
+		ptrdiff_t diff = grid.end() - grid.begin();
 		Assert::IsTrue(diff == grid.size());
 	}
 
 	TEST_METHOD(RangeFor_EnumerateEachValue) {
 		auto grid = CreateFilledGrid(5, 3);
-		auto i = 0;
+		int i = 0;
 
-		for(auto&& it : grid)
+		for(int& it : grid)
 			Assert::AreEqual(i++, it);
 	}
 
 	TEST_METHOD(RangeForConst_EnumerateEachValue) {
 		auto grid = CreateFilledGrid(5, 3);
-		auto i = 0;
+		int i = 0;
 
-		for(auto&& it : std::as_const(grid))
+		for(int const& it : std::as_const(grid))
 			Assert::AreEqual(i++, it);
 	}
 

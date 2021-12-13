@@ -12,8 +12,12 @@ public:
 	using value_type = int;
 	using pointer = value_type*;
 	using const_pointer = value_type const*;
+	using reference = value_type&;
+	using const_reference = value_type const&;
 	using iterator = pointer;
 	using const_iterator = const_pointer;
+
+	constexpr Row2() = default;
 
 	constexpr Row2(pointer begin, pointer end) :
 		_begin{begin},
@@ -26,14 +30,18 @@ public:
 	[[nodiscard]] constexpr const_iterator cbegin() const noexcept { return _begin; }
 	[[nodiscard]] constexpr const_iterator cend() const noexcept { return _end; };
 
+	[[nodiscard]] constexpr size_t size() const noexcept { return _end - _begin; }
+	[[nodiscard]] constexpr reference operator[](size_t idx) noexcept { return *(_begin + idx); };
+	[[nodiscard]] constexpr const_reference operator[](size_t idx) const noexcept { return *(_begin + idx); };
+
 	[[nodiscard]] constexpr friend bool operator==(Row2 const& lhs, Row2 const& rhs)
 	{
 		return lhs._begin == rhs._begin && lhs._end == rhs._end;
 	}
 
 private:
-	pointer _begin;
-	pointer _end;
+	pointer _begin{};
+	pointer _end{};
 };
 
 /// <summary>
@@ -42,14 +50,20 @@ private:
 /// </summary>
 class ConstRowIterator2 {
 public:
+	using T = int;
 	using value_type = Row2;
 	using pointer = value_type const*;
 	using reference = value_type const&;
 	using difference_type = ptrdiff_t;
 	using iterator_category = std::random_access_iterator_tag;
 
-	constexpr ConstRowIterator2(int* begin, difference_type row_length) :
-		_row{begin, begin + row_length}, _row_length{row_length} {}
+	constexpr ConstRowIterator2() = default;
+
+	constexpr ConstRowIterator2(T* begin, difference_type row_length) :
+		_begin{begin},
+		_row{begin, begin + row_length},
+		_row_length{row_length}
+	{}
 
 	constexpr void swap(ConstRowIterator2& right) noexcept
 	{
@@ -65,7 +79,7 @@ public:
 		left.swap(right);
 	}
 
-	[[nodiscard]] constexpr difference_type size() const noexcept { return _row_length; }
+	[[nodiscard]] constexpr value_type operator[](difference_type idx) const noexcept { return {_begin, _begin + _row_length}; }
 	[[nodiscard]] constexpr reference operator*() const noexcept { return _row; }
 	[[nodiscard]] constexpr pointer operator->() const noexcept { return &_row; }
 
@@ -82,14 +96,28 @@ public:
 		return previous;
 	}
 
+	constexpr ConstRowIterator2& operator--() noexcept
+	{
+		_row = {_row.begin() - _row_length, _row.end() - _row_length};
+		return *this;
+	}
+
+	[[nodiscard]] constexpr ConstRowIterator2 operator--(int) noexcept
+	{
+		ConstRowIterator2 previous{*this};
+		--*this;
+		return previous;
+	}
+
 	[[nodiscard]] constexpr friend bool operator==(ConstRowIterator2 const& lhs, ConstRowIterator2 const& rhs)
 	{
 		return lhs._row == rhs._row;
 	}
 
 private:
+	T* _begin{};
 	Row2 _row;
-	difference_type _row_length;
+	difference_type _row_length{};
 };
 
 /// <summary>
@@ -100,6 +128,8 @@ class RowIterator2 : public ConstRowIterator2 {
 public:
 	using pointer = value_type*;
 	using reference = value_type&;
+
+	constexpr RowIterator2() = default;
 
 	constexpr RowIterator2(int* begin, difference_type row_length) :
 		ConstRowIterator2{begin, row_length} {}
@@ -124,6 +154,19 @@ public:
 	{
 		RowIterator2 previous{*this};
 		++*this;
+		return previous;
+	}
+
+	constexpr RowIterator2& operator--() noexcept
+	{
+		ConstRowIterator2::operator--();
+		return *this;
+	}
+
+	[[nodiscard]] constexpr RowIterator2 operator--(int) noexcept
+	{
+		RowIterator2 previous{*this};
+		--*this;
 		return previous;
 	}
 };
