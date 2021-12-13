@@ -4,12 +4,82 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include "../../src/grid/grid2.hpp"
 #include <algorithm>
+#include <array>
 #include <iterator>
 #include <type_traits>
 #include <utility>
 #include <vector>
 
 using namespace shoujin;
+
+namespace assist {
+
+class GridVectorAsserter2 {
+public:
+	GridVectorAsserter2(int width, int height) :
+		_width{width},
+		_height{height},
+		_expected{height} {}
+
+	void Push(int row, int value) { _expected[row].push_back(value); }
+
+	template<int Size>
+	void AssertSameAsArray(const std::array<int, Size> array)
+	{
+		_assert_all_rows_same_size();
+		_assert_match_array(array);
+	}
+
+private:
+	int _width, _height;
+	std::vector<std::vector<int>> _expected;
+
+	void _assert_all_rows_same_size()
+	{
+		auto size = _expected[0].size();
+		for(auto& row : _expected)
+			Assert::AreEqual(size, row.size());
+	}
+
+	template<int Size>
+	void _assert_match_array(const std::array<int, Size> array)
+	{
+		for(int i = 0; i < _height; ++i)
+			Assert::IsTrue(_compare_row(_expected[i].data(), array.data() + i * _width));
+	}
+
+	bool _compare_row(const int* actual, const int* expected)
+	{
+		bool result = true;
+		for(int i = 0; i < _width; ++i, ++actual, ++expected)
+			result &= *actual == *expected;
+		return result;
+	}
+};
+
+template<int Size>
+std::array<int, Size> CreateIntArray()
+{
+	std::array<int, Size> array;
+	for(int i = 0; i < Size; ++i)
+		array[i] = i + 1;
+	return array;
+}
+
+Grid2 CreateFilledGrid(size_t width, size_t height)
+{
+	Grid2 grid(width, height);
+
+	auto&& it = grid.data();
+	auto&& end = it + grid.size();
+	auto i = 0;
+	while(it != end)
+		*it++ = ++i;
+
+	return grid;
+}
+
+}
 
 TEST_CLASS(Grid_Row2Test) {
 	TEST_METHOD(Alias_ValueType_IsType) {
@@ -60,7 +130,7 @@ TEST_CLASS(Grid_Row2Test) {
 		Assert::IsTrue(std::is_default_constructible_v<Row2>);
 	}
 
-	TEST_METHOD(RangeFor_EnumerateEachValue) {
+	TEST_METHOD(EnumerateUsingRangeFor_EnumerateEachValue) {
 		int data[]{1, 2, 3};
 		Row2 row{data, data + 3};
 		int i = 0;
@@ -69,7 +139,7 @@ TEST_CLASS(Grid_Row2Test) {
 			Assert::AreEqual(++i, it);
 	}
 
-	TEST_METHOD(RangeForConst_EnumerateEachValue) {
+	TEST_METHOD(EnumerateUsingRangeForConst_EnumerateEachValue) {
 		int data[]{1, 2, 3};
 		Row2 row{data, data + 3};
 		const Row2 const_row = std::as_const(row);
@@ -420,20 +490,100 @@ TEST_CLASS(Grid_RowIterator2Test) {
 	}
 };
 
-TEST_CLASS(Grid_Grid2Test) {
-	Grid2 CreateFilledGrid(size_t width, size_t height)
-	{
-		Grid2 grid(width, height);
-
-		auto&& it = grid.data();
-		auto&& end = it + grid.size();
-		auto i = 0;
-		while(it != end)
-			*it++ = i++;
-
-		return grid;
+TEST_CLASS(Grid_Rows2Test) {
+	TEST_METHOD(IsCopyConstructible) {
+		Assert::IsTrue(std::is_copy_constructible_v<Rows2>);
 	}
 
+	TEST_METHOD(IsCopyAssignable) {
+		Assert::IsTrue(std::is_copy_assignable_v<Rows2>);
+	}
+
+	TEST_METHOD(IsMoveConstructible) {
+		Assert::IsTrue(std::is_move_constructible_v<Rows2>);
+	}
+
+	TEST_METHOD(IsMoveAssignable) {
+		Assert::IsTrue(std::is_move_assignable_v<Rows2>);
+	}
+
+	TEST_METHOD(IsDefaultConstructible) {
+		Assert::IsTrue(std::is_default_constructible_v<Rows2>);
+	}
+
+	TEST_METHOD(EnumerateUsingRangeFor_EnumerateEachRow) {
+		//Arrange
+		constexpr auto kWidth = 3;
+		constexpr auto kHeight = 2;
+		constexpr auto kSize = kWidth * kHeight;
+		auto test_data = assist::CreateIntArray<kSize>();
+		Rows2 rows{test_data.data(), test_data.data() + kSize, kWidth};
+		assist::GridVectorAsserter2 grid_vec{kWidth, kHeight};
+
+		//Act
+		for(int y{}; Row2 & row : rows) {
+			for(int& cell : row)
+				grid_vec.Push(y, cell);
+			++y;
+		}
+
+		//Assert
+		grid_vec.AssertSameAsArray(test_data);
+	}
+
+	TEST_METHOD(EnumerateUsingRangeForConst_EnumerateEachRow) {
+		//Arrange
+		constexpr auto kWidth = 3;
+		constexpr auto kHeight = 2;
+		constexpr auto kSize = kWidth * kHeight;
+		auto test_data = assist::CreateIntArray<kSize>();
+		Rows2 const const_rows{test_data.data(), test_data.data() + kSize, kWidth};
+		assist::GridVectorAsserter2 grid_vec{kWidth, kHeight};
+
+		//Act
+		for(int y{}; Row2 const& row : const_rows) {
+			for(int const& cell : row)
+				grid_vec.Push(y, cell);
+			++y;
+		}
+
+		//Assert
+		grid_vec.AssertSameAsArray(test_data);
+	}
+
+	TEST_METHOD(EnumerateUsingBeginEnd_EnumerateEachRow) {
+		//Arrange
+		constexpr auto kWidth = 3;
+		constexpr auto kHeight = 2;
+		constexpr auto kSize = kWidth * kHeight;
+		auto test_data = assist::CreateIntArray<kSize>();
+		auto rows = Rows2{test_data.data(), test_data.data() + kSize, kWidth};
+		assist::GridVectorAsserter2 grid_vec{kWidth, kHeight};
+
+		//Act
+		RowIterator2 row_begin = rows.begin();
+		RowIterator2 row_end = rows.end();
+		RowIterator2 row_it = row_begin;
+		auto y = int{};
+		while(row_it != row_end) {
+			Row2& row = row_it.operator*();
+			int* cell_begin = row.begin();
+			int* cell_end = row.end();
+			int* cell_it = cell_begin;
+			while(cell_it != cell_end) {
+				int& cell = *cell_it;
+				grid_vec.Push(y, cell);
+				++cell_it;
+			}
+			++row_it, ++y;
+		}
+
+		//Assert
+		grid_vec.AssertSameAsArray(test_data);
+	}
+};
+
+TEST_CLASS(Grid_Grid2Test) {
 public:
 	TEST_METHOD(Alias_ValueType_IsType) {
 		Assert::IsTrue(std::is_same_v<Grid2::value_type, int>);
@@ -562,32 +712,32 @@ public:
 		Assert::IsTrue(diff == grid.size());
 	}
 
-	TEST_METHOD(RangeFor_EnumerateEachValue) {
-		auto grid = CreateFilledGrid(5, 3);
+	TEST_METHOD(EnumerateUsingRangeFor_EnumerateEachValue) {
+		auto grid = assist::CreateFilledGrid(5, 3);
 		int i = 0;
 
 		for(int& it : grid)
-			Assert::AreEqual(i++, it);
+			Assert::AreEqual(++i, it);
 	}
 
-	TEST_METHOD(RangeForConst_EnumerateEachValue) {
-		auto grid = CreateFilledGrid(5, 3);
+	TEST_METHOD(EnumerateUsingRangeForConst_EnumerateEachValue) {
+		auto grid = assist::CreateFilledGrid(5, 3);
 		int i = 0;
 
 		for(int const& it : std::as_const(grid))
-			Assert::AreEqual(i++, it);
+			Assert::AreEqual(++i, it);
 	}
 
 	TEST_METHOD(OperatorComparison_WhenSizeMismatch_ReturnFalse) {
-		auto a = CreateFilledGrid(5, 3);
-		auto b = CreateFilledGrid(3, 5);
+		auto a = assist::CreateFilledGrid(5, 3);
+		auto b = assist::CreateFilledGrid(3, 5);
 
 		Assert::IsFalse(a == b);
 		Assert::IsTrue(a != b);
 	}
 
 	TEST_METHOD(OperatorComparison_WhenDataMismatch_ReturnFalse) {
-		auto a = CreateFilledGrid(2, 3);
+		auto a = assist::CreateFilledGrid(2, 3);
 		auto b = Grid2(2, 3);
 
 		Assert::IsFalse(a == b);
@@ -595,8 +745,8 @@ public:
 	}
 
 	TEST_METHOD(OperatorComparison_WhenDataMatch_ReturnTrue) {
-		auto a = CreateFilledGrid(2, 3);
-		auto b = CreateFilledGrid(2, 3);
+		auto a = assist::CreateFilledGrid(2, 3);
+		auto b = assist::CreateFilledGrid(2, 3);
 
 		Assert::IsTrue(a == b);
 		Assert::IsFalse(a != b);
@@ -657,5 +807,43 @@ public:
 
 		auto expected = {1, 2, 0, 0};
 		Assert::IsTrue(std::equal(grid.begin(), grid.end(), expected.begin()));
+	}
+
+	TEST_METHOD(Rows_EnumerateUsingRangeFor_EnumerateEachRow) {
+		//Arrange
+		constexpr auto kWidth = 3;
+		constexpr auto kHeight = 2;
+		auto test_data = assist::CreateIntArray<kWidth * kHeight>();
+		Grid2 grid = assist::CreateFilledGrid(kWidth, kHeight);
+		assist::GridVectorAsserter2 grid_vec{kWidth, kHeight};
+
+		//Act
+		for(int y{}; Row2 & row : grid.Rows()) {
+			for(int& cell : row)
+				grid_vec.Push(y, cell);
+			++y;
+		}
+
+		//Assert
+		grid_vec.AssertSameAsArray(test_data);
+	}
+
+	TEST_METHOD(Rows_EnumerateUsingRangeForConst_EnumerateEachRow) {
+		////Arrange
+		//constexpr auto kWidth = 3;
+		//constexpr auto kHeight = 2;
+		//auto test_data = assist::CreateIntArray<kWidth * kHeight>();
+		//Grid2 const const_grid = assist::CreateFilledGrid(kWidth, kHeight);
+		//assist::GridVectorAsserter2 grid_vec{kWidth, kHeight};
+
+		////Act
+		//for(int y{}; Row2 const& row : const_grid.Rows()) {
+		//	for(int const& cell : row)
+		//		grid_vec.Push(y, cell);
+		//	++y;
+		//}
+
+		////Assert
+		//grid_vec.AssertSameAsArray(test_data);
 	}
 };

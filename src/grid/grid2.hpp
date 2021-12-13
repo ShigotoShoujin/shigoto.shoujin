@@ -59,7 +59,7 @@ public:
 
 	constexpr ConstRowIterator2() = default;
 
-	constexpr ConstRowIterator2(T* begin, difference_type row_length) :
+	constexpr ConstRowIterator2(T* begin, size_t row_length) :
 		_begin{begin},
 		_row{begin, begin + row_length},
 		_row_length{row_length}
@@ -79,7 +79,7 @@ public:
 		left.swap(right);
 	}
 
-	[[nodiscard]] constexpr value_type operator[](difference_type idx) const noexcept { return {_begin, _begin + _row_length}; }
+	[[nodiscard]] constexpr value_type operator[](size_t idx) const noexcept { return {_begin, _begin + _row_length}; }
 	[[nodiscard]] constexpr reference operator*() const noexcept { return _row; }
 	[[nodiscard]] constexpr pointer operator->() const noexcept { return &_row; }
 
@@ -117,7 +117,7 @@ public:
 private:
 	T* _begin{};
 	Row2 _row;
-	difference_type _row_length{};
+	size_t _row_length{};
 };
 
 /// <summary>
@@ -131,7 +131,7 @@ public:
 
 	constexpr RowIterator2() = default;
 
-	constexpr RowIterator2(int* begin, difference_type row_length) :
+	constexpr RowIterator2(int* begin, size_t row_length) :
 		ConstRowIterator2{begin, row_length} {}
 
 	[[nodiscard]] constexpr reference operator*() const noexcept
@@ -171,10 +171,29 @@ public:
 	}
 };
 
-//class Rows {
-//public:
-//	RowIterator2 begin
-//};
+class Rows2 {
+public:
+	using T = int;
+	constexpr Rows2() {}
+
+	constexpr Rows2(T* begin, T* end, size_t row_length) :
+		_begin{begin},
+		_end{end},
+		_row_length{row_length}
+	{}
+
+	[[nodiscard]] constexpr RowIterator2 begin() noexcept { return {_begin, _row_length}; }
+	[[nodiscard]] constexpr RowIterator2 end() noexcept { return {_end, _row_length}; }
+	[[nodiscard]] constexpr ConstRowIterator2 begin() const noexcept { return {_begin, _row_length}; }
+	[[nodiscard]] constexpr ConstRowIterator2 end() const noexcept { return {_end, _row_length}; }
+	[[nodiscard]] constexpr ConstRowIterator2 cbegin() const noexcept { return {_begin, _row_length}; }
+	[[nodiscard]] constexpr ConstRowIterator2 cend() const noexcept { return {_end, _row_length}; }
+
+private:
+	T* _begin{};
+	T* _end{};
+	size_t _row_length{};
+};
 
 /// <summary>
 /// Grid2 is a Container
@@ -245,6 +264,16 @@ public:
 	{
 		left.swap(right);
 	}
+
+	[[nodiscard]] constexpr Rows2 Rows() noexcept
+	{
+		return Rows2{data(), data() + size(), _width};
+	}
+
+	//[[nodiscard]] constexpr Rows2 Rows() const noexcept
+	//{
+	//	return Rows2{data(), data() + size(), _width};
+	//}
 
 private:
 	std::vector<int> _vector;
