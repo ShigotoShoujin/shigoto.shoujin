@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_RECT
+#define SHOUJIN_SOURCE_GUI_RECT
+
 #include "point.hpp"
 #include "size.hpp"
 #define WIN32_LEAN_AND_MEAN
@@ -37,3 +39,5 @@ inline Size RectToSize(const Rect& rect) { return {rect.x2 - rect.x1, rect.y2 - 
 inline Size RectToSize(const RECT& rect) { return {rect.right - rect.left, rect.bottom - rect.top}; }
 
 }
+
+#endif

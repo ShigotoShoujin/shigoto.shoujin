@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_ASSERT_ASSERT
+#define SHOUJIN_SOURCE_ASSERT_ASSERT
 
 #include "../event.hpp"
 #include "../tstring.hpp"
@@ -135,3 +136,5 @@ void AbortWin32(const ErrorInfo& ei);
 /// <returns>Returns what expression evaluates to</returns>
 #define SHOUJIN_ASSERT_WIN32_EXPLICIT(expression, result_ok_func) \
 	__SHOUJIN_ASSERT_EXPLICIT__(expression, result_ok_func, shoujin::assert::AbortWin32)
+
+#endif

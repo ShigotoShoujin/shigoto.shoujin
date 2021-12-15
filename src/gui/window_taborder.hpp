@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_WINDOW_TABORDER
+#define SHOUJIN_SOURCE_GUI_WINDOW_TABORDER
+
 #define WIN32_LEAN_AND_MEAN
 #include <map>
 #include <Windows.h>
@@ -22,3 +24,5 @@ private:
 };
 
 }
+
+#endif

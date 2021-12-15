@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_USERCTL_COLOR_CONTROL
+#define SHOUJIN_SOURCE_GUI_USERCTL_COLOR_CONTROL
+
 #include "../bitmap.hpp"
 #include "../window.hpp"
 #include <memory>
@@ -20,3 +22,5 @@ private:
 };
 
 }
+
+#endif

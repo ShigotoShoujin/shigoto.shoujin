@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_POINT
+#define SHOUJIN_SOURCE_GUI_POINT
+
 #include "vector2d.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -23,3 +25,5 @@ struct Point : public Vector2d {
 };
 
 }
+
+#endif

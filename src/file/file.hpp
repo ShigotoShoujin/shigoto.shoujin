@@ -1,3 +1,6 @@
+#ifndef SHOUJIN_SOURCE_FILE_FILE
+#define SHOUJIN_SOURCE_FILE_FILE
+
 #pragma once
 #include "../tstring.hpp"
 
@@ -11,3 +14,5 @@ void FileDelete(tstring file);
 [[nodiscard]] bool TryFileDelete(tstring file);
 
 }
+
+#endif

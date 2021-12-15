@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_EVENT
+#define SHOUJIN_SOURCE_EVENT
+
 #include <type_traits>
 
 // clang does not yet support c++20 concepts
@@ -71,3 +73,5 @@ Event<TResult, TArguments...>::operator bool() const
 }
 
 }
+
+#endif

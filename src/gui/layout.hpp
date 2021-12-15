@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_LAYOUT
+#define SHOUJIN_SOURCE_GUI_LAYOUT
+
 #include "../tstring.hpp"
 #include "types.hpp"
 #define WIN32_LEAN_AND_MEAN
@@ -62,3 +64,5 @@ public:
 };
 
 }
+
+#endif

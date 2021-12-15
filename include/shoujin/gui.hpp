@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SHOUJIN_INCLUDE_GUI
+#define SHOUJIN_INCLUDE_GUI
 
 #include "../../src/gui/bitmap.hpp"
 #include "../../src/gui/bitmap_window.hpp"
@@ -10,3 +11,5 @@
 #include "../../src/gui/types.hpp"
 #include "../../src/gui/userctl/color_control.hpp"
 #include "../../src/gui/window.hpp"
+
+#endif

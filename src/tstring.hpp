@@ -1,3 +1,6 @@
+#ifndef SHOUJIN_SOURCE_TSTRING
+#define SHOUJIN_SOURCE_TSTRING
+
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -11,3 +14,5 @@ using tstring_view = std::basic_string_view<TCHAR>;
 using tstringstream = std::basic_stringstream<TCHAR>;
 
 }
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_COLOR
+#define SHOUJIN_SOURCE_GUI_COLOR
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <stdint.h>
@@ -40,3 +42,5 @@ public:
 };
 
 }
+
+#endif

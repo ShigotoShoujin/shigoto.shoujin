@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_VECTOR2D
+#define SHOUJIN_SOURCE_GUI_VECTOR2D
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -31,3 +33,5 @@ struct Vector2d {
 };
 
 }
+
+#endif

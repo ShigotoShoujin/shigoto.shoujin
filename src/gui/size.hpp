@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_SIZE
+#define SHOUJIN_SOURCE_GUI_SIZE
+
 #include "vector2d.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -23,3 +25,5 @@ struct Size : public Vector2d {
 };
 
 }
+
+#endif

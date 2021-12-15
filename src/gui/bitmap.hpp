@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_BITMAP
+#define SHOUJIN_SOURCE_GUI_BITMAP
+
 #include "bitmap_bits.hpp"
 #include "types.hpp"
 #define WIN32_LEAN_AND_MEAN
@@ -42,3 +44,5 @@ public:
 };
 
 }
+
+#endif

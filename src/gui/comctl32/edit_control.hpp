@@ -1,3 +1,6 @@
+#ifndef SHOUJIN_SOURCE_GUI_COMCTL32_EDIT_CONTROL
+#define SHOUJIN_SOURCE_GUI_COMCTL32_EDIT_CONTROL
+
 #pragma once
 #include "../window.hpp"
 
@@ -18,3 +21,5 @@ private:
 };
 
 }
+
+#endif

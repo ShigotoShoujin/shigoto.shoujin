@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GRID
+#define SHOUJIN_SOURCE_GRID
+
 #include <algorithm>
 #include <initializer_list>
 #include <iterator>
@@ -292,3 +294,5 @@ private:
 };
 
 }
+
+#endif

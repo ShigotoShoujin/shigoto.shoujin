@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_FILE_LOGFILE
+#define SHOUJIN_SOURCE_FILE_LOGFILE
+
 #include "../tstring.hpp"
 
 namespace shoujin::file {
@@ -28,3 +30,5 @@ public:
 };
 
 }
+
+#endif

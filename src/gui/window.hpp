@@ -1,5 +1,6 @@
-#pragma once
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_WINDOW
+#define SHOUJIN_SOURCE_GUI_WINDOW
+
 #include "../event.hpp"
 #include "layout.hpp"
 #include "window_handle.hpp"
@@ -107,3 +108,5 @@ private:
 };
 
 }
+
+#endif

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_ASSERT_STREAM_TO_FILE_REDIRECTOR
+#define SHOUJIN_SOURCE_ASSERT_STREAM_TO_FILE_REDIRECTOR
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <stdio.h>
@@ -19,3 +21,5 @@ public:
 };
 
 }
+
+#endif

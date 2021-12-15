@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_COMCTL32_LABEL_CONTROL
+#define SHOUJIN_SOURCE_GUI_COMCTL32_LABEL_CONTROL
+
 #include "../window.hpp"
 
 namespace shoujin::gui::comctl32 {
@@ -18,3 +20,5 @@ private:
 };
 
 }
+
+#endif

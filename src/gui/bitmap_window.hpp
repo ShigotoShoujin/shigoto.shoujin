@@ -1,4 +1,6 @@
-#pragma once
+#ifndef SHOUJIN_SOURCE_GUI_BITMAP_WINDOW
+#define SHOUJIN_SOURCE_GUI_BITMAP_WINDOW
+
 #include "bitmap.hpp"
 #include "window.hpp"
 #include <memory>
@@ -24,3 +26,5 @@ private:
 };
 
 }
+
+#endif
