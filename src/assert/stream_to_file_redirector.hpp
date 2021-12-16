@@ -11,8 +11,8 @@ class StreamToFileRedirector {
 	FILE* _target_stream;
 
 public:
-	StreamToFileRedirector(const StreamToFileRedirector&) = delete;
-	StreamToFileRedirector& operator=(const StreamToFileRedirector&) = delete;
+	StreamToFileRedirector(StreamToFileRedirector const&) = delete;
+	StreamToFileRedirector& operator=(StreamToFileRedirector const&) = delete;
 	StreamToFileRedirector(StreamToFileRedirector&&) noexcept;
 	StreamToFileRedirector& operator=(StreamToFileRedirector&&) noexcept;
 

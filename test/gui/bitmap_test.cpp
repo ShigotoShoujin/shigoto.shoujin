@@ -24,7 +24,7 @@ public:
 		Assert::IsTrue(std::is_move_assignable_v<Bitmap>);
 	}
 
-	static bool OnError(const shoujin::assert::ErrorInfo& ei, void* userdata)
+	static bool OnError(shoujin::assert::ErrorInfo const& ei, void* userdata)
 	{
 		int* count = reinterpret_cast<int*>(userdata);
 		++*count;

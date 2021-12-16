@@ -21,16 +21,16 @@ struct ErrorInfo {
 };
 
 /// <summary>Return true to abort the event or false to continue</summary>
-extern Event<bool, const ErrorInfo&> OnErrorEvent;
+extern Event<bool, ErrorInfo const&> OnErrorEvent;
 /// <summary>Return true to abort the event or false to continue</summary>
 extern Event<bool, tstring> OnErrorOutputEvent;
 /// <summary>Return true to abort the event or false to continue</summary>
 extern Event<bool> OnExitProcessEvent;
 
-void Abort(const ErrorInfo& ei);
-void AbortCLib(const ErrorInfo& ei);
-void AbortStdErrorCode(const ErrorInfo& ei);
-void AbortWin32(const ErrorInfo& ei);
+void Abort(ErrorInfo const& ei);
+void AbortCLib(ErrorInfo const& ei);
+void AbortStdErrorCode(ErrorInfo const& ei);
+void AbortWin32(ErrorInfo const& ei);
 
 }
 

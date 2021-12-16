@@ -17,16 +17,16 @@ static auto SetWindowPtr(HWND hwnd, int index, auto new_value) -> decltype(new_v
 
 namespace shoujin::gui {
 
-static Rect GetOnSizingMinRect(WPARAM wparam, const Rect& onsizing_rect, const Size& min_size);
+static Rect GetOnSizingMinRect(WPARAM wparam, Rect const& onsizing_rect, Size const& min_size);
 
-Window::Window(const LayoutParam& lp) :
+Window::Window(LayoutParam const& lp) :
 	Layout{lp},
 	_default_wndproc{nullptr},
 	_taborder{}
 {
 }
 
-Window::Window(const Window& rhs) :
+Window::Window(Window const& rhs) :
 	Layout{rhs},
 	_default_wndproc{nullptr},
 	_taborder{}
@@ -34,7 +34,7 @@ Window::Window(const Window& rhs) :
 	CopyChilds(rhs);
 }
 
-Window& Window::operator=(const Window& rhs)
+Window& Window::operator=(Window const& rhs)
 {
 	if(this == &rhs)
 		return *this;
@@ -133,7 +133,7 @@ void Window::ShowModal()
 		TranslateAndDispatchMessage(msg);
 }
 
-void Window::CreateHandle(const WindowHandle* parent)
+void Window::CreateHandle(WindowHandle const* parent)
 {
 	ConstructWindow(parent);
 	_window_group = std::make_unique<WindowTabOrder>();
@@ -153,7 +153,7 @@ Window::CreateParam Window::OnCreateParam()
 	return {.classname = TEXT("ShoujinWindow")};
 }
 
-bool Window::OnDispatchMessage(const MSG& msg)
+bool Window::OnDispatchMessage(MSG const& msg)
 {
 	if(msg.message == WM_KEYDOWN && msg.wParam == VK_TAB) {
 		bool cycle_up = GetAsyncKeyState(VK_SHIFT);
@@ -164,7 +164,7 @@ bool Window::OnDispatchMessage(const MSG& msg)
 	return false;
 }
 
-bool Window::OnWndProc(const WindowMessage& message)
+bool Window::OnWndProc(WindowMessage const& message)
 {
 	switch(message.msg) {
 		case WM_CREATE:
@@ -184,7 +184,7 @@ bool Window::OnWndProc(const WindowMessage& message)
 	return false;
 }
 
-bool Window::OnCreate(const CREATESTRUCT& createparam)
+bool Window::OnCreate(CREATESTRUCT const& createparam)
 {
 	return false;
 }
@@ -211,7 +211,7 @@ bool Window::OnSizingFinished()
 	return false;
 }
 
-void Window::OnParentSized(const Window& parent)
+void Window::OnParentSized(Window const& parent)
 {
 	//Integrate this func in Layout Stream ?
 	constexpr int margin = 11;
@@ -252,13 +252,13 @@ void Window::OnDestroy()
 {
 }
 
-Window::MessageResult Window::RaiseOnCreate(const WindowMessage& message)
+Window::MessageResult Window::RaiseOnCreate(WindowMessage const& message)
 {
 	auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
 	return OnCreate(createparam) | (OnCreateEvent ? OnCreateEvent(*this, createparam) : false);
 }
 
-Window::MessageResult Window::RaiseOnDispatchMessage(const MSG& msg)
+Window::MessageResult Window::RaiseOnDispatchMessage(MSG const& msg)
 {
 	return OnDispatchMessage(msg) | (OnDispatchMessageEvent ? OnDispatchMessageEvent(msg) : false);
 }
@@ -279,7 +279,7 @@ Window::MessageResult Window::RaiseOnPaint()
 	return OnPaint() | (OnPaintEvent ? OnPaintEvent() : false);
 }
 
-Window::MessageResult Window::RaiseOnSizing(const WindowMessage& message)
+Window::MessageResult Window::RaiseOnSizing(WindowMessage const& message)
 {
 	RECT* sizing_rect = reinterpret_cast<RECT*>(message.lparam);
 	Rect new_rect = *sizing_rect;
@@ -322,7 +322,7 @@ Window* Window::Clone() const
 	return new Window(*this);
 }
 
-void Window::CopyChilds(const Window& rhs)
+void Window::CopyChilds(Window const& rhs)
 {
 	_child_vec.reserve(rhs._child_vec.size());
 	for(auto& child : rhs._child_vec) {
@@ -422,14 +422,14 @@ bool Window::ReadMessageAsync(MSG& msg)
 	return PeekMessage(&msg, *_handle, 0, 0, PM_REMOVE);
 }
 
-void Window::TranslateAndDispatchMessage(const MSG& msg)
+void Window::TranslateAndDispatchMessage(MSG const& msg)
 {
 	TranslateMessage(&msg);
 	if(!RaiseOnDispatchMessage(msg))
 		DispatchMessage(&msg);
 }
 
-static Rect GetOnSizingMinRect(WPARAM wparam, const Rect& onsizing_rect, const Size& min_size)
+static Rect GetOnSizingMinRect(WPARAM wparam, Rect const& onsizing_rect, Size const& min_size)
 {
 	Rect rect = onsizing_rect;
 	Size offset = {rect.width() - min_size.x, rect.height() - min_size.y};

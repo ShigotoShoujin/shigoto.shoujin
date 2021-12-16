@@ -11,14 +11,14 @@ class ColorControl : public Window {
 	static const Size DefaultClientSize;
 
 public:
-	explicit ColorControl(const LayoutParam& lp = {});
+	explicit ColorControl(LayoutParam const& lp = {});
 	virtual ~ColorControl() = default;
 
 	virtual CreateParam OnCreateParam() override;
 
 private:
 	virtual Window* Clone() const override;
-	static LayoutParam BuildLayout(const LayoutParam& lp);
+	static LayoutParam BuildLayout(LayoutParam const& lp);
 };
 
 }

@@ -45,20 +45,20 @@ class Layout {
 public:
 	static constexpr DWORD DefaultStyle = WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
 
-	Layout(const LayoutParam& = {});
+	Layout(LayoutParam const& = {});
 
-	[[nodiscard]] const Point& position() const { return _position; }
-	[[nodiscard]] const Size& window_size() const { return _window_size; }
-	[[nodiscard]] const Size& client_size() const { return _client_size; }
-	[[nodiscard]] const DWORD& style() const { return _style; }
-	[[nodiscard]] const DWORD& exstyle() const { return _exstyle; }
+	[[nodiscard]] Point const& position() const { return _position; }
+	[[nodiscard]] Size const& window_size() const { return _window_size; }
+	[[nodiscard]] Size const& client_size() const { return _client_size; }
+	[[nodiscard]] DWORD const& style() const { return _style; }
+	[[nodiscard]] DWORD const& exstyle() const { return _exstyle; }
 	[[nodiscard]] int anchor() const { return _anchor; }
-	[[nodiscard]] const bool& tabstop() const { return _tabstop; }
-	[[nodiscard]] const tstring& text() const { return _text; }
+	[[nodiscard]] bool const& tabstop() const { return _tabstop; }
+	[[nodiscard]] tstring const& text() const { return _text; }
 	[[nodiscard]] Rect window_rect() const { return Rect{_position, _window_size}; }
 
 	void UpdateStyle(DWORD style, DWORD exstyle);
-	void UpdateWindowSize(const Size& window_size);
+	void UpdateWindowSize(Size const& window_size);
 	void UpdateRectFromHandle(HWND hwnd);
 	void UpdateFromHandle(HWND hwnd);
 };

@@ -10,15 +10,15 @@ using namespace shoujin::gui::layout;
 
 namespace shoujin::gui::comctl32 {
 
-const Size ColorControl::DefaultClientSize{768, 768};
+Size const ColorControl::DefaultClientSize{768, 768};
 
-ColorControl::ColorControl(const LayoutParam& lp) :
+ColorControl::ColorControl(LayoutParam const& lp) :
 	Window{BuildLayout(lp)}
 {
-	auto bitmap_window = [](const LayoutParam& lp) -> Window* { auto p{lp}; p.tabstop=false; return new BitmapWindow(p); };
-	auto window = [](const LayoutParam& lp) -> Window* { auto p{lp}; p.tabstop=false; return new Window(p); };
-	auto label = [](const LayoutParam& lp) -> Window* { return new LabelControl(lp); };
-	auto edit = [](const LayoutParam& lp) -> Window* { return new EditControl(lp); };
+	auto bitmap_window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop = false; return new BitmapWindow(p); };
+	auto window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop=false; return new Window(p); };
+	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
+	auto edit = [](LayoutParam const& lp) -> Window* { return new EditControl(lp); };
 
 	LayoutStream stream;
 
@@ -45,7 +45,7 @@ Window* ColorControl::Clone() const
 	return new ColorControl(*this);
 }
 
-LayoutParam ColorControl::BuildLayout(const LayoutParam& lp)
+LayoutParam ColorControl::BuildLayout(LayoutParam const& lp)
 {
 	Size client_size;
 	if(!lp.window_size && !lp.client_size)

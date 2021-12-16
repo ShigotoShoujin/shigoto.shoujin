@@ -19,28 +19,28 @@ private:
 	Bitmap();
 
 public:
-	Bitmap(const Size& size);
+	Bitmap(Size const& size);
 
-	Bitmap(const Bitmap&);
-	Bitmap& operator=(const Bitmap&);
+	Bitmap(Bitmap const&);
+	Bitmap& operator=(Bitmap const&);
 	Bitmap(Bitmap&&) noexcept;
 	Bitmap& operator=(Bitmap&&) noexcept;
 
 	virtual ~Bitmap();
 
-	[[nodiscard]] virtual const Size& size() const { return _size; }
-	[[nodiscard]] virtual const HDC& hdc() const { return _hdc; }
+	[[nodiscard]] virtual Size const& size() const { return _size; }
+	[[nodiscard]] virtual HDC const& hdc() const { return _hdc; }
 
 	virtual void Destroy() noexcept;
-	virtual void Reset(const Size& size);
-	virtual void Fill(const RECT& rect, Color color);
+	virtual void Reset(Size const& size);
+	virtual void Fill(RECT const& rect, Color color);
 	virtual void Fill(Point position, Size size, Color color);
 	virtual void Fill(Color color);
 	virtual void Draw(HDC source, Point position, Size size, Point src_position = {});
-	virtual void Draw(const Bitmap& source);
+	virtual void Draw(Bitmap const& source);
 
 	BitmapBits GetBits() const;
-	void SetBits(const BitmapBits&);
+	void SetBits(BitmapBits const&);
 };
 
 }

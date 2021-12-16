@@ -9,7 +9,7 @@ using namespace shoujin;
 using namespace shoujin::gui;
 using namespace shoujin::gui::comctl32;
 
-static bool OnCreatePostCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata);
+static bool OnCreatePostCloseMsg(Window const& window, CREATESTRUCT const& createparam, void* userdata);
 static bool OnErrorOutput(tstring message, void* userdata);
 
 TEST_CLASS(WindowTest) {
@@ -116,7 +116,7 @@ public:
 	}
 };
 
-static bool OnCreatePostCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata)
+static bool OnCreatePostCloseMsg(Window const& window, CREATESTRUCT const& createparam, void* userdata)
 {
 	SHOUJIN_ASSERT(window.handle());
 	PostMessage(window.handle()->hwnd(), WM_CLOSE, 0, 0);

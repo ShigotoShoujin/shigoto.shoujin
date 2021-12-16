@@ -13,7 +13,7 @@ namespace shoujin::gui::layout {
 
 class LayoutStream {
 public:
-	using CreateFunc = Window* (*)(const LayoutParam&);
+	using CreateFunc = Window* (*)(LayoutParam const&);
 
 private:
 	struct FromLayout {
@@ -34,21 +34,21 @@ private:
 	};
 
 public:
-	using CreateFunc = Window* (*)(const LayoutParam&);
+	using CreateFunc = Window* (*)(LayoutParam const&);
 	LayoutStream();
 	LayoutStream& operator<<(LayoutStream& (*)(LayoutStream&));
-	LayoutStream& operator<<(const LayoutParam&);
-	LayoutStream& operator<<(const FromLayout&);
-	LayoutStream& operator<<(const Style&);
-	LayoutStream& operator<<(const ExStyle&);
-	LayoutStream& operator<<(const CreateParam&);
-	LayoutStream& operator<<(const Point&);
-	LayoutStream& operator<<(const Size&);
-	LayoutStream& operator<<(const tstring&);
+	LayoutStream& operator<<(LayoutParam const&);
+	LayoutStream& operator<<(FromLayout const&);
+	LayoutStream& operator<<(Style const&);
+	LayoutStream& operator<<(ExStyle const&);
+	LayoutStream& operator<<(CreateParam const&);
+	LayoutStream& operator<<(Point const&);
+	LayoutStream& operator<<(Size const&);
+	LayoutStream& operator<<(tstring const&);
 	operator LayoutParam();
 
 private:
-	friend FromLayout from(const LayoutParam&);
+	friend FromLayout from(LayoutParam const&);
 	friend Style style(DWORD style);
 	friend ExStyle exstyle(DWORD exstyle);
 	friend CreateParam create(Window* parent, CreateFunc func);
@@ -68,7 +68,7 @@ private:
 	std::stack<LayoutParam> _stack;
 };
 
-LayoutStream::FromLayout from(const LayoutParam&);
+LayoutStream::FromLayout from(LayoutParam const&);
 LayoutStream::Style style(DWORD style);
 LayoutStream::ExStyle exstyle(DWORD exstyle);
 LayoutStream::CreateParam create(Window* parent, LayoutStream::CreateFunc func);

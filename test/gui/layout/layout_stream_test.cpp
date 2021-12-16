@@ -9,8 +9,8 @@ using namespace shoujin;
 using namespace shoujin::gui;
 using namespace shoujin::gui::layout;
 
-void AssertEmptyLayout(const LayoutParam& lp);
-void AssertLayout(const LayoutParam& expected, const LayoutParam& actual);
+void AssertEmptyLayout(LayoutParam const& lp);
+void AssertLayout(LayoutParam const& expected, LayoutParam const& actual);
 
 TEST_CLASS(LayoutStreamTest) {
 	LayoutParam _button{.position{}, .window_size{160, 20}};
@@ -117,7 +117,7 @@ void AssertEmptyLayout(const LayoutParam& lp)
 	Assert::AreEqual(nostyle, lp.exstyle);
 }
 
-void AssertLayout(const LayoutParam& expected, const LayoutParam& actual)
+void AssertLayout(LayoutParam const& expected, LayoutParam const& actual)
 {
 	//Assert::AreEqual(expected.layout_mode, actual.layout_mode);
 	Assert::AreEqual(expected.position.x, actual.position.x);

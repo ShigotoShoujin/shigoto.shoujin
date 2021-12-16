@@ -4,15 +4,15 @@ using namespace shoujin::gui;
 
 namespace shoujin::gui {
 
-BitmapWindow::BitmapWindow(const LayoutParam& lp) :
+BitmapWindow::BitmapWindow(LayoutParam const& lp) :
 	Window{lp} {}
 
-BitmapWindow::BitmapWindow(const BitmapWindow& rhs)
+BitmapWindow::BitmapWindow(BitmapWindow const& rhs)
 {
 	_bitmap = std::make_unique<Bitmap>(*rhs._bitmap);
 }
 
-BitmapWindow& BitmapWindow::operator=(const BitmapWindow& rhs)
+BitmapWindow& BitmapWindow::operator=(BitmapWindow const& rhs)
 {
 	if(this != &rhs)
 		_bitmap = std::make_unique<Bitmap>(*rhs._bitmap);
@@ -24,7 +24,7 @@ Window::CreateParam BitmapWindow::OnCreateParam()
 	return CreateParam{.classname = TEXT("ShoujinBitmapWindow")};
 }
 
-bool BitmapWindow::OnCreate(const CREATESTRUCT& createparam)
+bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 {
 	_bitmap = std::make_unique<Bitmap>(client_size());
 	_bitmap->Fill(Color(160, 80, 100));

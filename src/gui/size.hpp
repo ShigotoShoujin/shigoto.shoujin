@@ -14,13 +14,13 @@ struct Size : public Vector2d {
 	Size(int x, int y) :
 		Vector2d{x, y} {}
 
-	Size(const Vector2d& rhs) :
+	Size(Vector2d const& rhs) :
 		Vector2d{rhs} {}
 
-	Size(const POINT& rhs) :
+	Size(POINT const& rhs) :
 		Vector2d{rhs} {}
 
-	Size(const SIZE& rhs) :
+	Size(SIZE const& rhs) :
 		Vector2d{rhs} {}
 };
 

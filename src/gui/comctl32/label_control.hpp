@@ -7,9 +7,9 @@ namespace shoujin::gui::comctl32 {
 
 class LabelControl : public Window {
 public:
-	static const Size DefaultSize;
+	static Size const DefaultSize;
 
-	LabelControl(const LayoutParam& lp = {});
+	LabelControl(LayoutParam const& lp = {});
 	virtual ~LabelControl() = default;
 
 	virtual CreateParam OnCreateParam() override;

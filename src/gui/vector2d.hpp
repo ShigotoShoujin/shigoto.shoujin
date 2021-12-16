@@ -16,20 +16,20 @@ struct Vector2d {
 	Vector2d(int x, int y) :
 		x{x}, y{y} {}
 
-	Vector2d(const POINT& rhs) :
+	Vector2d(POINT const& rhs) :
 		x{rhs.x}, y{rhs.y} {}
 
-	Vector2d(const SIZE& rhs) :
+	Vector2d(SIZE const& rhs) :
 		x{rhs.cx}, y{rhs.cy} {}
 
 	operator bool() const { return x || y; }
 	operator POINT() const { return {x, y}; }
 	operator SIZE() const { return {x, y}; }
 
-	friend bool operator==(const Vector2d& lhs, const Vector2d& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
-	friend bool operator!=(const Vector2d& lhs, const Vector2d& rhs) { return !(lhs == rhs); }
-	friend Vector2d operator*(const Vector2d& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
-	friend Vector2d operator/(const Vector2d& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
+	friend bool operator==(Vector2d const& lhs, Vector2d const& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
+	friend bool operator!=(Vector2d const& lhs, Vector2d const& rhs) { return !(lhs == rhs); }
+	friend Vector2d operator*(Vector2d const& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
+	friend Vector2d operator/(Vector2d const& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
 };
 
 }

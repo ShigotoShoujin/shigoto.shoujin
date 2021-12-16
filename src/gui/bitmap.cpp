@@ -22,12 +22,12 @@ void swap(Bitmap& first, Bitmap& second) noexcept
 Bitmap::Bitmap() :
 	_hdc{}, _hbitmap{}, _size{} {}
 
-Bitmap::Bitmap(const Size& size)
+Bitmap::Bitmap(Size const& size)
 {
 	Reset(size);
 }
 
-Bitmap::Bitmap(const Bitmap& rhs)
+Bitmap::Bitmap(Bitmap const& rhs)
 {
 	if(rhs._hdc) {
 		CreateBitmap(rhs._hdc, rhs._size, _hdc, _hbitmap);
@@ -40,7 +40,7 @@ Bitmap::Bitmap(const Bitmap& rhs)
 	}
 }
 
-Bitmap& Bitmap::operator=(const Bitmap& rhs)
+Bitmap& Bitmap::operator=(Bitmap const& rhs)
 {
 	Bitmap local = rhs;
 	swap(*this, local);
@@ -76,7 +76,7 @@ void Bitmap::Destroy() noexcept
 	}
 }
 
-void Bitmap::Reset(const Size& size)
+void Bitmap::Reset(Size const& size)
 {
 	SHOUJIN_ASSERT(size);
 	Destroy();
@@ -86,7 +86,7 @@ void Bitmap::Reset(const Size& size)
 	_size = size;
 }
 
-void Bitmap::Fill(const RECT& rect, Color color)
+void Bitmap::Fill(RECT const& rect, Color color)
 {
 	HBRUSH brush = SHOUJIN_ASSERT_WIN32(CreateSolidBrush(color));
 	SHOUJIN_ASSERT_WIN32(::FillRect(_hdc, &rect, brush));
@@ -108,7 +108,7 @@ void Bitmap::Draw(HDC source, Point position, Size size, Point src_position)
 	BitBlt(_hdc, position.x, position.y, size.x, size.y, source, src_position.x, src_position.y, SRCCOPY);
 }
 
-void Bitmap::Draw(const Bitmap& source)
+void Bitmap::Draw(Bitmap const& source)
 {
 	int w = max(source._size.x, _size.x);
 	int h = max(source._size.y, _size.y);
@@ -134,7 +134,7 @@ BitmapBits Bitmap::GetBits() const
 	return bits;
 }
 
-void Bitmap::SetBits(const BitmapBits& bitmap_bits)
+void Bitmap::SetBits(BitmapBits const& bitmap_bits)
 {
 	BITMAPINFO bi{};
 	BITMAPINFOHEADER& bih = bi.bmiHeader;

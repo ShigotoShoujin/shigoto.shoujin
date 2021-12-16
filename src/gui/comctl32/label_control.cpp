@@ -4,9 +4,9 @@ using namespace shoujin::gui;
 
 namespace shoujin::gui::comctl32 {
 
-const Size LabelControl::DefaultSize{80, 23};
+Size const LabelControl::DefaultSize{80, 23};
 
-LabelControl::LabelControl(const LayoutParam& lp) :
+LabelControl::LabelControl(LayoutParam const& lp) :
 	Window{BuildLayout(lp)} {}
 
 Window::CreateParam LabelControl::OnCreateParam()
@@ -19,7 +19,7 @@ Window* LabelControl::Clone() const
 	return new LabelControl(*this);
 }
 
-LayoutParam LabelControl::BuildLayout(const LayoutParam& lp)
+LayoutParam LabelControl::BuildLayout(LayoutParam const& lp)
 {
 	LayoutParam layout = lp;
 

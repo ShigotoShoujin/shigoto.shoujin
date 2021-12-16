@@ -10,8 +10,8 @@ namespace shoujin::gui {
 class Color {
 	COLORREF _color;
 
-	friend inline bool operator==(const Color& lhs, const Color& rhs);
-	friend inline bool operator!=(const Color& lhs, const Color& rhs);
+	friend inline bool operator==(Color const& lhs, Color const& rhs);
+	friend inline bool operator!=(Color const& lhs, Color const& rhs);
 
 public:
 	Color();
@@ -23,22 +23,22 @@ public:
 	static Color FromFloat(float r, float g, float b);
 
 	//Basic colors taken from https://www.rapidtables.com/web/color/RGB_Color.html
-	static const Color Black;
-	static const Color White;
-	static const Color Red;
-	static const Color Lime;
-	static const Color Blue;
-	static const Color Yellow;
-	static const Color Cyan;
-	static const Color Magenta;
-	static const Color Silver;
-	static const Color Gray;
-	static const Color Maroon;
-	static const Color Olive;
-	static const Color Green;
-	static const Color Purple;
-	static const Color Teal;
-	static const Color Navy;
+	static Color const Black;
+	static Color const White;
+	static Color const Red;
+	static Color const Lime;
+	static Color const Blue;
+	static Color const Yellow;
+	static Color const Cyan;
+	static Color const Magenta;
+	static Color const Silver;
+	static Color const Gray;
+	static Color const Maroon;
+	static Color const Olive;
+	static Color const Green;
+	static Color const Purple;
+	static Color const Teal;
+	static Color const Navy;
 };
 
 }

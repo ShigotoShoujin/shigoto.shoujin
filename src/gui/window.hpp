@@ -37,15 +37,15 @@ public:
 		operator bool() const { return handled; }
 	};
 
-	explicit Window(const LayoutParam& = {});
-	Window(const Window&);
-	Window& operator=(const Window&);
+	explicit Window(LayoutParam const& = {});
+	Window(Window const&);
+	Window& operator=(Window const&);
 	Window(Window&&) = default;
 	Window& operator=(Window&&) = default;
 	virtual ~Window() = default;
 
-	[[nodiscard]] const WindowHandle* handle() const { return _handle.get(); }
-	[[nodiscard]] const int& taborder() const { return _taborder; }
+	[[nodiscard]] WindowHandle const* handle() const { return _handle.get(); }
+	[[nodiscard]] int const& taborder() const { return _taborder; }
 
 	static Window* FindWindowByHandle(HWND hwnd);
 
@@ -58,9 +58,9 @@ public:
 	void Show();
 	void ShowModal();
 
-	Event<bool, const MSG&> OnDispatchMessageEvent;
-	Event<bool, const WindowMessage&> OnWndProcEvent;
-	Event<bool, const Window&, const CREATESTRUCT&> OnCreateEvent;
+	Event<bool, MSG const&> OnDispatchMessageEvent;
+	Event<bool, WindowMessage const&> OnWndProcEvent;
+	Event<bool, Window const&, CREATESTRUCT const&> OnCreateEvent;
 	Event<bool> OnCloseEvent;
 	Event<bool> OnPaintEvent;
 	Event<bool, WPARAM, Rect*> OnSizingEvent;
@@ -73,38 +73,38 @@ protected:
 		bool need_subclassing{};
 	};
 
-	void CreateHandle(const WindowHandle* parent = nullptr);
+	void CreateHandle(WindowHandle const* parent = nullptr);
 	virtual CreateParam OnCreateParam();
 
-	virtual bool OnDispatchMessage(const MSG& msg);
-	virtual bool OnWndProc(const WindowMessage& message);
-	virtual bool OnCreate(const CREATESTRUCT& createparam);
+	virtual bool OnDispatchMessage(MSG const& msg);
+	virtual bool OnWndProc(WindowMessage const& message);
+	virtual bool OnCreate(CREATESTRUCT const& createparam);
 	virtual bool OnClose();
 	virtual bool OnPaint();
 	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
 	virtual bool OnSizingFinished();
-	virtual void OnParentSized(const Window& parent);
+	virtual void OnParentSized(Window const& parent);
 	virtual void OnDestroy();
 
 private:
-	MessageResult RaiseOnDispatchMessage(const MSG& msg);
+	MessageResult RaiseOnDispatchMessage(MSG const& msg);
 	MessageResult RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
-	MessageResult RaiseOnCreate(const WindowMessage& message);
+	MessageResult RaiseOnCreate(WindowMessage const& message);
 	MessageResult RaiseOnClose();
 	MessageResult RaiseOnPaint();
-	MessageResult RaiseOnSizing(const WindowMessage& message);
+	MessageResult RaiseOnSizing(WindowMessage const& message);
 	MessageResult RaiseOnSizingFinished();
 	void RaiseOnParentSized();
 	MessageResult RaiseOnDestroy();
 
 	virtual Window* Clone() const;
-	void CopyChilds(const Window& rhs);
-	void ConstructWindow(const WindowHandle* parent);
+	void CopyChilds(Window const& rhs);
+	void ConstructWindow(WindowHandle const* parent);
 	static LRESULT CALLBACK WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	static LRESULT CALLBACK WndProcSubclassStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	bool ReadMessage(MSG& msg);
 	bool ReadMessageAsync(MSG& msg);
-	void TranslateAndDispatchMessage(const MSG& msg);
+	void TranslateAndDispatchMessage(MSG const& msg);
 };
 
 }

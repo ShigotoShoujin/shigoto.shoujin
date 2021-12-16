@@ -29,7 +29,7 @@ public:
 
 	TEST_METHOD(FileDelete_WhenNameMalformed_RaiseExitProcessEvent) {
 		//Arrange
-		const TCHAR* kBadFileName = TEXT("\\/:*?\"<>|");
+		TCHAR const* kBadFileName = TEXT("\\/:*?\"<>|");
 		int exit_process_call_count = 0;
 		shoujin::assert::OnExitProcessEvent = {OnExitProcess, &exit_process_call_count};
 

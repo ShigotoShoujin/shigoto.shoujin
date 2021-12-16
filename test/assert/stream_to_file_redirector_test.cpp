@@ -45,7 +45,7 @@ public:
 
 	TEST_METHOD(ErrorOutputRedirectedToFile) {
 		//Arrange
-		const TCHAR* kErrFile = TEXT("err_file.txt");
+		TCHAR const* kErrFile = TEXT("err_file.txt");
 		auto temp_path = std::filesystem::temp_directory_path();
 		auto err_file_path = temp_path.replace_filename(kErrFile);
 		std::filesystem::remove(err_file_path);

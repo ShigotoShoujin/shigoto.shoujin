@@ -7,14 +7,14 @@ using namespace shoujin::gui;
 
 static Size GetWindowSize(HWND hwnd);
 static Size GetDefaultWindowSize(HWND hwnd);
-static Size GetClientSizeFromWindowSize(const Size& window_size, DWORD style, DWORD exstyle);
-static Size GetWindowSizeFromClientSize(const Size& window_size, DWORD style, DWORD exstyle);
-static Point GetCenteredPosition(const Size& window_size, HWND hparentwnd);
+static Size GetClientSizeFromWindowSize(Size const& window_size, DWORD style, DWORD exstyle);
+static Size GetWindowSizeFromClientSize(Size const& window_size, DWORD style, DWORD exstyle);
+static Point GetCenteredPosition(Size const& window_size, HWND hparentwnd);
 static void AdjustSizes(Size& window_size, Size& client_size, DWORD style, DWORD exstyle);
 
 namespace shoujin::gui {
 
-Layout::Layout(const LayoutParam& lp) :
+Layout::Layout(LayoutParam const& lp) :
 	_position{lp.position},
 	_window_size{lp.window_size},
 	_client_size{lp.client_size},
@@ -45,7 +45,7 @@ void Layout::UpdateStyle(DWORD style, DWORD exstyle)
 	AdjustSizes(_window_size, _client_size, _style, _exstyle);
 }
 
-void Layout::UpdateWindowSize(const Size& window_size)
+void Layout::UpdateWindowSize(Size const& window_size)
 {
 	_window_size = window_size;
 	_client_size = GetClientSizeFromWindowSize(window_size, _style, _exstyle);
@@ -94,7 +94,7 @@ static Size GetDefaultWindowSize(HWND hwnd)
 	return size;
 }
 
-static Size GetClientSizeFromWindowSize(const Size& window_size, DWORD style, DWORD exstyle)
+static Size GetClientSizeFromWindowSize(Size const& window_size, DWORD style, DWORD exstyle)
 {
 	RECT rect{0, 0, window_size.x, window_size.y};
 	SHOUJIN_ASSERT_WIN32(AdjustWindowRectEx(&rect, style, 0, exstyle));
@@ -105,7 +105,7 @@ static Size GetClientSizeFromWindowSize(const Size& window_size, DWORD style, DW
 	};
 }
 
-static Size GetWindowSizeFromClientSize(const Size& client_size, DWORD style, DWORD exstyle)
+static Size GetWindowSizeFromClientSize(Size const& client_size, DWORD style, DWORD exstyle)
 {
 	RECT rect{0, 0, client_size.x, client_size.y};
 	SHOUJIN_ASSERT_WIN32(AdjustWindowRectEx(&rect, style, 0, exstyle));
@@ -113,7 +113,7 @@ static Size GetWindowSizeFromClientSize(const Size& client_size, DWORD style, DW
 	return {adjusted_size.x, adjusted_size.y};
 }
 
-static Point GetCenteredPosition(const Size& window_size, HWND hparentwnd)
+static Point GetCenteredPosition(Size const& window_size, HWND hparentwnd)
 {
 	RECT parent_rect;
 	SHOUJIN_ASSERT_WIN32(GetWindowRect(hparentwnd, &parent_rect));

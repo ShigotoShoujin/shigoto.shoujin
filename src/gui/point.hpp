@@ -14,13 +14,13 @@ struct Point : public Vector2d {
 	Point(int x, int y) :
 		Vector2d{x, y} {}
 
-	Point(const Vector2d& rhs) :
+	Point(Vector2d const& rhs) :
 		Vector2d{rhs} {}
 
-	Point(const POINT& rhs) :
+	Point(POINT const& rhs) :
 		Vector2d{rhs} {}
 
-	Point(const SIZE& rhs) :
+	Point(SIZE const& rhs) :
 		Vector2d{rhs} {}
 };
 

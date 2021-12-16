@@ -50,8 +50,8 @@ public:
 				return self;
 			}
 
-			friend bool operator==(const Iterator& a, const Iterator& b) { return a._at == b._at; };
-			friend bool operator!=(const Iterator& a, const Iterator& b) { return a._at != b._at; };
+			friend bool operator==(Iterator const& a, Iterator const& b) { return a._at == b._at; };
+			friend bool operator!=(Iterator const& a, Iterator const& b) { return a._at != b._at; };
 
 		private:
 			pointer _at;

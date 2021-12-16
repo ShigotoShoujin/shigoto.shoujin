@@ -8,7 +8,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace shoujin;
 using namespace shoujin::gui;
 
-static bool OnCreatePostCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata);
+static bool OnCreatePostCloseMsg(Window const& window, CREATESTRUCT const& createparam, void* userdata);
 
 TEST_CLASS(BitmapWindowTest) {
 public:
@@ -35,7 +35,7 @@ public:
 	}
 };
 
-static bool OnCreatePostCloseMsg(const Window& window, const CREATESTRUCT& createparam, void* userdata)
+static bool OnCreatePostCloseMsg(Window const& window, CREATESTRUCT const& createparam, void* userdata)
 {
 	SHOUJIN_ASSERT(window.handle());
 	PostMessage(window.handle()->hwnd(), WM_CLOSE, 0, 0);

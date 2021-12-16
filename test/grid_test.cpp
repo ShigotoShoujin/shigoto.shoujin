@@ -24,7 +24,7 @@ public:
 	void Push(int row, int value) { _expected[row].push_back(value); }
 
 	template<int Size>
-	void AssertSameAsArray(const std::array<int, Size> array)
+	void AssertSameAsArray(std::array<int, Size> const array)
 	{
 		_assert_all_rows_same_size();
 		_assert_match_array(array);
@@ -42,13 +42,13 @@ private:
 	}
 
 	template<int Size>
-	void _assert_match_array(const std::array<int, Size> array)
+	void _assert_match_array(std::array<int, Size> const array)
 	{
 		for(int i = 0; i < _height; ++i)
 			Assert::IsTrue(_compare_row(_expected[i].data(), array.data() + i * _width));
 	}
 
-	bool _compare_row(const int* actual, const int* expected)
+	bool _compare_row(int const* actual, int const* expected)
 	{
 		bool result = true;
 		for(int i = 0; i < _width; ++i, ++actual, ++expected)
@@ -66,7 +66,7 @@ std::array<int, Size> CreateIntArray()
 	return array;
 }
 
-template <typename T>
+template<typename T>
 Grid<T> CreateFilledGrid(size_t width, size_t height)
 {
 	Grid<T> grid(width, height);
@@ -150,7 +150,7 @@ TEST_CLASS(Grid_RowTest) {
 	TEST_METHOD(EnumerateUsingRangeForConst_EnumerateEachValue) {
 		int data[]{1, 2, 3};
 		Row row{data, data + 3};
-		const Row const_row = std::as_const(row);
+		Row const const_row = std::as_const(row);
 		int i = 0;
 
 		for(int const& it : const_row)
@@ -159,13 +159,13 @@ TEST_CLASS(Grid_RowTest) {
 
 	TEST_METHOD(Size_ReturnSize) {
 		int data[]{1, 2, 3};
-		const Row const_row{data, data + 3};
+		Row const const_row{data, data + 3};
 		Assert::AreEqual<size_t>(3, const_row.size());
 	}
 
 	TEST_METHOD(OperatorSubscript_ReturnValue) {
 		int data[]{1, 2, 3};
-		const Row const_row{data, data + 3};
+		Row const const_row{data, data + 3};
 		Assert::AreEqual(2, const_row[1]);
 	}
 
@@ -709,7 +709,7 @@ public:
 		*(grid.data() + 2) = 53;
 		Grid<T> const& const_grid = std::as_const(grid);
 
-		const int& actual = const_grid[2];
+		int const& actual = const_grid[2];
 
 		Assert::AreEqual(53, actual);
 	}

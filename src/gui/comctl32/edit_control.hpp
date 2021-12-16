@@ -8,16 +8,16 @@ namespace shoujin::gui::comctl32 {
 
 class EditControl : public Window {
 public:
-	static const Size DefaultSize;
+	static Size const DefaultSize;
 
-	EditControl(const LayoutParam& lp = {});
+	EditControl(LayoutParam const& lp = {});
 	virtual ~EditControl() = default;
 
 	virtual CreateParam OnCreateParam() override;
 
 private:
 	virtual Window* Clone() const override;
-	static LayoutParam BuildLayout(const LayoutParam& lp);
+	static LayoutParam BuildLayout(LayoutParam const& lp);
 };
 
 }

@@ -265,7 +265,7 @@ namespace shoujin::gui::logging {
 
 LPCTSTR LookupWindowMessageText(UINT msg)
 {
-	const auto it = _messages.find(msg);
+	auto const it = _messages.find(msg);
 	if(it == _messages.cend())
 		return TEXT("Unknown message");
 	else

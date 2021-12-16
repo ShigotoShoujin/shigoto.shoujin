@@ -32,8 +32,8 @@ public:
 		_parent = nullptr;
 	}
 
-	[[nodiscard]] const HWND& hwnd() const { return _hwnd; }
-	[[nodiscard]] const HWND& parent() const { return _parent; }
+	[[nodiscard]] HWND const& hwnd() const { return _hwnd; }
+	[[nodiscard]] HWND const& parent() const { return _parent; }
 
 	operator HWND() const { return _hwnd; }
 };

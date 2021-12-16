@@ -26,7 +26,7 @@ TEST_CLASS(AssertTest) {
 		return event_data.cancel;
 	}
 
-	static bool OnError(const ErrorInfo& ei, void* userdata)
+	static bool OnError(ErrorInfo const& ei, void* userdata)
 	{
 		auto testdata = reinterpret_cast<TestData*>(userdata);
 		testdata->ei = ei;
@@ -94,7 +94,7 @@ public:
 		TestData testdata{.onerror{.cancel = true}};
 		ErrorInfo& ei = testdata.ei;
 		OnErrorEvent = {OnError, &testdata};
-		const int kFailCode = 8;
+		int const kFailCode = 8;
 
 		auto line = __LINE__ + 1;
 		SHOUJIN_ASSERT_EXPLICIT(("This assertion will fail", kFailCode), [kFailCode](int ret_code) { return ret_code != kFailCode; });

@@ -19,7 +19,7 @@ class Event {
 public:
 	Event();
 	Event(TFunc func, void* userdata = nullptr);
-	Event& operator=(const Event& rhs);
+	Event& operator=(Event const& rhs);
 	~Event();
 
 	TResult operator()(TArguments... args) const;
@@ -40,7 +40,7 @@ Event<TResult, TArguments...>::Event(TFunc func, void* userdata) :
 
 template<event_tresult TResult, typename... TArguments>
 Event<TResult, TArguments...>
-&Event<TResult, TArguments...>::operator=(const Event<TResult, TArguments...>& rhs)
+&Event<TResult, TArguments...>::operator=(Event<TResult, TArguments...> const& rhs)
 {
 	_func = rhs._func;
 	_userdata = rhs._userdata;

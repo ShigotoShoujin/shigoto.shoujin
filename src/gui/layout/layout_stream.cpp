@@ -21,31 +21,31 @@ LayoutStream& LayoutStream::operator<<(LayoutStream& (*func)(LayoutStream&))
 	return func(*this);
 }
 
-LayoutStream& LayoutStream::operator<<(const LayoutParam& rhs)
+LayoutStream& LayoutStream::operator<<(LayoutParam const& rhs)
 {
 	_layout = rhs;
 	return *this;
 }
 
-LayoutStream& LayoutStream::operator<<(const LayoutStream::FromLayout& rhs)
+LayoutStream& LayoutStream::operator<<(LayoutStream::FromLayout const& rhs)
 {
 	_from_layout = rhs.layout;
 	return *this;
 }
 
-LayoutStream& LayoutStream::operator<<(const Style& rhs)
+LayoutStream& LayoutStream::operator<<(Style const& rhs)
 {
 	_layout.style = rhs.style;
 	return *this;
 }
 
-LayoutStream& LayoutStream::operator<<(const ExStyle& rhs)
+LayoutStream& LayoutStream::operator<<(ExStyle const& rhs)
 {
 	_layout.exstyle = rhs.exstyle;
 	return *this;
 }
 
-LayoutStream& LayoutStream::operator<<(const CreateParam& rhs)
+LayoutStream& LayoutStream::operator<<(CreateParam const& rhs)
 {
 	auto child = rhs.func(_layout);
 	rhs.parent->AddChild(child);
@@ -59,18 +59,18 @@ LayoutStream& LayoutStream::operator<<(const CreateParam& rhs)
 	return *this;
 }
 
-LayoutStream& LayoutStream::operator<<(const Point& rhs)
+LayoutStream& LayoutStream::operator<<(Point const& rhs)
 {
 	_layout.position = rhs;
 	return *this;
 }
 
-LayoutStream& LayoutStream::operator<<(const Size& rhs)
+LayoutStream& LayoutStream::operator<<(Size const& rhs)
 {
 	_layout.window_size = rhs;
 	return *this;
 }
-LayoutStream& LayoutStream::operator<<(const tstring& text)
+LayoutStream& LayoutStream::operator<<(tstring const& text)
 {
 	_layout.text = text;
 	return *this;
@@ -81,7 +81,7 @@ LayoutStream::operator LayoutParam()
 	return _layout;
 }
 
-LayoutStream::FromLayout from(const LayoutParam& rhs)
+LayoutStream::FromLayout from(LayoutParam const& rhs)
 {
 	return LayoutStream::FromLayout{rhs};
 }

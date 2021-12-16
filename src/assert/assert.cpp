@@ -17,11 +17,11 @@ namespace shoujin::assert {
 
 thread_local bool _activate_assert_messagebox_;
 
-Event<bool, const ErrorInfo&> OnErrorEvent;
+Event<bool, ErrorInfo const&> OnErrorEvent;
 Event<bool, tstring> OnErrorOutputEvent;
 Event<bool> OnExitProcessEvent;
 
-static bool OnError(const ErrorInfo& ei)
+static bool OnError(ErrorInfo const& ei)
 {
 	return OnErrorEvent(ei);
 }
@@ -55,7 +55,7 @@ static void OnExitProcess(UINT exit_code)
 		::ExitProcess(exit_code);
 }
 
-static tstring FormatError(const ErrorInfo& ei)
+static tstring FormatError(ErrorInfo const& ei)
 {
 	tstringstream ss;
 	std::filesystem::path path(ei.file);
@@ -69,7 +69,7 @@ static tstring FormatError(const ErrorInfo& ei)
 	return ss.str();
 }
 
-void Abort(const ErrorInfo& ei)
+void Abort(ErrorInfo const& ei)
 {
 	if(OnError(ei))
 		return;
@@ -81,7 +81,7 @@ void Abort(const ErrorInfo& ei)
 		OnExitProcess(1);
 }
 
-void AbortCLib(const ErrorInfo& ei)
+void AbortCLib(ErrorInfo const& ei)
 {
 	if(OnError(ei))
 		return;
@@ -89,7 +89,7 @@ void AbortCLib(const ErrorInfo& ei)
 	int errcode = std::any_cast<int>(ei.result);
 
 	tstringstream ss;
-	const int kMsgBufferSize = 0xff;
+	int const kMsgBufferSize = 0xff;
 	TCHAR msg_buffer[kMsgBufferSize];
 
 	ss << FormatError(ei);
@@ -104,7 +104,7 @@ void AbortCLib(const ErrorInfo& ei)
 		OnExitProcess(errcode ? errcode : 1);
 }
 
-void AbortStdErrorCode(const ErrorInfo& ei)
+void AbortStdErrorCode(ErrorInfo const& ei)
 {
 	if(OnError(ei))
 		return;
@@ -122,7 +122,7 @@ void AbortStdErrorCode(const ErrorInfo& ei)
 		OnExitProcess(error_code.value());
 }
 
-void AbortWin32(const ErrorInfo& ei)
+void AbortWin32(ErrorInfo const& ei)
 {
 	if(OnError(ei))
 		return;
