@@ -138,12 +138,44 @@ TEST_CLASS(Grid_RowTest) {
 		Assert::IsTrue(std::is_default_constructible_v<Row>);
 	}
 
+	TEST_METHOD(Begin_WhenRowIsNotConst_ReturnIteratorType) {
+		Row row;
+
+		auto actual = row.begin();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Row::iterator>);
+	}
+
+	TEST_METHOD(End_WhenRowIsNotConst_ReturnIteratorType) {
+		Row row;
+
+		auto actual = row.end();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Row::iterator>);
+	}
+
+	TEST_METHOD(Begin_WhenRowIsConst_ReturnConstIteratorType) {
+		Row const row;
+
+		auto actual = row.begin();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Row::const_iterator>);
+	}
+
+	TEST_METHOD(End_WhenRowIsConst_ReturnConstIteratorType) {
+		Row const row;
+
+		auto actual = row.end();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Row::const_iterator>);
+	}
+
 	TEST_METHOD(EnumerateUsingRangeFor_EnumerateEachValue) {
 		int data[]{1, 2, 3};
 		Row row{data, data + 3};
 		int i = 0;
 
-		for(int& it : row)
+		for(auto&& it : row)
 			Assert::AreEqual(++i, it);
 	}
 
@@ -153,7 +185,7 @@ TEST_CLASS(Grid_RowTest) {
 		Row const const_row = std::as_const(row);
 		int i = 0;
 
-		for(int const& it : const_row)
+		for(auto&& it : const_row)
 			Assert::AreEqual(++i, it);
 	}
 
@@ -498,6 +530,64 @@ TEST_CLASS(Grid_RowIteratorTest) {
 	}
 };
 
+TEST_CLASS(Grid_ConstRowsTest) {
+	TEST_METHOD(IsCopyConstructible) {
+		Assert::IsTrue(std::is_copy_constructible_v<ConstRows>);
+	}
+
+	TEST_METHOD(IsCopyAssignable) {
+		Assert::IsTrue(std::is_copy_assignable_v<ConstRows>);
+	}
+
+	TEST_METHOD(IsMoveConstructible) {
+		Assert::IsTrue(std::is_move_constructible_v<ConstRows>);
+	}
+
+	TEST_METHOD(IsMoveAssignable) {
+		Assert::IsTrue(std::is_move_assignable_v<ConstRows>);
+	}
+
+	TEST_METHOD(IsDefaultConstructible) {
+		Assert::IsTrue(std::is_default_constructible_v<ConstRows>);
+	}
+
+	TEST_METHOD(Begin_ReturnConstIteratorType) {
+		ConstRows const_rows;
+
+		auto actual = const_rows.begin();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), ConstRows::const_iterator>);
+	}
+
+	TEST_METHOD(End_ReturnConstIteratorType) {
+		ConstRows const_rows;
+
+		auto actual = const_rows.end();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), ConstRows::const_iterator>);
+	}
+
+	TEST_METHOD(EnumerateUsingRangeFor_EnumerateEachRow) {
+		//Arrange
+		constexpr auto kWidth = 3;
+		constexpr auto kHeight = 2;
+		constexpr auto kSize = kWidth * kHeight;
+		auto test_data = assist::CreateIntArray<kSize>();
+		ConstRows const_rows{test_data.data(), test_data.data() + kSize, kWidth};
+		assist::GridVectorAsserter grid_vec{kWidth, kHeight};
+
+		//Act
+		for(int y{}; auto&& row : const_rows) {
+			for(auto&& cell : row)
+				grid_vec.Push(y, cell);
+			++y;
+		}
+
+		//Assert
+		grid_vec.AssertSameAsArray(test_data);
+	}
+};
+
 TEST_CLASS(Grid_RowsTest) {
 	TEST_METHOD(IsCopyConstructible) {
 		Assert::IsTrue(std::is_copy_constructible_v<Rows>);
@@ -519,6 +609,22 @@ TEST_CLASS(Grid_RowsTest) {
 		Assert::IsTrue(std::is_default_constructible_v<Rows>);
 	}
 
+	TEST_METHOD(Begin_ReturnIteratorType) {
+		Rows rows;
+
+		auto actual = rows.begin();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Rows::iterator>);
+	}
+
+	TEST_METHOD(End_ReturnIteratorType) {
+		Rows rows;
+
+		auto actual = rows.end();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Rows::iterator>);
+	}
+
 	TEST_METHOD(EnumerateUsingRangeFor_EnumerateEachRow) {
 		//Arrange
 		constexpr auto kWidth = 3;
@@ -529,28 +635,8 @@ TEST_CLASS(Grid_RowsTest) {
 		assist::GridVectorAsserter grid_vec{kWidth, kHeight};
 
 		//Act
-		for(int y{}; Row & row : rows) {
-			for(int& cell : row)
-				grid_vec.Push(y, cell);
-			++y;
-		}
-
-		//Assert
-		grid_vec.AssertSameAsArray(test_data);
-	}
-
-	TEST_METHOD(EnumerateUsingRangeForConst_EnumerateEachRow) {
-		//Arrange
-		constexpr auto kWidth = 3;
-		constexpr auto kHeight = 2;
-		constexpr auto kSize = kWidth * kHeight;
-		auto test_data = assist::CreateIntArray<kSize>();
-		ConstRows const_rows{test_data.data(), test_data.data() + kSize, kWidth};
-		assist::GridVectorAsserter grid_vec{kWidth, kHeight};
-
-		//Act
-		for(int y{}; Row const& row : const_rows) {
-			for(int const& cell : row)
+		for(int y{}; auto&& row : rows) {
+			for(auto&& cell : row)
 				grid_vec.Push(y, cell);
 			++y;
 		}
@@ -720,19 +806,67 @@ public:
 		Assert::IsTrue(diff == grid.size());
 	}
 
+	TEST_METHOD(Begin_WhenGridIsNotConst_ReturnIteratorType) {
+		Grid<T> grid;
+
+		auto actual = grid.begin();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Grid<T>::iterator>);
+	}
+
+	TEST_METHOD(End_WhenGridIsNotConst_ReturnIteratorType) {
+		Grid<T> grid;
+
+		auto actual = grid.end();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Grid<T>::iterator>);
+	}
+
+	TEST_METHOD(Begin_WhenGridIsConst_ReturnConstIteratorType) {
+		Grid<T> const grid;
+
+		auto actual = grid.begin();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Grid<T>::const_iterator>);
+	}
+
+	TEST_METHOD(End_WhenGridIsConst_ReturnConstIteratorType) {
+		Grid<T> const grid;
+
+		auto actual = grid.end();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Grid<T>::const_iterator>);
+	}
+
+	TEST_METHOD(Begin_ReturnIteratorType) {
+		Grid<T> grid;
+
+		auto actual = grid.begin();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Grid<T>::iterator>);
+	}
+
+	TEST_METHOD(End_ReturnIteratorType) {
+		Grid<T> grid;
+
+		auto actual = grid.end();
+
+		Assert::IsTrue(std::is_same_v<decltype(actual), Grid<T>::iterator>);
+	}
+
 	TEST_METHOD(EnumerateUsingRangeFor_EnumerateEachValue) {
 		auto grid = assist::CreateFilledGrid<T>(5, 3);
 		int i = 0;
 
-		for(int& it : grid)
+		for(auto&& it : grid)
 			Assert::AreEqual(++i, it);
 	}
 
 	TEST_METHOD(EnumerateUsingRangeForConst_EnumerateEachValue) {
-		auto grid = assist::CreateFilledGrid<T>(5, 3);
+		auto const grid = assist::CreateFilledGrid<T>(5, 3);
 		int i = 0;
 
-		for(int const& it : std::as_const(grid))
+		for(auto&& it : grid)
 			Assert::AreEqual(++i, it);
 	}
 

@@ -15,8 +15,6 @@ namespace shoujin {
 /// </summary>
 template<typename T>
 class Grid {
-	//using T = int;
-
 public:
 	class Row {
 	public:
@@ -183,34 +181,42 @@ public:
 
 	class ConstRows {
 	public:
-		constexpr ConstRows() {}
+		using value_type = T;
+		using pointer = value_type*;
+		using const_pointer = value_type const*;
+		using const_iterator = ConstRowIterator;
 
-		constexpr ConstRows(T const* begin, T const* end, size_t row_length) :
-			_begin{const_cast<T*>(begin)},
-			_end{const_cast<T*>(end)},
+		constexpr ConstRows() = default;
+
+		constexpr ConstRows(const_pointer begin, const_pointer end, size_t row_length) :
+			_begin{const_cast<pointer>(begin)},
+			_end{const_cast<pointer>(end)},
 			_row_length{row_length}
 		{}
 
-		[[nodiscard]] constexpr ConstRowIterator begin() const noexcept { return {_begin, _row_length}; }
-		[[nodiscard]] constexpr ConstRowIterator end() const noexcept { return {_end, _row_length}; }
-		[[nodiscard]] constexpr ConstRowIterator cbegin() const noexcept { return {_begin, _row_length}; }
-		[[nodiscard]] constexpr ConstRowIterator cend() const noexcept { return {_end, _row_length}; }
+		[[nodiscard]] constexpr const_iterator begin() const noexcept { return {_begin, _row_length}; }
+		[[nodiscard]] constexpr const_iterator end() const noexcept { return {_end, _row_length}; }
+		[[nodiscard]] constexpr const_iterator cbegin() const noexcept { return {_begin, _row_length}; }
+		[[nodiscard]] constexpr const_iterator cend() const noexcept { return {_end, _row_length}; }
 
 	protected:
-		T* _begin{};
-		T* _end{};
+		pointer _begin{};
+		pointer _end{};
 		size_t _row_length{};
 	};
 
 	class Rows : public ConstRows {
 	public:
-		constexpr Rows() {}
+		using iterator = RowIterator;
+		using pointer = ConstRows::pointer;
 
-		constexpr Rows(T* begin, T* end, size_t row_length) :
+		constexpr Rows() = default;
+
+		constexpr Rows(pointer begin, pointer end, size_t row_length) :
 			ConstRows(begin, end, row_length) {}
 
-		[[nodiscard]] constexpr RowIterator begin() noexcept { return {ConstRows::_begin, ConstRows::_row_length}; }
-		[[nodiscard]] constexpr RowIterator end() noexcept { return {ConstRows::_end, ConstRows::_row_length}; }
+		[[nodiscard]] constexpr iterator begin() noexcept { return {ConstRows::_begin, ConstRows::_row_length}; }
+		[[nodiscard]] constexpr iterator end() noexcept { return {ConstRows::_end, ConstRows::_row_length}; }
 	};
 
 	using value_type = T;
