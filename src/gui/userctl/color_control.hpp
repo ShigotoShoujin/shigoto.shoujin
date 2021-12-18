@@ -8,7 +8,7 @@
 namespace shoujin::gui::comctl32 {
 
 class ColorControl : public Window {
-	static const Size DefaultClientSize;
+	static Size const kDefaultClientSize;
 
 public:
 	explicit ColorControl(LayoutParam const& lp = {});

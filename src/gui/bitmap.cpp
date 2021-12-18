@@ -128,7 +128,7 @@ BitmapBits Bitmap::GetBits() const
 	bih.biHeight = -bih.biHeight;
 	bih.biBitCount = 24;
 	bih.biCompression = BI_RGB;
-	getdibits_result = GetDIBits(_hdc, _hbitmap, 0, -bih.biHeight, bits.begin(), &bi, DIB_RGB_COLORS);
+	getdibits_result = GetDIBits(_hdc, _hbitmap, 0, -bih.biHeight, bits.data(), &bi, DIB_RGB_COLORS);
 	SHOUJIN_ASSERT_WIN32(getdibits_result && getdibits_result != ERROR_INVALID_PARAMETER);
 
 	return bits;
@@ -145,7 +145,7 @@ void Bitmap::SetBits(BitmapBits const& bitmap_bits)
 	bih.biBitCount = 24;
 	bih.biCompression = BI_RGB;
 
-	SHOUJIN_ASSERT_WIN32(SetDIBits(_hdc, _hbitmap, 0, -bih.biHeight, bitmap_bits.begin(), &bi, DIB_RGB_COLORS));
+	SHOUJIN_ASSERT_WIN32(SetDIBits(_hdc, _hbitmap, 0, -bih.biHeight, bitmap_bits.data(), &bi, DIB_RGB_COLORS));
 }
 
 }

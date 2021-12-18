@@ -40,8 +40,8 @@ public:
 		[[nodiscard]] constexpr const_iterator cend() const noexcept { return _end; };
 
 		[[nodiscard]] constexpr size_t size() const noexcept { return _end - _begin; }
-		[[nodiscard]] constexpr reference operator[](size_t idx) noexcept { return *(_begin + idx); };
-		[[nodiscard]] constexpr const_reference operator[](size_t idx) const noexcept { return *(_begin + idx); };
+		[[nodiscard]] constexpr reference operator[](size_t idx) { return *(_begin + idx); };
+		[[nodiscard]] constexpr const_reference operator[](size_t idx) const { return *(_begin + idx); };
 
 		[[nodiscard]] constexpr friend bool operator==(Row const& lhs, Row const& rhs)
 		{
@@ -87,7 +87,7 @@ public:
 			left.swap(right);
 		}
 
-		[[nodiscard]] constexpr value_type operator[](size_t idx) const noexcept { return {_begin, _begin + _row_length}; }
+		[[nodiscard]] constexpr value_type operator[](size_t idx) const { return {_begin, _begin + _row_length}; }
 		[[nodiscard]] constexpr reference operator*() const noexcept { return _row; }
 		[[nodiscard]] constexpr pointer operator->() const noexcept { return &_row; }
 
@@ -256,8 +256,8 @@ public:
 
 	[[nodiscard]] constexpr value_type* data() noexcept { return _vector.data(); }
 	[[nodiscard]] constexpr value_type const* data() const noexcept { return const_cast<value_type const*>(_vector.data()); }
-	[[nodiscard]] constexpr reference operator[](size_type idx) noexcept { return _vector[idx]; }
-	[[nodiscard]] constexpr const_reference operator[](size_type idx) const noexcept { return _vector[idx]; }
+	[[nodiscard]] constexpr reference operator[](size_type idx) { return _vector[idx]; }
+	[[nodiscard]] constexpr const_reference operator[](size_type idx) const { return _vector[idx]; }
 	[[nodiscard]] constexpr size_type width() const noexcept { return _width; }
 	[[nodiscard]] constexpr size_type height() const noexcept { return _height; }
 

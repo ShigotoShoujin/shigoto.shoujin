@@ -15,7 +15,6 @@ class Bitmap {
 	HBITMAP _hbitmap;
 	Size _size;
 
-private:
 	Bitmap();
 
 public:

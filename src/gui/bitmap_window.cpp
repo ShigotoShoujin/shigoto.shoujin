@@ -27,32 +27,68 @@ Window::CreateParam BitmapWindow::OnCreateParam()
 bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 {
 	_bitmap = std::make_unique<Bitmap>(client_size());
-	_bitmap->Fill(Color(160, 80, 100));
+	//_bitmap->Fill(Color(160, 80, 100));
 
-	//auto bits = _bitmap->GetBits();
+	struct crange {
+		struct {
+			float step;
+			float val;
+		} h, v;
 
-	//auto width = _bitmap->size().x;
-	//auto step = 255.0 / width;
+		crange(int width, int height, uint8_t min) :
+			_width{width}, _height{height}, _min{min}
+		{
+			v.step = _min / static_cast<float>(_height);
+			v.val = 255.f;
 
-	//auto it = bits.begin();
-	//auto end = bits.end();
-	//while(it < end) {
-	//	auto line_end = it + width;
-	//	auto c = 0.0;
-	//	while(it < line_end) {
-	//		it->r = 0;
-	//		it->g = static_cast<uint8_t>(c += step);
-	//		it->b = 0;
-	//		++it;
-	//	}
-	//}
+			h.step = {};
+			h.val = {};
+		}
 
-	//auto z = bits.PixelRows();
-	//for(auto& row : bits.PixelRows())
-	//	for(auto& p : row)
-	//		p.r = 100;
+		inline void row_begin()
+		{
+			h.step = v.val / static_cast<float>(_width);
+			h.val = v.val;
+		}
 
-	//_bitmap->SetBits(bits);
+		inline uint8_t next()
+		{
+			return static_cast<uint8_t>(h.val -= h.step);
+		}
+
+		inline void row_end()
+		{
+			v.val -= v.step;
+		}
+
+		int _width;
+		int _height;
+		uint8_t _min;
+	};
+
+	auto bits = _bitmap->GetBits();
+
+	crange red(bits.width(), bits.height(), 255);
+	crange green(bits.width(), bits.height(), 0);
+	crange blue(bits.width(), bits.height(), 0);
+
+	for(auto&& row : bits.EnumerateRows()) {
+		red.row_begin();
+		green.row_begin();
+		blue.row_begin();
+
+		for(auto&& pixel : row) {
+			pixel.r = red.next();
+			pixel.g = 0; //green.next();
+			pixel.b = 0; //blue.next();
+		}
+
+		red.row_end();
+		green.row_end();
+		blue.row_end();
+	}
+
+	_bitmap->SetBits(bits);
 
 	return true;
 }

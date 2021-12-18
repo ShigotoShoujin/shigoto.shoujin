@@ -10,7 +10,7 @@ using namespace shoujin::gui::layout;
 
 namespace shoujin::gui::comctl32 {
 
-Size const ColorControl::DefaultClientSize{768, 768};
+Size const ColorControl::kDefaultClientSize{768, 768};
 
 ColorControl::ColorControl(LayoutParam const& lp) :
 	Window{BuildLayout(lp)}
@@ -49,7 +49,7 @@ LayoutParam ColorControl::BuildLayout(LayoutParam const& lp)
 {
 	Size client_size;
 	if(!lp.window_size && !lp.client_size)
-		client_size = DefaultClientSize;
+		client_size = kDefaultClientSize;
 
 	LayoutParam layout = lp;
 	layout.client_size = client_size;
