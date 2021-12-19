@@ -23,7 +23,7 @@ ColorControl::ColorControl(LayoutParam const& lp) :
 	LayoutStream stream;
 
 	stream
-		<< Size{512, 512} << layout::exstyle(WS_EX_CLIENTEDGE)
+		<< Size{316, 316} << layout::exstyle(WS_EX_CLIENTEDGE)
 		<< topleft << create(this, bitmap_window)
 		<< layout::exstyle(0) << LabelControl::DefaultSize << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below

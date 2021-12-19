@@ -48,12 +48,12 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 				_vertical_step_left = _line_start / (height - 1);
 				_vertical_step_right = _line_end / (height - 1);
 				_line_step = (_line_start - _line_end) / (_width - 1);
-				_value = _line_start - _line_step;
+				_value = _line_start + _line_step;
 			}
 
 			inline uint8_t next_pixel()
 			{
-				return static_cast<uint8_t>(_value += _line_step);
+				return static_cast<uint8_t>(_value -= _line_step);
 			}
 
 			void next_line()
@@ -61,6 +61,7 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 				_line_start -= _vertical_step_left;
 				_line_end -= _vertical_step_right;
 				_line_step = (_line_start - _line_end) / (_width - 1);
+				_value = _line_start;
 			}
 		} r, g, b;
 
@@ -94,7 +95,7 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 
 	auto bits = _bitmap->GetBits();
 
-	colormap cm{bits.width(), bits.height(), {255, 0, 0}};
+	colormap cm{bits.width(), bits.height(), {255, 112, 0}};
 
 	for(auto&& row : bits.EnumerateRows()) {
 		for(auto&& pixel : row) {

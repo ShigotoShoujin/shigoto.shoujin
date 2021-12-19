@@ -951,7 +951,7 @@ public:
 		Assert::IsTrue(std::equal(grid.begin(), grid.end(), expected.begin()));
 	}
 
-	TEST_METHOD(EnumerateRows_EnumerateUsingRangeFor_EnumerateEachRow) {
+	TEST_METHOD(EnumerateUsingRangeFor_EnumerateEachRow) {
 		//Arrange
 		constexpr auto kWidth = 3;
 		constexpr auto kHeight = 2;
@@ -960,8 +960,8 @@ public:
 		assist::GridVectorAsserter grid_vec{kWidth, kHeight};
 
 		//Act
-		for(int y{}; Row & row : grid.EnumerateRows()) {
-			for(int& cell : row)
+		for(int y{}; auto&& row : grid.EnumerateRows()) {
+			for(auto&& cell : row)
 				grid_vec.Push(y, cell);
 			++y;
 		}
@@ -970,7 +970,7 @@ public:
 		grid_vec.AssertSameAsArray(test_data);
 	}
 
-	TEST_METHOD(EnumerateRows_EnumerateUsingRangeForConst_EnumerateEachRow) {
+	TEST_METHOD(EnumerateUsingRangeForConst_EnumerateEachRow) {
 		//Arrange
 		constexpr auto kWidth = 3;
 		constexpr auto kHeight = 2;
@@ -987,5 +987,37 @@ public:
 
 		//Assert
 		grid_vec.AssertSameAsArray(test_data);
+	}
+
+	TEST_METHOD(EnumerateUsingRangeFor_WidthGreaterThanHeight_WriteValue) {
+		//Arrange
+		constexpr auto kWidth = 50;
+		constexpr auto kHeight = 20;
+		Grid<T> grid(kWidth, kHeight);
+
+		//Act
+		for(int i{}; auto&& row : grid.EnumerateRows())
+			for(auto&& cell : row)
+				cell = ++i;
+
+		//Assert
+		for(int i{}; auto&& cell : grid)
+			Assert::AreEqual(++i, cell);
+	}
+
+	TEST_METHOD(EnumerateUsingRangeFor_WidthSmallerThanHeight_WriteValue) {
+		//Arrange
+		constexpr auto kWidth = 20;
+		constexpr auto kHeight = 50;
+		Grid<T> grid(kWidth, kHeight);
+
+		//Act
+		for(int i{}; auto&& row : grid.EnumerateRows())
+			for(auto&& cell : row)
+				cell = ++i;
+
+		//Assert
+		for(int i{}; auto&& cell : grid)
+			Assert::AreEqual(++i, cell);
 	}
 };
