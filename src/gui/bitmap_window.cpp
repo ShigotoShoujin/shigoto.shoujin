@@ -27,65 +27,83 @@ Window::CreateParam BitmapWindow::OnCreateParam()
 bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 {
 	_bitmap = std::make_unique<Bitmap>(client_size());
-	//_bitmap->Fill(Color(160, 80, 100));
 
-	struct crange {
-		struct {
-			float step;
-			float val;
-		} h, v;
+	struct colormap {
+		struct channel {
+			uint8_t _target;
+			int _width;
+			float _vertical_step_left;
+			float _vertical_step_right;
+			float _line_start;
+			float _line_end;
+			float _line_step;
+			float _value;
 
-		crange(int width, int height, uint8_t min) :
-			_width{width}, _height{height}, _min{min}
+			channel(uint8_t target, int width, int height) :
+				_target{target},
+				_width{width}
+			{
+				_line_start = 255.f;
+				_line_end = _target;
+				_vertical_step_left = _line_start / (height - 1);
+				_vertical_step_right = _line_end / (height - 1);
+				_line_step = (_line_start - _line_end) / (_width - 1);
+				_value = _line_start - _line_step;
+			}
+
+			inline uint8_t next_pixel()
+			{
+				return static_cast<uint8_t>(_value += _line_step);
+			}
+
+			void next_line()
+			{
+				_line_start -= _vertical_step_left;
+				_line_end -= _vertical_step_right;
+				_line_step = (_line_start - _line_end) / (_width - 1);
+			}
+		} r, g, b;
+
+		struct color {
+			uint8_t r;
+			uint8_t g;
+			uint8_t b;
+		};
+
+		colormap(int width, int height, color target_color) :
+			r{target_color.r, width, height},
+			g{target_color.g, width, height},
+			b{target_color.b, width, height}
+		{}
+
+		inline color next_pixel()
 		{
-			v.step = _min / static_cast<float>(_height);
-			v.val = 255.f;
-
-			h.step = {};
-			h.val = {};
+			return {
+				r.next_pixel(),
+				g.next_pixel(),
+				b.next_pixel()};
 		}
 
-		inline void row_begin()
+		void next_line()
 		{
-			h.step = v.val / static_cast<float>(_width);
-			h.val = v.val;
+			r.next_line();
+			g.next_line();
+			b.next_line();
 		}
-
-		inline uint8_t next()
-		{
-			return static_cast<uint8_t>(h.val -= h.step);
-		}
-
-		inline void row_end()
-		{
-			v.val -= v.step;
-		}
-
-		int _width;
-		int _height;
-		uint8_t _min;
 	};
 
 	auto bits = _bitmap->GetBits();
 
-	crange red(bits.width(), bits.height(), 255);
-	crange green(bits.width(), bits.height(), 0);
-	crange blue(bits.width(), bits.height(), 0);
+	colormap cm{bits.width(), bits.height(), {255, 0, 0}};
 
 	for(auto&& row : bits.EnumerateRows()) {
-		red.row_begin();
-		green.row_begin();
-		blue.row_begin();
-
 		for(auto&& pixel : row) {
-			pixel.r = red.next();
-			pixel.g = 0; //green.next();
-			pixel.b = 0; //blue.next();
+			auto c = cm.next_pixel();
+			pixel.r = c.r;
+			pixel.g = c.g;
+			pixel.b = c.b;
 		}
-
-		red.row_end();
-		green.row_end();
-		blue.row_end();
+		cm.next_line();
 	}
 
 	_bitmap->SetBits(bits);
