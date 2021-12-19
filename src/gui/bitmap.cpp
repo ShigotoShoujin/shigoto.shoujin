@@ -6,6 +6,7 @@
 using namespace shoujin::gui;
 
 static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hbitmap);
+static WORD const kBitmapInfoBitCount = 32;
 
 namespace shoujin::gui {
 
@@ -117,6 +118,8 @@ void Bitmap::Draw(Bitmap const& source)
 
 BitmapBits Bitmap::GetBits() const
 {
+	SHOUJIN_ASSERT(sizeof(BitmapBits::value_type) == kBitmapInfoBitCount >> 3);
+
 	BITMAPINFO bi{};
 	BITMAPINFOHEADER& bih = bi.bmiHeader;
 	bih.biSize = sizeof(bih);
@@ -126,7 +129,7 @@ BitmapBits Bitmap::GetBits() const
 	BitmapBits bits(bih.biWidth, bih.biHeight);
 
 	bih.biHeight = -bih.biHeight;
-	bih.biBitCount = 24;
+	bih.biBitCount = kBitmapInfoBitCount;
 	bih.biCompression = BI_RGB;
 	getdibits_result = GetDIBits(_hdc, _hbitmap, 0, -bih.biHeight, bits.data(), &bi, DIB_RGB_COLORS);
 	SHOUJIN_ASSERT_WIN32(getdibits_result && getdibits_result != ERROR_INVALID_PARAMETER);
@@ -136,13 +139,15 @@ BitmapBits Bitmap::GetBits() const
 
 void Bitmap::SetBits(BitmapBits const& bitmap_bits)
 {
+	SHOUJIN_ASSERT(sizeof(BitmapBits::value_type) == kBitmapInfoBitCount >> 3);
+
 	BITMAPINFO bi{};
 	BITMAPINFOHEADER& bih = bi.bmiHeader;
 	bih.biSize = sizeof(bih);
 	bih.biWidth = bitmap_bits.width();
 	bih.biHeight = -bitmap_bits.height();
 	bih.biPlanes = 1;
-	bih.biBitCount = 24;
+	bih.biBitCount = kBitmapInfoBitCount;
 	bih.biCompression = BI_RGB;
 
 	SHOUJIN_ASSERT_WIN32(SetDIBits(_hdc, _hbitmap, 0, -bih.biHeight, bitmap_bits.data(), &bi, DIB_RGB_COLORS));

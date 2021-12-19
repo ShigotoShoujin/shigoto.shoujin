@@ -8,7 +8,7 @@
 
 namespace shoujin::gui {
 struct Pixel {
-	uint8_t b, g, r;
+	uint8_t b, g, r, a;
 };
 
 class BitmapBits : public Grid<Pixel> {
