@@ -20,6 +20,8 @@ public:
 
 	[[nodiscard]] int width() const { return static_cast<int>(Grid::width()); }
 	[[nodiscard]] int height() const { return static_cast<int>(Grid::height()); }
+
+
 };
 
 }
