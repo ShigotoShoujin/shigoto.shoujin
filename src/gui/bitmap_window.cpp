@@ -30,7 +30,14 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 
 	struct colormap {
 		struct channel {
-			uint8_t _target;
+			struct gradient {
+				uint8_t topleft;
+				uint8_t topright;
+				uint8_t bottomleft;
+				uint8_t bottomright;
+			};
+
+			gradient _target;
 			int _width;
 			float _vertical_step_left;
 			float _vertical_step_right;
@@ -39,16 +46,17 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 			float _line_step;
 			float _value;
 
-			channel(uint8_t target, int width, int height) :
+			channel(gradient target, int width, int height) :
 				_target{target},
-				_width{width}
+				_width{width - 1},
+				_line_step{},
+				_value{}
 			{
-				_line_start = 255.f;
-				_line_end = _target;
-				_vertical_step_left = _line_start / (height - 1);
-				_vertical_step_right = _line_end / (height - 1);
-				_line_step = -(_line_start - _line_end) / (_width - 1);
-				_value = _line_start - _line_step;
+				auto h = static_cast<float>(height - 1);
+				_vertical_step_left = (_target.bottomleft - _target.topleft) / h;
+				_vertical_step_right = (_target.bottomright - _target.topright) / h;
+				_line_start = _target.topleft - _vertical_step_left;
+				_line_end = _target.topright - _vertical_step_right;
 			}
 
 			inline uint8_t next_pixel()
@@ -58,9 +66,9 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 
 			void next_line()
 			{
-				_line_start -= _vertical_step_left;
-				_line_end -= _vertical_step_right;
-				_line_step = -(_line_start - _line_end) / (_width - 1);
+				_line_start += _vertical_step_left;
+				_line_end += _vertical_step_right;
+				_line_step = (_line_end - _line_start) / _width;
 				_value = _line_start;
 			}
 		} r, g, b;
@@ -71,10 +79,17 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 			uint8_t b;
 		};
 
-		colormap(int width, int height, color target_color) :
-			r{target_color.r, width, height},
-			g{target_color.g, width, height},
-			b{target_color.b, width, height}
+		struct gradient {
+			color topleft;
+			color topright;
+			color bottomleft;
+			color bottomright;
+		};
+
+		colormap(int width, int height, gradient grad) :
+			r{{grad.topleft.r, grad.topright.r, grad.bottomleft.r, grad.bottomright.r}, width, height},
+			g{{grad.topleft.g, grad.topright.g, grad.bottomleft.g, grad.bottomright.g}, width, height},
+			b{{grad.topleft.b, grad.topright.b, grad.bottomleft.b, grad.bottomright.b}, width, height}
 		{}
 
 		inline color next_pixel()
@@ -95,16 +110,16 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 
 	auto bits = _bitmap->GetBits();
 
-	colormap cm{bits.width(), bits.height(), {255, 112, 0}};
+	colormap cm{bits.width(), bits.height(), {{255, 0, 20}, {0, 0, 255}, {0, 255, 0}, {255, 0, 0}}};
 
 	for(auto&& row : bits.EnumerateRows()) {
+		cm.next_line();
 		for(auto&& pixel : row) {
 			auto c = cm.next_pixel();
 			pixel.r = c.r;
 			pixel.g = c.g;
 			pixel.b = c.b;
 		}
-		cm.next_line();
 	}
 
 	_bitmap->SetBits(bits);
