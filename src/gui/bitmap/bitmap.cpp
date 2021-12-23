@@ -1,6 +1,6 @@
-#include "../assert/assert.hpp"
+#include "../../assert/assert.hpp"
 #include "bitmap.hpp"
-#include "types.hpp"
+#include "../types.hpp"
 #include <utility>
 
 using namespace shoujin::gui;
@@ -8,7 +8,7 @@ using namespace shoujin::gui;
 static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hbitmap);
 static WORD const kBitmapInfoBitCount = 32;
 
-namespace shoujin::gui {
+namespace shoujin::gui::bitmap {
 
 void swap(Bitmap& first, Bitmap& second) noexcept
 {

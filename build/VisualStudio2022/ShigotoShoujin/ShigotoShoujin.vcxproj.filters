@@ -31,6 +31,9 @@
     <Filter Include="src\gui\userctl">
       <UniqueIdentifier>{d146e26e-421a-4765-85a9-9e15c47e0813}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gui\bitmap">
+      <UniqueIdentifier>{49665a3e-9d00-42d0-9c02-de17abbe950d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -62,9 +65,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\shoujin\gui.hpp">
       <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap.hpp">
-      <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\gui\size.hpp">
       <Filter>src\gui</Filter>
@@ -117,14 +117,17 @@
     <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp">
       <Filter>src\gui\userctl</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap_window.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\src\grid.hpp">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp">
+      <Filter>src\gui\bitmap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -136,9 +139,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp">
       <Filter>src\assert</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap.cpp">
-      <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\doc\todo.cpp">
       <Filter>doc</Filter>
@@ -176,11 +176,14 @@
     <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp">
       <Filter>src\gui\userctl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap_window.cpp">
-      <Filter>src\gui</Filter>
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap.cpp">
+      <Filter>src\gui\bitmap</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap_bits.cpp">
-      <Filter>src\gui</Filter>
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_bits.cpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_window.cpp">
+      <Filter>src\gui\bitmap</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

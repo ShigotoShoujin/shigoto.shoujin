@@ -2,7 +2,7 @@
 
 using namespace shoujin::gui;
 
-namespace shoujin::gui {
+namespace shoujin::gui::bitmap {
 
 BitmapWindow::BitmapWindow(LayoutParam const& lp) :
 	Window{lp} {}

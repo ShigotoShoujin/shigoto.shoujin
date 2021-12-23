@@ -5,6 +5,7 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace shoujin::gui;
+using namespace shoujin::gui::bitmap;
 
 TEST_CLASS(BitmapTest) {
 public:

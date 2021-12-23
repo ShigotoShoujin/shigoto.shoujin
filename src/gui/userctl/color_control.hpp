@@ -1,7 +1,7 @@
 #ifndef SHOUJIN_SOURCE_GUI_USERCTL_COLOR_CONTROL
 #define SHOUJIN_SOURCE_GUI_USERCTL_COLOR_CONTROL
 
-#include "../bitmap.hpp"
+#include "../bitmap/bitmap.hpp"
 #include "../window.hpp"
 #include <memory>
 

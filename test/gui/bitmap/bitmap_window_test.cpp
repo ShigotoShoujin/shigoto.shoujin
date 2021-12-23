@@ -7,6 +7,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace shoujin;
 using namespace shoujin::gui;
+using namespace shoujin::gui::bitmap;
 
 static bool OnCreatePostCloseMsg(Window const& window, CREATESTRUCT const& createparam, void* userdata);
 

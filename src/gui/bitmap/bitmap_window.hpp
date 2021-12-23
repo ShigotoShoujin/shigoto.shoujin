@@ -2,10 +2,10 @@
 #define SHOUJIN_SOURCE_GUI_BITMAP_WINDOW
 
 #include "bitmap.hpp"
-#include "window.hpp"
+#include "../window.hpp"
 #include <memory>
 
-namespace shoujin::gui {
+namespace shoujin::gui::bitmap {
 
 class BitmapWindow : public Window {
 	std::unique_ptr<Bitmap> _bitmap;

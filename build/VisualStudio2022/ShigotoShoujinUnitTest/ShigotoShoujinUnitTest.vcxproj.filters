@@ -23,9 +23,6 @@
     <ClCompile Include="..\..\..\test\gui\rect_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\gui\bitmap_test.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\gui\window_taborder_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
@@ -35,10 +32,13 @@
     <ClCompile Include="..\..\..\test\gui\layout\layout_stream_test.cpp">
       <Filter>gui\layout</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\gui\bitmap_window_test.cpp">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\grid_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_test.cpp">
+      <Filter>gui\bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_window_test.cpp">
+      <Filter>gui\bitmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">
@@ -55,6 +55,9 @@
     </Filter>
     <Filter Include="gui\layout">
       <UniqueIdentifier>{cb50b92d-11c3-4049-9af8-b93cb632d300}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\bitmap">
+      <UniqueIdentifier>{b304c61c-1098-40e1-a5a6-513aeb29663e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

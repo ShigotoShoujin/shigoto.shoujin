@@ -1,8 +1,9 @@
 #ifndef SHOUJIN_INCLUDE_GUI
 #define SHOUJIN_INCLUDE_GUI
 
-#include "../../src/gui/bitmap.hpp"
-#include "../../src/gui/bitmap_window.hpp"
+#include "../../src/gui/bitmap/bitmap.hpp"
+#include "../../src/gui/bitmap/bitmap_bits.hpp"
+#include "../../src/gui/bitmap/bitmap_window.hpp"
 #include "../../src/gui/color.hpp"
 #include "../../src/gui/comctl32/edit_control.hpp"
 #include "../../src/gui/comctl32/label_control.hpp"

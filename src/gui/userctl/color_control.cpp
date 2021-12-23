@@ -1,11 +1,12 @@
 #include "../../assert/assert.hpp"
-#include "../bitmap_window.hpp"
+#include "../bitmap/bitmap_window.hpp"
 #include "../comctl32/edit_control.hpp"
 #include "../comctl32/label_control.hpp"
 #include "../layout/layout_stream.hpp"
 #include "color_control.hpp"
 
 using namespace shoujin::gui;
+using namespace shoujin::gui::bitmap;
 using namespace shoujin::gui::layout;
 
 namespace shoujin::gui::comctl32 {

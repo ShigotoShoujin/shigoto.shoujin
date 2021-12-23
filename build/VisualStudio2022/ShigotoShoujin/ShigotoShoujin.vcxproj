@@ -176,9 +176,9 @@
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\file\logfile.hpp" />
     <ClInclude Include="..\..\..\src\grid.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap_bits.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap_window.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp" />
     <ClInclude Include="..\..\..\src\gui\color.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp" />
@@ -203,9 +203,9 @@
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp" />
     <ClCompile Include="..\..\..\src\file\file.cpp" />
     <ClCompile Include="..\..\..\src\file\logfile.cpp" />
-    <ClCompile Include="..\..\..\src\gui\bitmap.cpp" />
-    <ClCompile Include="..\..\..\src\gui\bitmap_bits.cpp" />
-    <ClCompile Include="..\..\..\src\gui\bitmap_window.cpp" />
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap.cpp" />
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_bits.cpp" />
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_window.cpp" />
     <ClCompile Include="..\..\..\src\gui\color.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\label_control.cpp" />

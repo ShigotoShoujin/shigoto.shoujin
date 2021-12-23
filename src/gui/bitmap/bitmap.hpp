@@ -2,11 +2,11 @@
 #define SHOUJIN_SOURCE_GUI_BITMAP
 
 #include "bitmap_bits.hpp"
-#include "types.hpp"
+#include "../types.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-namespace shoujin::gui {
+namespace shoujin::gui::bitmap {
 
 class Bitmap {
 	friend void swap(Bitmap&, Bitmap&) noexcept;
