@@ -34,6 +34,9 @@
     <Filter Include="src\gui\bitmap">
       <UniqueIdentifier>{49665a3e-9d00-42d0-9c02-de17abbe950d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gui\bitmap\effect">
+      <UniqueIdentifier>{6eb7e2f9-2b90-4eb1-aa82-c8551f92c6e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
@@ -128,6 +131,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp">
       <Filter>src\gui\bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient.hpp">
+      <Filter>src\gui\bitmap\effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

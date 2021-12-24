@@ -179,6 +179,7 @@
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient.hpp" />
     <ClInclude Include="..\..\..\src\gui\color.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp" />

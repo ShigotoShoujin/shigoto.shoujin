@@ -1,5 +1,5 @@
-#ifndef SHOUJIN_SOURCE_GUI_BITMAP
-#define SHOUJIN_SOURCE_GUI_BITMAP
+#ifndef SHOUJIN_SOURCE_GUI_BITMAP_BITMAP
+#define SHOUJIN_SOURCE_GUI_BITMAP_BITMAP
 
 #include "bitmap_bits.hpp"
 #include "../types.hpp"

@@ -39,6 +39,9 @@
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_window_test.cpp">
       <Filter>gui\bitmap</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_test.cpp">
+      <Filter>gui\bitmap\effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">
@@ -58,6 +61,9 @@
     </Filter>
     <Filter Include="gui\bitmap">
       <UniqueIdentifier>{b304c61c-1098-40e1-a5a6-513aeb29663e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\bitmap\effect">
+      <UniqueIdentifier>{df22ca12-9cd6-4280-a186-3555128fee8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

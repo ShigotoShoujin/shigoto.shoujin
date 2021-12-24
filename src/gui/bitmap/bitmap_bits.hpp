@@ -1,12 +1,14 @@
-#ifndef SHOUJIN_SOURCE_GUI_BITMAP_BITS
-#define SHOUJIN_SOURCE_GUI_BITMAP_BITS
+#ifndef SHOUJIN_SOURCE_GUI_BITMAP_BITMAP_BITS
+#define SHOUJIN_SOURCE_GUI_BITMAP_BITMAP_BITS
 
 #include "../../grid.hpp"
+#include "../color.hpp"
 #include <memory>
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 namespace shoujin::gui::bitmap {
+
 struct Pixel {
 	uint8_t b, g, r, a;
 };
@@ -21,7 +23,7 @@ public:
 	[[nodiscard]] int width() const { return static_cast<int>(Grid::width()); }
 	[[nodiscard]] int height() const { return static_cast<int>(Grid::height()); }
 
-
+	void RenderGradient(Color const& top_left, Color const& top_right, Color const& bottom_left, Color const& bottom_right);
 };
 
 }

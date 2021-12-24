@@ -31,6 +31,7 @@
     <ClCompile Include="..\..\..\test\grid_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_window_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\layout\layout_stream_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\modal_comctrl32.cpp" />
     <ClCompile Include="..\..\..\test\gui\rect_test.cpp" />
