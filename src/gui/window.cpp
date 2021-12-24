@@ -138,13 +138,12 @@ void Window::CreateHandle(WindowHandle const* parent)
 	ConstructWindow(parent);
 	_window_group = std::make_unique<WindowTabOrder>();
 
-	for(auto& child : _child_vec) {
+	for(auto&& child : _child_vec) {
 		child->CreateHandle(_handle.get());
 		_window_group->AddWindow(&*child, child->_taborder);
 	}
 
 	RaiseOnParentSized();
-
 	SetFocus();
 }
 
@@ -187,6 +186,10 @@ bool Window::OnWndProc(WindowMessage const& message)
 bool Window::OnCreate(CREATESTRUCT const& createparam)
 {
 	return false;
+}
+
+void Window::OnInitialize(Window* source)
+{
 }
 
 bool Window::OnClose()
@@ -255,7 +258,12 @@ void Window::OnDestroy()
 Window::MessageResult Window::RaiseOnCreate(WindowMessage const& message)
 {
 	auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
-	return OnCreate(createparam) | (OnCreateEvent ? OnCreateEvent(*this, createparam) : false);
+	auto result = OnCreate(createparam) | (OnCreateEvent ? OnCreateEvent(*this, createparam) : false);
+
+	if(result)
+		RaiseOnInitialize();
+
+	return result;
 }
 
 Window::MessageResult Window::RaiseOnDispatchMessage(MSG const& msg)
@@ -267,6 +275,15 @@ Window::MessageResult Window::RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lpa
 {
 	WindowMessage wmsg{msg, wparam, lparam};
 	return OnWndProc(wmsg) | (OnWndProcEvent ? OnWndProcEvent(wmsg) : false);
+}
+
+void Window::RaiseOnInitialize()
+{
+	OnInitialize(this);
+	OnInitializeEvent(this);
+
+	for(auto&& child : _child_vec)
+		child->RaiseOnInitialize();
 }
 
 Window::MessageResult Window::RaiseOnClose()
@@ -313,7 +330,7 @@ Window::MessageResult Window::RaiseOnDestroy()
 
 void Window::RaiseOnParentSized()
 {
-	for(auto& child : _child_vec)
+	for(auto&& child : _child_vec)
 		child->OnParentSized(*this);
 }
 
@@ -325,7 +342,7 @@ Window* Window::Clone() const
 void Window::CopyChilds(Window const& rhs)
 {
 	_child_vec.reserve(rhs._child_vec.size());
-	for(auto& child : rhs._child_vec) {
+	for(auto&& child : rhs._child_vec) {
 		auto clone = child->Clone();
 		_child_vec.emplace_back(clone);
 	}

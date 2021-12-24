@@ -20,6 +20,7 @@ public:
 	Event();
 	Event(TFunc func, void* userdata = nullptr);
 	Event& operator=(Event const& rhs);
+	Event& operator=(TFunc func);
 	~Event();
 
 	TResult operator()(TArguments... args) const;
@@ -44,6 +45,15 @@ Event<TResult, TArguments...>
 {
 	_func = rhs._func;
 	_userdata = rhs._userdata;
+	return *this;
+}
+
+template<event_tresult TResult, typename... TArguments>
+Event<TResult, TArguments...>
+&Event<TResult, TArguments...>::operator=(TFunc func)
+{
+	_func = func;
+	_userdata = nullptr;
 	return *this;
 }
 

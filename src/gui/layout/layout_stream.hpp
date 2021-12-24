@@ -20,6 +20,14 @@ private:
 		const LayoutParam& layout;
 	};
 
+	struct WindowSize {
+		Size size;
+	};
+
+	struct ClientSize {
+		Size size;
+	};
+
 	struct Style {
 		DWORD style;
 	};
@@ -31,24 +39,32 @@ private:
 	struct CreateParam {
 		Window* parent;
 		CreateFunc func;
+		Window** out_ptr;
+	};
+
+	struct Position {
+		Point position;
 	};
 
 public:
-	using CreateFunc = Window* (*)(LayoutParam const&);
 	LayoutStream();
 	LayoutStream& operator<<(LayoutStream& (*)(LayoutStream&));
 	LayoutStream& operator<<(LayoutParam const&);
 	LayoutStream& operator<<(FromLayout const&);
+	LayoutStream& operator<<(WindowSize const&);
+	LayoutStream& operator<<(ClientSize const&);
 	LayoutStream& operator<<(Style const&);
 	LayoutStream& operator<<(ExStyle const&);
 	LayoutStream& operator<<(CreateParam const&);
-	LayoutStream& operator<<(Point const&);
-	LayoutStream& operator<<(Size const&);
+	LayoutStream& operator<<(Position const&);
 	LayoutStream& operator<<(tstring const&);
 	operator LayoutParam();
 
 private:
 	friend FromLayout from(LayoutParam const&);
+	friend WindowSize window_size(Size size);
+	friend ClientSize client_size(Size size);
+	friend Position position(Point point);
 	friend Style style(DWORD style);
 	friend ExStyle exstyle(DWORD exstyle);
 	friend CreateParam create(Window* parent, CreateFunc func);
@@ -69,6 +85,9 @@ private:
 };
 
 LayoutStream::FromLayout from(LayoutParam const&);
+LayoutStream::WindowSize window_size(Size size);
+LayoutStream::ClientSize client_size(Size size);
+LayoutStream::Position position(Point point);
 LayoutStream::Style style(DWORD style);
 LayoutStream::ExStyle exstyle(DWORD exstyle);
 LayoutStream::CreateParam create(Window* parent, LayoutStream::CreateFunc func);

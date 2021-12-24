@@ -8,17 +8,19 @@
 namespace shoujin::gui::comctl32 {
 
 class ColorControl : public Window {
-	static Size const kDefaultClientSize;
-
 public:
 	explicit ColorControl(LayoutParam const& lp = {});
 	virtual ~ColorControl() = default;
 
 	virtual CreateParam OnCreateParam() override;
+	virtual bool OnCreate(CREATESTRUCT const& createparam) override;
 
 private:
+	static Size const kDefaultClientSize;
 	virtual Window* Clone() const override;
 	static LayoutParam BuildLayout(LayoutParam const& lp);
+
+	static void GradientMap_OnInitialize(Window* source, void* userdata);
 };
 
 }

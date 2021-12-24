@@ -33,6 +33,24 @@ LayoutStream& LayoutStream::operator<<(LayoutStream::FromLayout const& rhs)
 	return *this;
 }
 
+LayoutStream& LayoutStream::operator<<(WindowSize const& rhs)
+{
+	_layout.window_size = rhs.size;
+	return *this;
+}
+
+LayoutStream& LayoutStream::operator<<(ClientSize const& rhs)
+{
+	_layout.client_size = rhs.size;
+	return *this;
+}
+
+LayoutStream& LayoutStream::operator<<(Position const& rhs)
+{
+	_layout.position = rhs.position;
+	return *this;
+}
+
 LayoutStream& LayoutStream::operator<<(Style const& rhs)
 {
 	_layout.style = rhs.style;
@@ -59,17 +77,6 @@ LayoutStream& LayoutStream::operator<<(CreateParam const& rhs)
 	return *this;
 }
 
-LayoutStream& LayoutStream::operator<<(Point const& rhs)
-{
-	_layout.position = rhs;
-	return *this;
-}
-
-LayoutStream& LayoutStream::operator<<(Size const& rhs)
-{
-	_layout.window_size = rhs;
-	return *this;
-}
 LayoutStream& LayoutStream::operator<<(tstring const& text)
 {
 	_layout.text = text;
@@ -86,6 +93,21 @@ LayoutStream::FromLayout from(LayoutParam const& rhs)
 	return LayoutStream::FromLayout{rhs};
 }
 
+LayoutStream::WindowSize window_size(Size size)
+{
+	return LayoutStream::WindowSize{size};
+}
+
+LayoutStream::ClientSize client_size(Size size)
+{
+	return LayoutStream::ClientSize{size};
+}
+
+LayoutStream::Position position(Point point)
+{
+	return LayoutStream::Position{point};
+}
+
 LayoutStream::Style style(DWORD rhs)
 {
 	return LayoutStream::Style{rhs};
@@ -98,7 +120,7 @@ LayoutStream::ExStyle exstyle(DWORD rhs)
 
 LayoutStream::CreateParam create(Window* parent, LayoutStream::CreateFunc func)
 {
-	return LayoutStream::CreateParam{.parent = parent, .func = func};
+	return LayoutStream::CreateParam{.parent = parent, .func = func, .out_ptr = nullptr};
 }
 
 LayoutStream& above(LayoutStream& ls)

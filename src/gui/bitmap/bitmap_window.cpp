@@ -27,11 +27,6 @@ Window::CreateParam BitmapWindow::OnCreateParam()
 bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 {
 	_bitmap = std::make_unique<Bitmap>(client_size());
-
-	auto bits = _bitmap->GetBits();
-	bits.RenderGradient(Color::Red, Color::Blue, Color::Green, Color::Yellow);
-	_bitmap->SetBits(bits);
-
 	return true;
 }
 

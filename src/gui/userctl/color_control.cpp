@@ -16,7 +16,17 @@ Size const ColorControl::kDefaultClientSize{768, 768};
 ColorControl::ColorControl(LayoutParam const& lp) :
 	Window{BuildLayout(lp)}
 {
-	auto bitmap_window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop = false; return new BitmapWindow(p); };
+	auto gradient_map = [](LayoutParam const& lp) -> Window* {
+		auto new_lp{lp};
+		new_lp.tabstop = false;
+
+		auto bitmap_window = new BitmapWindow(new_lp);
+		bitmap_window->OnInitializeEvent = GradientMap_OnInitialize;
+
+		return bitmap_window;
+	};
+
+	//auto gradient_bar = [](LayoutParam const& lp) -> Window* { auto new_lp{lp}; new_lp.tabstop = false; return new BitmapWindow(new_lp); };
 	auto window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop=false; return new Window(p); };
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
 	auto edit = [](LayoutParam const& lp) -> Window* { return new EditControl(lp); };
@@ -24,9 +34,9 @@ ColorControl::ColorControl(LayoutParam const& lp) :
 	LayoutStream stream;
 
 	stream
-		<< Size{client_size() / 2} << layout::exstyle(WS_EX_CLIENTEDGE)
-		<< topleft << create(this, bitmap_window)
-		<< layout::exstyle(0) << LabelControl::DefaultSize << unrelated << after
+		<< layout::window_size(client_size() / 2) << layout::exstyle(WS_EX_CLIENTEDGE)
+		<< topleft << create(this, gradient_map)
+		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
 		<< TEXT("Blue") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below;
@@ -39,6 +49,11 @@ ColorControl::ColorControl(LayoutParam const& lp) :
 Window::CreateParam ColorControl::OnCreateParam()
 {
 	return CreateParam{.classname = TEXT("ShoujinColorControl")};
+}
+
+bool ColorControl::OnCreate(CREATESTRUCT const& createparam)
+{
+	return Window::OnCreate(createparam);
 }
 
 Window* ColorControl::Clone() const
@@ -57,6 +72,15 @@ LayoutParam ColorControl::BuildLayout(LayoutParam const& lp)
 	layout.exstyle = WS_EX_CLIENTEDGE;
 
 	return layout;
+}
+
+void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
+{
+	auto self = static_cast<BitmapWindow*>(source);
+	auto& bmp = self->bitmap();
+	auto bits = bmp.GetBits();
+	bits.RenderGradient(Color::Red, Color::Blue, Color::Green, Color::Yellow);
+	bmp.SetBits(bits);
 }
 
 }

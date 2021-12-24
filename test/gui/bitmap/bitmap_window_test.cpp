@@ -29,9 +29,9 @@ public:
 		Assert::IsTrue(std::is_move_assignable_v<BitmapWindowTest>);
 	}
 
-	TEST_METHOD(ShowWindow_Paint_OK) {
+	TEST_METHOD(ShowModal_LooksNice_Ok) {
 		BitmapWindow bitmap_window;
-		//bitmap_window.OnCreateEvent = OnCreatePostCloseMsg;
+		bitmap_window.OnCreateEvent = OnCreatePostCloseMsg;
 		bitmap_window.ShowModal();
 	}
 };

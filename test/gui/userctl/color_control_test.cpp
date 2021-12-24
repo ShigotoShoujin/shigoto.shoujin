@@ -39,7 +39,7 @@ public:
 		Assert::IsTrue(std::is_move_assignable_v<ColorControl>);
 	}
 
-	TEST_METHOD(WIP_Test) {
+	TEST_METHOD(ShowModal_LooksNice_Ok) {
 		ColorControl cc{LayoutParam{.layout_mode{LayoutMode::CenterParent}}};
 		cc.ShowModal();
 	}

@@ -61,6 +61,7 @@ public:
 	Event<bool, MSG const&> OnDispatchMessageEvent;
 	Event<bool, WindowMessage const&> OnWndProcEvent;
 	Event<bool, Window const&, CREATESTRUCT const&> OnCreateEvent;
+	Event<void, Window*> OnInitializeEvent;
 	Event<bool> OnCloseEvent;
 	Event<bool> OnPaintEvent;
 	Event<bool, WPARAM, Rect*> OnSizingEvent;
@@ -79,6 +80,7 @@ protected:
 	virtual bool OnDispatchMessage(MSG const& msg);
 	virtual bool OnWndProc(WindowMessage const& message);
 	virtual bool OnCreate(CREATESTRUCT const& createparam);
+	virtual void OnInitialize(Window* source);
 	virtual bool OnClose();
 	virtual bool OnPaint();
 	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
@@ -90,6 +92,7 @@ private:
 	MessageResult RaiseOnDispatchMessage(MSG const& msg);
 	MessageResult RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 	MessageResult RaiseOnCreate(WindowMessage const& message);
+	void RaiseOnInitialize();
 	MessageResult RaiseOnClose();
 	MessageResult RaiseOnPaint();
 	MessageResult RaiseOnSizing(WindowMessage const& message);

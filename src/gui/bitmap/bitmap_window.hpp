@@ -1,8 +1,8 @@
 #ifndef SHOUJIN_SOURCE_GUI_BITMAP_BITMAP_WINDOW
 #define SHOUJIN_SOURCE_GUI_BITMAP_BITMAP_WINDOW
 
-#include "bitmap.hpp"
 #include "../window.hpp"
+#include "bitmap.hpp"
 #include <memory>
 
 namespace shoujin::gui::bitmap {
@@ -20,6 +20,8 @@ public:
 	virtual bool OnCreate(CREATESTRUCT const& createparam) override;
 	virtual bool OnPaint() override;
 	virtual bool OnSizingFinished() override;
+
+	[[nodiscard]] virtual Bitmap& bitmap() const { return *_bitmap; }
 
 private:
 	virtual Window* Clone() const override;
