@@ -1,11 +1,11 @@
-#ifndef SHOUJIN_SOURCE_GUI_BITMAP_EFFECT_GRADIENT
-#define SHOUJIN_SOURCE_GUI_BITMAP_EFFECT_GRADIENT
+#ifndef SHOUJIN_SOURCE_GUI_BITMAP_EFFECT_GRADIENT_MAP
+#define SHOUJIN_SOURCE_GUI_BITMAP_EFFECT_GRADIENT_MAP
 
 #include <cstdint>
 
 namespace shoujin::gui::bitmap::effect {
 
-class Gradient {
+class GradientMap {
 	class Channel {
 		struct ChannelParam {
 			uint8_t TopLeft;
@@ -69,7 +69,7 @@ public:
 		Color BottomRight;
 	};
 
-	Gradient(GradientParam gp, int width, int height) :
+	GradientMap(GradientParam gp, int width, int height) :
 		_ch_R{{gp.TopLeft.R, gp.TopRight.R, gp.BottomLeft.R, gp.BottomRight.R}, width, height},
 		_ch_G{{gp.TopLeft.G, gp.TopRight.G, gp.BottomLeft.G, gp.BottomRight.G}, width, height},
 		_ch_B{{gp.TopLeft.B, gp.TopRight.B, gp.BottomLeft.B, gp.BottomRight.B}, width, height}

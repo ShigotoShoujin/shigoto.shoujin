@@ -19,14 +19,19 @@ ColorControl::ColorControl(LayoutParam const& lp) :
 	auto gradient_map = [](LayoutParam const& lp) -> Window* {
 		auto new_lp{lp};
 		new_lp.tabstop = false;
-
-		auto bitmap_window = new BitmapWindow(new_lp);
-		bitmap_window->OnInitializeEvent = GradientMap_OnInitialize;
-
-		return bitmap_window;
+		auto bw = new BitmapWindow(new_lp);
+		bw->OnInitializeEvent = GradientMap_OnInitialize;
+		return bw;
 	};
 
-	//auto gradient_bar = [](LayoutParam const& lp) -> Window* { auto new_lp{lp}; new_lp.tabstop = false; return new BitmapWindow(new_lp); };
+	auto gradient_bar = [](LayoutParam const& lp) -> Window* {
+		auto new_lp{lp};
+		new_lp.tabstop = false;
+		auto bw = new BitmapWindow(new_lp);
+		bw->OnInitializeEvent = GradientBar_OnInitialize;
+		return bw;
+	};
+
 	auto window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop=false; return new Window(p); };
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
 	auto edit = [](LayoutParam const& lp) -> Window* { return new EditControl(lp); };
@@ -36,6 +41,7 @@ ColorControl::ColorControl(LayoutParam const& lp) :
 	stream
 		<< layout::window_size(client_size() / 2) << layout::exstyle(WS_EX_CLIENTEDGE)
 		<< topleft << create(this, gradient_map)
+		<< layout::window_size({23, client_size().y / 2}) << after << create(this, gradient_bar)
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
@@ -79,7 +85,17 @@ void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
 	auto self = static_cast<BitmapWindow*>(source);
 	auto& bmp = self->bitmap();
 	auto bits = bmp.GetBits();
-	bits.RenderGradient(Color::Red, Color::Blue, Color::Green, Color::Yellow);
+	bits.RenderGradientMap(Color::Red, Color::Blue, Color::Green, Color::Yellow);
+	bmp.SetBits(bits);
+}
+
+void ColorControl::GradientBar_OnInitialize(Window* source, void* userdata)
+{
+	auto self = static_cast<BitmapWindow*>(source);
+	auto& bmp = self->bitmap();
+
+	auto bits = bmp.GetBits();
+	bits.RenderGradientBar();
 	bmp.SetBits(bits);
 }
 

@@ -1,13 +1,14 @@
 #include "bitmap_bits.hpp"
-#include "effect/gradient.hpp"
+#include "effect/gradient_bar.hpp"
+#include "effect/gradient_map.hpp"
 
 namespace shoujin::gui::bitmap {
 
 using namespace effect;
 
-void BitmapBits::RenderGradient(Color const& top_left, Color const& top_right, Color const& bottom_left, Color const& bottom_right)
+void BitmapBits::RenderGradientMap(Color const& top_left, Color const& top_right, Color const& bottom_left, Color const& bottom_right)
 {
-	auto cast = [](Color const& c) -> Gradient::Color {
+	auto cast = [](Color const& c) -> GradientMap::Color {
 		COLORREF cr = c;
 		return {GetRValue(cr), GetGValue(cr), GetBValue(cr)};
 	};
@@ -17,12 +18,26 @@ void BitmapBits::RenderGradient(Color const& top_left, Color const& top_right, C
 	auto bl = cast(bottom_left);
 	auto br = cast(bottom_right);
 
-	Gradient gradient{{tl, tr, bl, br}, width(), height()};
+	GradientMap gm{{tl, tr, bl, br}, width(), height()};
 
 	for(auto&& row : EnumerateRows()) {
-		gradient.NextRow();
+		gm.NextRow();
 		for(auto&& pixel : row) {
-			auto c = gradient.NextPixel();
+			auto c = gm.NextPixel();
+			pixel.r = c.R;
+			pixel.g = c.G;
+			pixel.b = c.B;
+		}
+	}
+}
+
+void BitmapBits::RenderGradientBar()
+{
+	GradientBar gb{height()};
+
+	for(auto&& row : EnumerateRows()) {
+		auto c = gb.NextPixel();
+		for(auto&& pixel : row) {
 			pixel.r = c.R;
 			pixel.g = c.G;
 			pixel.b = c.B;

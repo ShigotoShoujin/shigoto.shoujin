@@ -1,20 +1,20 @@
-#include "../../../../src/gui/bitmap/effect/gradient.hpp"
+#include "../../../../src/gui/bitmap/effect/gradient_map.hpp"
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace shoujin::gui::bitmap::effect;
 
-bool operator==(Gradient::Color const& lhs, Gradient::Color const& rhs)
+bool operator==(GradientMap::Color const& lhs, GradientMap::Color const& rhs)
 {
 	return lhs.R == rhs.R && lhs.G == rhs.G && lhs.B == rhs.B;
 }
 
-TEST_CLASS(GradientTest) {
+TEST_CLASS(GradientMapTest) {
 public:
-	TEST_METHOD(GradientAllBlack_AllBlack) {
-		Gradient::Color black{0, 0, 0};
-		Gradient gradient{{black, black, black, black}, 10, 10};
+	TEST_METHOD(GradientMapAllBlack_AllBlack) {
+		GradientMap::Color black{0, 0, 0};
+		GradientMap gradient{{black, black, black, black}, 10, 10};
 
 		for(auto y = 0; y < 10; ++y) {
 			gradient.NextRow();
@@ -23,10 +23,10 @@ public:
 		}
 	}
 
-	TEST_METHOD(GradientRedRedBlackBlack_SpotCheckOk) {
-		Gradient::Color red{0xff, 0, 0};
-		Gradient::Color black{0, 0, 0};
-		Gradient gradient{{red, red, black, black}, 4, 4};
+	TEST_METHOD(GradientMapRedRedBlackBlack_SpotCheckOk) {
+		GradientMap::Color red{0xff, 0, 0};
+		GradientMap::Color black{0, 0, 0};
+		GradientMap gradient{{red, red, black, black}, 4, 4};
 
 		// clang-format off
 		int expected[] {
@@ -45,12 +45,12 @@ public:
 		}
 	}
 
-	TEST_METHOD(GradientAllFourSet_SpotCheckOk) {
-		Gradient::Color top_left{100, 0, 0};
-		Gradient::Color top_right{160, 0, 0};
-		Gradient::Color bottom_left{52, 0, 0};
-		Gradient::Color bottom_right{242, 0, 0};
-		Gradient gradient{{top_left, top_right, bottom_left, bottom_right}, 4, 4};
+	TEST_METHOD(GradientMapAllFourSet_SpotCheckOk) {
+		GradientMap::Color top_left{100, 0, 0};
+		GradientMap::Color top_right{160, 0, 0};
+		GradientMap::Color bottom_left{52, 0, 0};
+		GradientMap::Color bottom_right{242, 0, 0};
+		GradientMap gradient{{top_left, top_right, bottom_left, bottom_right}, 4, 4};
 
 		// clang-format off
 		int expected[] {

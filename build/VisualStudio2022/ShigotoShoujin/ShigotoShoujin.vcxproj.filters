@@ -132,7 +132,10 @@
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp">
       <Filter>src\gui\bitmap</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient.hpp">
+    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_map.hpp">
+      <Filter>src\gui\bitmap\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_bar.hpp">
       <Filter>src\gui\bitmap\effect</Filter>
     </ClInclude>
   </ItemGroup>

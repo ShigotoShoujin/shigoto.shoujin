@@ -23,7 +23,8 @@ public:
 	[[nodiscard]] int width() const { return static_cast<int>(Grid::width()); }
 	[[nodiscard]] int height() const { return static_cast<int>(Grid::height()); }
 
-	void RenderGradient(Color const& top_left, Color const& top_right, Color const& bottom_left, Color const& bottom_right);
+	void RenderGradientMap(Color const& top_left, Color const& top_right, Color const& bottom_left, Color const& bottom_right);
+	void RenderGradientBar();
 };
 
 }

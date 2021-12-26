@@ -21,6 +21,7 @@ private:
 	static LayoutParam BuildLayout(LayoutParam const& lp);
 
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
+	static void GradientBar_OnInitialize(Window* source, void* userdata);
 };
 
 }

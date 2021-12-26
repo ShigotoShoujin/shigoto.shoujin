@@ -39,7 +39,10 @@
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_window_test.cpp">
       <Filter>gui\bitmap</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_test.cpp">
+    <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_map_test.cpp">
+      <Filter>gui\bitmap\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_bar_test.cpp">
       <Filter>gui\bitmap\effect</Filter>
     </ClCompile>
   </ItemGroup>
