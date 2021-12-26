@@ -24,7 +24,8 @@ public:
 	[[nodiscard]] int height() const { return static_cast<int>(Grid::height()); }
 
 	void RenderGradientMap(Color const& top_left, Color const& top_right, Color const& bottom_left, Color const& bottom_right);
-	void RenderGradientBar();
+	void RenderGradientBarHorizontal();
+	void RenderGradientBarVertical();
 };
 
 }

@@ -31,13 +31,26 @@ void BitmapBits::RenderGradientMap(Color const& top_left, Color const& top_right
 	}
 }
 
-void BitmapBits::RenderGradientBar()
+void BitmapBits::RenderGradientBarVertical()
 {
 	GradientBar gb{height()};
 
 	for(auto&& row : EnumerateRows()) {
 		auto c = gb.NextPixel();
 		for(auto&& pixel : row) {
+			pixel.r = c.R;
+			pixel.g = c.G;
+			pixel.b = c.B;
+		}
+	}
+}
+
+void BitmapBits::RenderGradientBarHorizontal()
+{
+	for(auto&& row : EnumerateRows()) {
+		GradientBar gb{width()};
+		for(auto&& pixel : row) {
+			auto c = gb.NextPixel();
 			pixel.r = c.R;
 			pixel.g = c.G;
 			pixel.b = c.B;
