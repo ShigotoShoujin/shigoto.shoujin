@@ -1,6 +1,7 @@
 #ifndef SHOUJIN_SOURCE_GUI_BITMAP_EFFECT_GRADIENT_BAR
 #define SHOUJIN_SOURCE_GUI_BITMAP_EFFECT_GRADIENT_BAR
 
+#include <cmath>
 #include <cstdint>
 
 namespace shoujin::gui::bitmap::effect {
@@ -19,9 +20,11 @@ public:
 		uint8_t B{};
 	};
 
-	GradientBar(int total) :
-		_total{total},
-		_step{0xff / (_total / 6.f)},
+	const int kMinSize = 7;
+
+	GradientBar(int size) :
+		_size{size},
+		_step{0xff / ((_size - 1) / 6.f)},
 		_color{0xff, 0, 0},
 		_colorf{0xff, 0, 0},
 		_c_ptr{&_color.B},
@@ -29,16 +32,13 @@ public:
 		_phase{}
 	{}
 
-	inline Color NextPixel()
+	Color NextPixel()
 	{
-		auto result = _color;
-		auto& cf = *_cf_ptr;
-		auto& c = *_c_ptr;
+		if(_size < kMinSize)
+			return {};
 
-		cf += _step;
-
-		if(cf > 0xff || cf < 0) {
-			cf = cf < 0 ? 0.f : 255.f;
+		if(*_cf_ptr > 0xff || *_cf_ptr < 0) {
+			*_cf_ptr = *_cf_ptr < 0 ? 0.f : 255.f;
 			switch(++_phase) {
 				case 1:
 					_cf_ptr = &_colorf.R;
@@ -63,15 +63,17 @@ public:
 				default: return {};
 			}
 			_step = -_step;
+			*_cf_ptr += _step;
 		}
 
-		c = static_cast<uint8_t>(cf);
+		*_c_ptr = static_cast<uint8_t>(std::roundf(*_cf_ptr));
+		*_cf_ptr += _step;
 
-		return result;
+		return _color;
 	}
 
 private:
-	int _total;
+	int _size;
 	float _step;
 	Color _color;
 	ColorF _colorf;
