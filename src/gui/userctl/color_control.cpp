@@ -111,9 +111,18 @@ void ColorControl::GradientBarH_OnInitialize(Window* source, void* userdata)
 
 void ColorControl::GradientBarH_OnClick(Window* source, Point const& position, void* userdata)
 {
-	tstringstream tss;
+	auto self = static_cast<BitmapWindow*>(source);
+	auto& bmp = self->bitmap();
 
-	tss << "X: " << position.x << " Y: " << position.y;
+	COLORREF color = GetPixel(bmp.hdc(), position.x, position.y);
+	auto r = GetRValue(color);
+	auto g = GetGValue(color);
+	auto b = GetBValue(color);
+
+	tstringstream tss;
+	tss << "X: " << position.x << " Y: " << position.y << '\n';
+	tss << "RGB : {" << r << ',' << g << ',' << b << "}\n";
+
 	auto text = tss.str();
 	MessageBox(*source->handle(), text.c_str(), L"OnClick", MB_OK | MB_ICONINFORMATION);
 }
