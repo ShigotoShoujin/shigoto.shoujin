@@ -22,6 +22,7 @@ private:
 
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
 	static void GradientBarH_OnInitialize(Window* source, void* userdata);
+	static void GradientBarH_OnClick(Window* source, Point const& position, void* userdata);
 	static void GradientBarV_OnInitialize(Window* source, void* userdata);
 };
 

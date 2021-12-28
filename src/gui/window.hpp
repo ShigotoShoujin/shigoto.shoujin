@@ -66,6 +66,7 @@ public:
 	Event<bool> OnPaintEvent;
 	Event<bool, WPARAM, Rect*> OnSizingEvent;
 	Event<bool> OnSizingFinishedEvent;
+	Event<void, Window*, Point const&> OnClickEvent;
 	Event<> OnDestroyEvent;
 
 protected:
@@ -86,6 +87,7 @@ protected:
 	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
 	virtual bool OnSizingFinished();
 	virtual void OnParentSized(Window const& parent);
+	virtual void OnClick(Point const& position);
 	virtual void OnDestroy();
 
 private:
@@ -98,6 +100,7 @@ private:
 	MessageResult RaiseOnSizing(WindowMessage const& message);
 	MessageResult RaiseOnSizingFinished();
 	void RaiseOnParentSized();
+	MessageResult RaiseOnClick(WindowMessage const& message);
 	MessageResult RaiseOnDestroy();
 
 	virtual Window* Clone() const;

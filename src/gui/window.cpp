@@ -176,6 +176,10 @@ bool Window::OnWndProc(WindowMessage const& message)
 			return RaiseOnSizing(message);
 		case WM_EXITSIZEMOVE:
 			return RaiseOnSizingFinished();
+		case WM_LBUTTONDOWN:
+		case WM_RBUTTONDOWN:
+		case WM_MBUTTONDOWN:
+			return RaiseOnClick(message);
 		case WM_DESTROY:
 			return RaiseOnDestroy();
 	}
@@ -249,6 +253,10 @@ void Window::OnParentSized(Window const& parent)
 		MoveWindow(*_handle, new_rect.x1, new_rect.y1, new_rect.width(), new_rect.height(), TRUE);
 		Layout::UpdateFromHandle(*_handle);
 	}
+}
+
+void Window::OnClick(Point const& position)
+{
 }
 
 void Window::OnDestroy()
@@ -332,6 +340,16 @@ void Window::RaiseOnParentSized()
 {
 	for(auto&& child : _child_vec)
 		child->OnParentSized(*this);
+}
+
+Window::MessageResult Window::RaiseOnClick(WindowMessage const& message)
+{
+	Point position{LOWORD(message.lparam), HIWORD(message.lparam)};
+
+	OnClick(position);
+	OnClickEvent(this, position);
+
+	return true;
 }
 
 Window* Window::Clone() const

@@ -102,17 +102,13 @@ public:
 		Assert::AreEqual({255, 0, 4}, color[1]);
 		Assert::AreEqual({255, 0, 254}, color[63]);
 		Assert::AreEqual({251, 0, 255}, color[64]);
-
 		Assert::AreEqual({5, 0, 255}, color[125]);
 		Assert::AreEqual({1, 0, 255}, color[126]);
 		Assert::AreEqual({0, 4, 255}, color[127]);
-
 		Assert::AreEqual({0, 254, 255}, color[189]);
 		Assert::AreEqual({0, 255, 251}, color[190]);
-
 		Assert::AreEqual({0, 255, 1}, color[252]);
 		Assert::AreEqual({4, 255, 0}, color[253]);
-
 		Assert::AreEqual({254, 255, 0}, color[315]);
 		Assert::AreEqual({255, 251, 0}, color[316]);
 		Assert::AreEqual({255, 1, 0}, color[378]);

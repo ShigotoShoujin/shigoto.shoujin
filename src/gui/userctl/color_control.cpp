@@ -29,6 +29,7 @@ ColorControl::ColorControl(LayoutParam const& lp) :
 		new_lp.tabstop = false;
 		auto bw = new BitmapWindow(new_lp);
 		bw->OnInitializeEvent = GradientBarH_OnInitialize;
+		bw->OnClickEvent = GradientBarH_OnClick;
 		return bw;
 	};
 
@@ -106,6 +107,15 @@ void ColorControl::GradientBarH_OnInitialize(Window* source, void* userdata)
 	auto bits = bmp.GetBits();
 	bits.RenderGradientBarHorizontal();
 	bmp.SetBits(bits);
+}
+
+void ColorControl::GradientBarH_OnClick(Window* source, Point const& position, void* userdata)
+{
+	tstringstream tss;
+
+	tss << "X: " << position.x << " Y: " << position.y;
+	auto text = tss.str();
+	MessageBox(*source->handle(), text.c_str(), L"OnClick", MB_OK | MB_ICONINFORMATION);
 }
 
 void ColorControl::GradientBarV_OnInitialize(Window* source, void* userdata)
