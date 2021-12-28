@@ -94,7 +94,7 @@ void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
 	auto self = static_cast<BitmapWindow*>(source);
 	auto& bmp = self->bitmap();
 	auto bits = bmp.GetBits();
-	bits.RenderGradientMap(Color::Red, Color::Blue, Color::Green, Color::Yellow);
+	bits.RenderGradientMap(Color::White, Color::Red, Color::Black, Color::Black);
 	bmp.SetBits(bits);
 }
 

@@ -24,6 +24,7 @@ public:
 
 	GradientBar(int size) :
 		_size{size},
+		_current{},
 		_step{0xff / ((_size - 1) / 6.f)},
 		_color{0xff, 0, 0},
 		_colorf{0xff, 0, 0},
@@ -36,9 +37,14 @@ public:
 	{
 		if(_size < kMinSize)
 			return {};
+		else if(++_current == _size) {
+			_size = 0;
+			return {255, 0, 0};
+		}
 
 		if(*_cf_ptr > 0xff || *_cf_ptr < 0) {
 			*_cf_ptr = *_cf_ptr < 0 ? 0.f : 255.f;
+			*_c_ptr = static_cast<uint8_t>(*_cf_ptr);
 			switch(++_phase) {
 				case 1:
 					_cf_ptr = &_colorf.R;
@@ -60,7 +66,6 @@ public:
 					_cf_ptr = &_colorf.G;
 					_c_ptr = &_color.G;
 					break;
-				default: return {};
 			}
 			_step = -_step;
 			*_cf_ptr += _step;
@@ -74,6 +79,7 @@ public:
 
 private:
 	int _size;
+	int _current;
 	float _step;
 	Color _color;
 	ColorF _colorf;
