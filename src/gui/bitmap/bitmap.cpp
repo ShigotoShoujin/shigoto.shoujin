@@ -116,6 +116,15 @@ void Bitmap::Draw(Bitmap const& source)
 	Draw(source._hdc, {}, {w, h});
 }
 
+Color Bitmap::GetPixelColor(Point position)
+{
+	COLORREF color = GetPixel(_hdc, position.x, position.y);
+	return {
+		GetRValue(color),
+		GetGValue(color),
+		GetBValue(color)};
+}
+
 BitmapBits Bitmap::GetBits() const
 {
 	SHOUJIN_ASSERT(sizeof(BitmapBits::value_type) == kBitmapInfoBitCount >> 3);

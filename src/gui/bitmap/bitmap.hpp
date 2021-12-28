@@ -38,8 +38,9 @@ public:
 	virtual void Draw(HDC source, Point position, Size size, Point src_position = {});
 	virtual void Draw(Bitmap const& source);
 
-	BitmapBits GetBits() const;
-	void SetBits(BitmapBits const&);
+	virtual Color GetPixelColor(Point position);
+	virtual BitmapBits GetBits() const;
+	virtual void SetBits(BitmapBits const&);
 };
 
 }

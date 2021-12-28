@@ -35,7 +35,7 @@ Layout::Layout(LayoutParam const& lp) :
 		_position = GetCenteredPosition(_window_size, hparentwnd);
 }
 
-void Layout::UpdateStyle(DWORD style, DWORD exstyle)
+void Layout::SetStyle(DWORD style, DWORD exstyle)
 {
 	if(_style == style && _exstyle == exstyle)
 		return;
@@ -45,13 +45,13 @@ void Layout::UpdateStyle(DWORD style, DWORD exstyle)
 	AdjustSizes(_window_size, _client_size, _style, _exstyle);
 }
 
-void Layout::UpdateWindowSize(Size const& window_size)
+void Layout::SetWindowSize(Size const& window_size)
 {
 	_window_size = window_size;
 	_client_size = GetClientSizeFromWindowSize(window_size, _style, _exstyle);
 }
 
-void Layout::UpdateRectFromHandle(HWND hwnd)
+void Layout::SetRectFromHandle(HWND hwnd)
 {
 	RECT rect;
 
@@ -64,9 +64,9 @@ void Layout::UpdateRectFromHandle(HWND hwnd)
 	_client_size = RectToSize(rect);
 }
 
-void Layout::UpdateFromHandle(HWND hwnd)
+void Layout::SetLayoutFromHandle(HWND hwnd)
 {
-	UpdateRectFromHandle(hwnd);
+	SetRectFromHandle(hwnd);
 
 	auto gwlp = [&hwnd](int index) {
 		auto longptr = GetWindowLongPtr(hwnd, index);
@@ -75,6 +75,18 @@ void Layout::UpdateFromHandle(HWND hwnd)
 
 	_style = gwlp(GWL_STYLE);
 	_exstyle = gwlp(GWL_EXSTYLE);
+}
+
+void Layout::SetLayout(Layout const& layout)
+{
+	_position = layout._position;
+	_window_size = layout._window_size;
+	_client_size = layout._client_size;
+	_style = layout._style;
+	_exstyle = layout._exstyle;
+	_anchor = layout._anchor;
+	_tabstop = layout._tabstop;
+	_text = layout._text;
 }
 
 }

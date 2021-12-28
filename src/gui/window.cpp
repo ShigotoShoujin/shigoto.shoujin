@@ -209,7 +209,7 @@ bool Window::OnPaint()
 bool Window::OnSizing(WPARAM wparam, Rect* onsizing_rect)
 {
 	*onsizing_rect = GetOnSizingMinRect(wparam, *onsizing_rect, {512, 512});
-	Layout::UpdateWindowSize(RectToSize(*onsizing_rect));
+	Layout::SetWindowSize(RectToSize(*onsizing_rect));
 	return true;
 }
 
@@ -251,7 +251,7 @@ void Window::OnParentSized(Window const& parent)
 
 	if(new_rect != rect) {
 		MoveWindow(*_handle, new_rect.x1, new_rect.y1, new_rect.width(), new_rect.height(), TRUE);
-		Layout::UpdateFromHandle(*_handle);
+		Layout::SetLayoutFromHandle(*_handle);
 	}
 }
 
@@ -395,7 +395,7 @@ void Window::ConstructWindow(const WindowHandle* parent)
 	else if(!style)
 		style = Window::DefaultStyle;
 
-	Layout::UpdateStyle(style, exstyle());
+	Layout::SetStyle(style, exstyle());
 
 	auto pos = position();
 	auto size = window_size();
@@ -409,7 +409,7 @@ void Window::ConstructWindow(const WindowHandle* parent)
 	}
 
 	SHOUJIN_ASSERT(hwnd && _handle);
-	Layout::UpdateFromHandle(hwnd);
+	Layout::SetLayoutFromHandle(hwnd);
 }
 
 LRESULT CALLBACK Window::WndProcStatic(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)

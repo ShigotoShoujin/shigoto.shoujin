@@ -14,11 +14,13 @@ enum class LayoutMode {
 	FillParent
 };
 
-constexpr int AnchorNone = 0;
-constexpr int AnchorLeft = 1;
-constexpr int AnchorTop = 2;
-constexpr int AnchorRight = 4;
-constexpr int AnchorBottom = 8;
+enum Anchor : int{
+	AnchorNone = 0,
+	AnchorLeft = 1,
+	AnchorTop = 2,
+	AnchorRight = 4,
+	AnchorBottom = 8
+};
 
 struct LayoutParam {
 	LayoutMode layout_mode{};
@@ -57,10 +59,11 @@ public:
 	[[nodiscard]] tstring const& text() const { return _text; }
 	[[nodiscard]] Rect window_rect() const { return Rect{_position, _window_size}; }
 
-	void UpdateStyle(DWORD style, DWORD exstyle);
-	void UpdateWindowSize(Size const& window_size);
-	void UpdateRectFromHandle(HWND hwnd);
-	void UpdateFromHandle(HWND hwnd);
+	void SetStyle(DWORD style, DWORD exstyle);
+	void SetWindowSize(Size const& window_size);
+	void SetRectFromHandle(HWND hwnd);
+	void SetLayoutFromHandle(HWND hwnd);
+	void SetLayout(Layout const& layout);
 };
 
 }

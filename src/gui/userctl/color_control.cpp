@@ -13,45 +13,32 @@ namespace shoujin::gui::comctl32 {
 
 Size const ColorControl::kDefaultClientSize{768, 768};
 
-ColorControl::ColorControl(LayoutParam const& lp) :
-	Window{BuildLayout(lp)}
+ColorControl::ColorControl(LayoutParam const& layout_param) :
+	Window{BuildLayout(layout_param)}
 {
-	auto gradient_map = [](LayoutParam const& lp) -> Window* {
-		auto new_lp{lp};
-		new_lp.tabstop = false;
-		auto bw = new BitmapWindow(new_lp);
-		bw->OnInitializeEvent = GradientMap_OnInitialize;
-		return bw;
-	};
+	LayoutParam layout{.tabstop = false};
 
-	auto gradient_bar_h = [](LayoutParam const& lp) -> Window* {
-		auto new_lp{lp};
-		new_lp.tabstop = false;
-		auto bw = new BitmapWindow(new_lp);
-		bw->OnInitializeEvent = GradientBarH_OnInitialize;
-		bw->OnClickEvent = GradientBarH_OnClick;
-		return bw;
-	};
+	_gradient_map = new BitmapWindow(layout);
+	_gradient_map->OnInitializeEvent = GradientMap_OnInitialize;
 
-	auto gradient_bar_v = [](LayoutParam const& lp) -> Window* {
-		auto new_lp{lp};
-		new_lp.tabstop = false;
-		auto bw = new BitmapWindow(new_lp);
-		bw->OnInitializeEvent = GradientBarV_OnInitialize;
-		return bw;
-	};
+	_gradient_bar_h = new BitmapWindow(layout);
+	_gradient_bar_h->OnInitializeEvent = GradientBarH_OnInitialize;
+	_gradient_bar_h->OnClickEvent = GradientBarH_OnClick;
+
+	_gradient_bar_v = new BitmapWindow(layout);
+	_gradient_bar_v->OnInitializeEvent = GradientBarV_OnInitialize;
 
 	auto window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop=false; return new Window(p); };
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
 	auto edit = [](LayoutParam const& lp) -> Window* { return new EditControl(lp); };
 
-	LayoutStream stream;
+	LayoutStream stream{this};
 
 	stream
 		<< layout::window_size(client_size() / 2) << layout::exstyle(WS_EX_CLIENTEDGE)
-		<< topleft << create(this, gradient_map)
-		<< push << layout::window_size({client_size().x / 2, 23}) << below << create(this, gradient_bar_h) << pop
-		<< layout::window_size({23, client_size().y / 2}) << after << create(this, gradient_bar_v)
+		<< topleft << _gradient_map
+		<< push << layout::window_size({client_size().x / 2, 23}) << below << _gradient_bar_h << pop
+		<< layout::window_size({23, client_size().y / 2}) << after << _gradient_bar_v
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
@@ -77,13 +64,13 @@ Window* ColorControl::Clone() const
 	return new ColorControl(*this);
 }
 
-LayoutParam ColorControl::BuildLayout(LayoutParam const& lp)
+LayoutParam ColorControl::BuildLayout(LayoutParam const& layout_param)
 {
 	Size client_size;
-	if(!lp.window_size && !lp.client_size)
+	if(!layout_param.window_size && !layout_param.client_size)
 		client_size = kDefaultClientSize;
 
-	LayoutParam layout = lp;
+	LayoutParam layout = layout_param;
 	layout.client_size = client_size;
 	layout.exstyle = WS_EX_CLIENTEDGE;
 
@@ -112,16 +99,13 @@ void ColorControl::GradientBarH_OnInitialize(Window* source, void* userdata)
 void ColorControl::GradientBarH_OnClick(Window* source, Point const& position, void* userdata)
 {
 	auto self = static_cast<BitmapWindow*>(source);
-	auto& bmp = self->bitmap();
+	auto color = self->bitmap().GetPixelColor(position);
 
-	COLORREF color = GetPixel(bmp.hdc(), position.x, position.y);
-	auto r = GetRValue(color);
-	auto g = GetGValue(color);
-	auto b = GetBValue(color);
+	//BitmapWindow* gradient_map = source.pa
 
 	tstringstream tss;
 	tss << "X: " << position.x << " Y: " << position.y << '\n';
-	tss << "RGB : {" << r << ',' << g << ',' << b << "}\n";
+	tss << "RGB : {" << color.red() << ',' << color.green() << ',' << color.blue() << "}\n";
 
 	auto text = tss.str();
 	MessageBox(*source->handle(), text.c_str(), L"OnClick", MB_OK | MB_ICONINFORMATION);

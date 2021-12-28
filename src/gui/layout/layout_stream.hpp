@@ -39,7 +39,6 @@ private:
 	struct CreateParam {
 		Window* parent;
 		CreateFunc func;
-		Window** out_ptr;
 	};
 
 	struct Position {
@@ -47,7 +46,8 @@ private:
 	};
 
 public:
-	LayoutStream();
+	LayoutStream() = default;
+	LayoutStream(Window* parent);
 	LayoutStream& operator<<(LayoutStream& (*)(LayoutStream&));
 	LayoutStream& operator<<(LayoutParam const&);
 	LayoutStream& operator<<(FromLayout const&);
@@ -55,6 +55,7 @@ public:
 	LayoutStream& operator<<(ClientSize const&);
 	LayoutStream& operator<<(Style const&);
 	LayoutStream& operator<<(ExStyle const&);
+	LayoutStream& operator<<(Window*);
 	LayoutStream& operator<<(CreateParam const&);
 	LayoutStream& operator<<(Position const&);
 	LayoutStream& operator<<(tstring const&);
@@ -78,6 +79,9 @@ private:
 	friend LayoutStream& push(LayoutStream&);
 	friend LayoutStream& pop(LayoutStream&);
 
+	void UpdateLayout(Window* window);
+
+	Window* _parent{};
 	int _padding;
 	LayoutParam _layout;
 	LayoutParam _from_layout;

@@ -18,6 +18,10 @@ public:
 	Color(uint8_t r, uint8_t g, uint8_t b);
 	Color(COLORREF color);
 
+	[[nodiscard]] inline uint8_t red() const { return GetRValue(_color); }
+	[[nodiscard]] inline uint8_t green() const { return GetGValue(_color); }
+	[[nodiscard]] inline uint8_t blue() const { return GetBValue(_color); }
+
 	operator COLORREF() const;
 
 	static Color FromFloat(float r, float g, float b);

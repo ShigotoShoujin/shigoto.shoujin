@@ -1,4 +1,5 @@
 #pragma once
+#include "../../assert/assert.hpp"
 #include "../window.hpp"
 #include "layout_stream.hpp"
 
@@ -12,7 +13,8 @@ constexpr int RelationBetweenUnrelatedControls = 11;
 constexpr int RelationBetweenRelatedControls = 7;
 constexpr int RelationDefault = RelationBetweenRelatedControls;
 
-LayoutStream::LayoutStream() :
+LayoutStream::LayoutStream(Window* parent) :
+	_parent{parent},
 	_padding{RelationDefault}
 {}
 
@@ -63,17 +65,23 @@ LayoutStream& LayoutStream::operator<<(ExStyle const& rhs)
 	return *this;
 }
 
+LayoutStream& LayoutStream::operator<<(Window* rhs)
+{
+	SHOUJIN_ASSERT(rhs);
+	SHOUJIN_ASSERT(_parent);
+
+	rhs->SetLayout(_layout);
+	_parent->AddChild(rhs);
+	UpdateLayout(rhs);
+
+	return *this;
+}
+
 LayoutStream& LayoutStream::operator<<(CreateParam const& rhs)
 {
 	auto child = rhs.func(_layout);
 	rhs.parent->AddChild(child);
-
-	_from_layout.position = child->position();
-	_from_layout.window_size = child->window_size();
-	_from_layout.client_size = child->client_size();
-	_from_layout.style = child->style();
-	_from_layout.exstyle = child->exstyle();
-
+	UpdateLayout(child);
 	return *this;
 }
 
@@ -120,7 +128,7 @@ LayoutStream::ExStyle exstyle(DWORD rhs)
 
 LayoutStream::CreateParam create(Window* parent, LayoutStream::CreateFunc func)
 {
-	return LayoutStream::CreateParam{.parent = parent, .func = func, .out_ptr = nullptr};
+	return LayoutStream::CreateParam{.parent = parent, .func = func};
 }
 
 LayoutStream& above(LayoutStream& ls)
@@ -183,6 +191,15 @@ LayoutStream& pop(LayoutStream& ls)
 	}
 
 	return ls;
+}
+
+void LayoutStream::UpdateLayout(Window* window)
+{
+	_from_layout.position = window->position();
+	_from_layout.window_size = window->window_size();
+	_from_layout.client_size = window->client_size();
+	_from_layout.style = window->style();
+	_from_layout.exstyle = window->exstyle();
 }
 
 }
