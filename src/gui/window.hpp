@@ -57,6 +57,7 @@ public:
 	void SetFocus();
 	void Show();
 	void ShowModal();
+	void Invalidate();
 
 	Event<bool, MSG const&> OnDispatchMessageEvent;
 	Event<bool, WindowMessage const&> OnWndProcEvent;

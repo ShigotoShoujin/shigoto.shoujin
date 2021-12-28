@@ -5,6 +5,8 @@
 #include "../window.hpp"
 #include <memory>
 
+using namespace shoujin::gui::bitmap;
+
 namespace shoujin::gui::bitmap {
 class BitmapWindow;
 }
@@ -24,14 +26,15 @@ private:
 	virtual Window* Clone() const override;
 	static LayoutParam BuildLayout(LayoutParam const& layout_param);
 
-	shoujin::gui::bitmap::BitmapWindow* _gradient_map;
-	shoujin::gui::bitmap::BitmapWindow* _gradient_bar_h;
-	shoujin::gui::bitmap::BitmapWindow* _gradient_bar_v;
+	BitmapWindow* _gradient_map;
+	BitmapWindow* _gradient_bar_h;
+	BitmapWindow* _gradient_bar_v;
 
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
+	static void GradientMap_OnClick(Window* source, Point const& position, void* userdata);
 	static void GradientBarH_OnInitialize(Window* source, void* userdata);
-	static void GradientBarH_OnClick(Window* source, Point const& position, void* userdata);
 	static void GradientBarV_OnInitialize(Window* source, void* userdata);
+	static void GradientBar_OnClick(Window* source, Point const& position, void* userdata);
 };
 
 }

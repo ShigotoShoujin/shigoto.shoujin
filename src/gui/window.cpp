@@ -133,6 +133,11 @@ void Window::ShowModal()
 		TranslateAndDispatchMessage(msg);
 }
 
+void Window::Invalidate()
+{
+	InvalidateRect(*_handle, NULL, FALSE);
+}
+
 void Window::CreateHandle(WindowHandle const* parent)
 {
 	ConstructWindow(parent);

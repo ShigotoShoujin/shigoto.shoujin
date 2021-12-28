@@ -9,6 +9,13 @@ using namespace shoujin::gui;
 using namespace shoujin::gui::bitmap;
 using namespace shoujin::gui::layout;
 
+static void RenderGradientMap(Bitmap& bitmap, Color const& color)
+{
+	auto bits = bitmap.GetBits();
+	bits.RenderGradientMap(Color::White, color, Color::Black, Color::Black);
+	bitmap.SetBits(bits);
+}
+
 namespace shoujin::gui::comctl32 {
 
 Size const ColorControl::kDefaultClientSize{768, 768};
@@ -20,13 +27,15 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 
 	_gradient_map = new BitmapWindow(layout);
 	_gradient_map->OnInitializeEvent = GradientMap_OnInitialize;
+	_gradient_map->OnClickEvent = {GradientMap_OnClick, this};
 
 	_gradient_bar_h = new BitmapWindow(layout);
 	_gradient_bar_h->OnInitializeEvent = GradientBarH_OnInitialize;
-	_gradient_bar_h->OnClickEvent = GradientBarH_OnClick;
+	_gradient_bar_h->OnClickEvent = {GradientBar_OnClick, this};
 
 	_gradient_bar_v = new BitmapWindow(layout);
 	_gradient_bar_v->OnInitializeEvent = GradientBarV_OnInitialize;
+	_gradient_bar_v->OnClickEvent = {GradientBar_OnClick, this};
 
 	auto window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop=false; return new Window(p); };
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
@@ -80,10 +89,20 @@ LayoutParam ColorControl::BuildLayout(LayoutParam const& layout_param)
 void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
 {
 	auto self = static_cast<BitmapWindow*>(source);
-	auto& bmp = self->bitmap();
-	auto bits = bmp.GetBits();
-	bits.RenderGradientMap(Color::White, Color::Red, Color::Black, Color::Black);
-	bmp.SetBits(bits);
+	RenderGradientMap(self->bitmap(), Color::Red);
+}
+
+void ColorControl::GradientMap_OnClick(Window* source, Point const& position, void* userdata)
+{
+	auto self = static_cast<BitmapWindow*>(source);
+	auto color = self->bitmap().GetPixelColor(position);
+
+	tstringstream tss;
+	tss << "X: " << position.x << " Y: " << position.y << '\n';
+	tss << "RGB : {" << color.red() << ',' << color.green() << ',' << color.blue() << "}\n";
+
+	auto text = tss.str();
+	MessageBox(*source->handle(), text.c_str(), L"OnClick", MB_OK | MB_ICONINFORMATION);
 }
 
 void ColorControl::GradientBarH_OnInitialize(Window* source, void* userdata)
@@ -96,21 +115,6 @@ void ColorControl::GradientBarH_OnInitialize(Window* source, void* userdata)
 	bmp.SetBits(bits);
 }
 
-void ColorControl::GradientBarH_OnClick(Window* source, Point const& position, void* userdata)
-{
-	auto self = static_cast<BitmapWindow*>(source);
-	auto color = self->bitmap().GetPixelColor(position);
-
-	//BitmapWindow* gradient_map = source.pa
-
-	tstringstream tss;
-	tss << "X: " << position.x << " Y: " << position.y << '\n';
-	tss << "RGB : {" << color.red() << ',' << color.green() << ',' << color.blue() << "}\n";
-
-	auto text = tss.str();
-	MessageBox(*source->handle(), text.c_str(), L"OnClick", MB_OK | MB_ICONINFORMATION);
-}
-
 void ColorControl::GradientBarV_OnInitialize(Window* source, void* userdata)
 {
 	auto self = static_cast<BitmapWindow*>(source);
@@ -119,6 +123,17 @@ void ColorControl::GradientBarV_OnInitialize(Window* source, void* userdata)
 	auto bits = bmp.GetBits();
 	bits.RenderGradientBarVertical();
 	bmp.SetBits(bits);
+}
+
+void ColorControl::GradientBar_OnClick(Window* source, Point const& position, void* userdata)
+{
+	auto parent = static_cast<ColorControl*>(userdata);
+	auto gradient_map = parent->_gradient_map;
+	auto self = static_cast<BitmapWindow*>(source);
+	auto color = self->bitmap().GetPixelColor(position);
+
+	RenderGradientMap(gradient_map->bitmap(), color);
+	gradient_map->Invalidate();
 }
 
 }
