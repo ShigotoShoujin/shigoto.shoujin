@@ -124,20 +124,9 @@ bool ColorControl::GradientMap_OnMouseMove(Window* source, MouseEvent const& e, 
 	auto self = static_cast<BitmapWindow*>(source);
 	auto& client_size = self->client_size();
 
-	MouseEvent new_e = e;
-	auto& p = new_e.Position;
-
-	if(p.x < 0)
-		p.x = 0;
-	else if(p.x >= client_size.x)
-		p.x = client_size.x - 1;
-
-	if(p.y < 0)
-		p.y = 0;
-	else if(p.y >= client_size.y)
-		p.y = client_size.y - 1;
-
-	GradientMap_OnMouseDown(source, new_e, userdata);
+	MouseEvent mouse_down_e = e;
+	mouse_down_e.Position.ClampPoint(client_size);
+	GradientMap_OnMouseDown(source, mouse_down_e, userdata);
 
 	return true;
 }
@@ -186,20 +175,9 @@ bool ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, 
 	auto self = static_cast<BitmapWindow*>(source);
 	auto& client_size = self->client_size();
 
-	MouseEvent new_e = e;
-	auto& p = new_e.Position;
-
-	if(p.x < 0)
-		p.x = 0;
-	else if(p.x >= client_size.x)
-		p.x = client_size.x - 1;
-
-	if(p.y < 0)
-		p.y = 0;
-	else if(p.y >= client_size.y)
-		p.y = client_size.y - 1;
-
-	GradientBar_OnMouseDown(source, new_e, userdata);
+	MouseEvent mouse_down_e = e;
+	mouse_down_e.Position.ClampPoint(client_size);
+	GradientBar_OnMouseDown(source, mouse_down_e, userdata);
 
 	return true;
 }

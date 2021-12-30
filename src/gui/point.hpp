@@ -22,6 +22,21 @@ struct Point : public Vector2d {
 
 	Point(SIZE const& rhs) :
 		Vector2d{rhs} {}
+
+	Point& ClampPoint(Vector2d const& size)
+	{
+		if(x < 0)
+			x = 0;
+		else if(x >= size.x)
+			x = size.x - 1;
+
+		if(y < 0)
+			y = 0;
+		else if(y >= size.y)
+			y = size.y - 1;
+
+		return *this;
+	}
 };
 
 }
