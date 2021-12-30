@@ -85,7 +85,7 @@ LayoutStream& LayoutStream::operator<<(CreateParam const& rhs)
 	return *this;
 }
 
-LayoutStream& LayoutStream::operator<<(tstring const& text)
+LayoutStream& LayoutStream::operator<<(tstring_view const& text)
 {
 	_layout.text = text;
 	return *this;

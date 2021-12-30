@@ -4,6 +4,7 @@
 #include "../comctl32/label_control.hpp"
 #include "../layout/layout_stream.hpp"
 #include "color_control.hpp"
+#include <format>
 
 using namespace shoujin::gui;
 using namespace shoujin::gui::bitmap;
@@ -23,25 +24,27 @@ Size const ColorControl::kDefaultClientSize{768, 768};
 ColorControl::ColorControl(LayoutParam const& layout_param) :
 	Window{BuildLayout(layout_param)}
 {
-	LayoutParam layout{.tabstop = false};
-
-	_gradient_map = new BitmapWindow(layout);
+	_gradient_map = new BitmapWindow();
 	_gradient_map->OnInitializeEvent = GradientMap_OnInitialize;
 	_gradient_map->OnMouseDownEvent = {GradientMap_OnMouseDown, this};
+	_gradient_map->OnMouseMoveEvent = {GradientMap_OnMouseMove, this};
 
-	_gradient_bar_h = new BitmapWindow(layout);
+	_gradient_bar_h = new BitmapWindow();
 	_gradient_bar_h->OnInitializeEvent = GradientBarH_OnInitialize;
 	_gradient_bar_h->OnMouseDownEvent = {GradientBar_OnMouseDown, this};
 	_gradient_bar_h->OnMouseMoveEvent = {GradientBar_OnMouseMove, this};
 
-	_gradient_bar_v = new BitmapWindow(layout);
+	_gradient_bar_v = new BitmapWindow();
 	_gradient_bar_v->OnInitializeEvent = GradientBarV_OnInitialize;
 	_gradient_bar_v->OnMouseDownEvent = {GradientBar_OnMouseDown, this};
 	_gradient_bar_v->OnMouseMoveEvent = {GradientBar_OnMouseMove, this};
 
-	auto window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop=false; return new Window(p); };
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
-	auto edit = [](LayoutParam const& lp) -> Window* { return new EditControl(lp); };
+
+	_edit_red = new EditControl();
+	_edit_green = new EditControl();
+	_edit_blue = new EditControl();
+	_edit_hex = new EditControl();
 
 	LayoutStream stream{this};
 
@@ -51,9 +54,10 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 		<< push << layout::window_size({client_size().x / 4, 23}) << below << _gradient_bar_h << pop
 		<< layout::window_size({23, client_size().y / 4}) << after << _gradient_bar_v
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
-		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
-		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
-		<< TEXT("Blue") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below;
+		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << _edit_red << pop << below
+		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << _edit_green << pop << below
+		<< TEXT("Blue") << create(this, label) << push << after << TEXT("0") << _edit_blue << pop << below
+		<< TEXT("Hex") << create(this, label) << push << after << TEXT("0") << _edit_hex << pop << below;
 
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorBottom}}));
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorTop}}));
@@ -94,17 +98,48 @@ void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
 	RenderGradientMap(self->bitmap(), Color::Red);
 }
 
-void ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
+bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
 {
+	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
+		return false;
+
+	auto parent = static_cast<ColorControl*>(userdata);
 	auto self = static_cast<BitmapWindow*>(source);
 	auto color = self->bitmap().GetPixelColor(e.Position);
 
-	tstringstream tss;
-	tss << "X: " << e.Position.x << " Y: " << e.Position.y << '\n';
-	tss << "RGB : {" << color.red() << ',' << color.green() << ',' << color.blue() << "}\n";
+	auto const fmt = TEXT("{:03d}");
+	parent->_edit_red->SetText(std::format(fmt, color.red()));
+	parent->_edit_green->SetText(std::format(fmt, color.green()));
+	parent->_edit_blue->SetText(std::format(fmt, color.blue()));
+	parent->_edit_hex->SetText(std::format(TEXT("{:02X}{:02X}{:02X}"), color.red(), color.green(), color.blue()));
 
-	auto text = tss.str();
-	MessageBox(source->hwnd(), text.c_str(), L"OnClick", MB_OK | MB_ICONINFORMATION);
+	return true;
+}
+
+bool ColorControl::GradientMap_OnMouseMove(Window* source, MouseEvent const& e, void* userdata)
+{
+	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
+		return false;
+
+	auto self = static_cast<BitmapWindow*>(source);
+	auto& client_size = self->client_size();
+
+	MouseEvent new_e = e;
+	auto& p = new_e.Position;
+
+	if(p.x < 0)
+		p.x = 0;
+	else if(p.x >= client_size.x)
+		p.x = client_size.x - 1;
+
+	if(p.y < 0)
+		p.y = 0;
+	else if(p.y >= client_size.y)
+		p.y = client_size.y - 1;
+
+	GradientMap_OnMouseDown(source, new_e, userdata);
+
+	return true;
 }
 
 void ColorControl::GradientBarH_OnInitialize(Window* source, void* userdata)
@@ -127,10 +162,10 @@ void ColorControl::GradientBarV_OnInitialize(Window* source, void* userdata)
 	bmp.SetBits(bits);
 }
 
-void ColorControl::GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
+bool ColorControl::GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
 {
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
-		return;
+		return false;
 
 	auto parent = static_cast<ColorControl*>(userdata);
 	auto gradient_map = parent->_gradient_map;
@@ -139,12 +174,14 @@ void ColorControl::GradientBar_OnMouseDown(Window* source, MouseEvent const& e, 
 
 	RenderGradientMap(gradient_map->bitmap(), color);
 	gradient_map->Invalidate();
+
+	return true;
 }
 
-void ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata)
+bool ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata)
 {
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
-		return;
+		return false;
 
 	auto self = static_cast<BitmapWindow*>(source);
 	auto& client_size = self->client_size();
@@ -163,6 +200,8 @@ void ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, 
 		p.y = client_size.y - 1;
 
 	GradientBar_OnMouseDown(source, new_e, userdata);
+
+	return true;
 }
 
 }

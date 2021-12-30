@@ -13,6 +13,7 @@ public:
 	virtual ~LabelControl() = default;
 
 	virtual CreateParam OnCreateParam() override;
+	virtual void SetLayout(Layout const& layout) override;
 
 private:
 	virtual Window* Clone() const override;

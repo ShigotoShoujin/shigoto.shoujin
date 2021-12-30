@@ -14,10 +14,11 @@ public:
 	virtual ~EditControl() = default;
 
 	virtual CreateParam OnCreateParam() override;
+	virtual void SetLayout(Layout const& layout) override;
 
 private:
 	virtual Window* Clone() const override;
-	static LayoutParam BuildLayout(LayoutParam const& lp);
+	static LayoutParam BuildLayout(LayoutParam layout);
 };
 
 }

@@ -30,12 +30,18 @@ private:
 	BitmapWindow* _gradient_bar_h;
 	BitmapWindow* _gradient_bar_v;
 
+	EditControl* _edit_red;
+	EditControl* _edit_green;
+	EditControl* _edit_blue;
+	EditControl* _edit_hex;
+
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
-	static void GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
+	static bool GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
+	static bool GradientMap_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
 	static void GradientBarH_OnInitialize(Window* source, void* userdata);
 	static void GradientBarV_OnInitialize(Window* source, void* userdata);
-	static void GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
-	static void GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
+	static bool GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
+	static bool GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
 };
 
 }

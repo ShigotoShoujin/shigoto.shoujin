@@ -58,7 +58,7 @@ public:
 	LayoutStream& operator<<(Window*);
 	LayoutStream& operator<<(CreateParam const&);
 	LayoutStream& operator<<(Position const&);
-	LayoutStream& operator<<(tstring const&);
+	LayoutStream& operator<<(tstring_view const&);
 	operator LayoutParam();
 
 private:

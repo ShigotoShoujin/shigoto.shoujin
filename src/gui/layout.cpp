@@ -35,6 +35,23 @@ Layout::Layout(LayoutParam const& lp) :
 		_position = GetCenteredPosition(_window_size, hparentwnd);
 }
 
+void Layout::SetLayout(Layout const& layout)
+{
+	_position = layout._position;
+	_window_size = layout._window_size;
+	_client_size = layout._client_size;
+	_style = layout._style;
+	_exstyle = layout._exstyle;
+	_anchor = layout._anchor;
+	_tabstop = layout._tabstop;
+	_text = layout._text;
+}
+
+void Layout::SetTabStop(bool tabstop)
+{
+	_tabstop = tabstop;
+}
+
 void Layout::SetStyle(DWORD style, DWORD exstyle)
 {
 	if(_style == style && _exstyle == exstyle)
@@ -75,18 +92,6 @@ void Layout::SetLayoutFromHandle(HWND hwnd)
 
 	_style = gwlp(GWL_STYLE);
 	_exstyle = gwlp(GWL_EXSTYLE);
-}
-
-void Layout::SetLayout(Layout const& layout)
-{
-	_position = layout._position;
-	_window_size = layout._window_size;
-	_client_size = layout._client_size;
-	_style = layout._style;
-	_exstyle = layout._exstyle;
-	_anchor = layout._anchor;
-	_tabstop = layout._tabstop;
-	_text = layout._text;
 }
 
 }

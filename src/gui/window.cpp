@@ -145,6 +145,11 @@ void Window::SetFocus()
 	SHOUJIN_ASSERT_WIN32(::SetFocus(hwnd));
 }
 
+void Window::SetText(tstring_view text)
+{
+	SHOUJIN_ASSERT_WIN32(SetWindowText(*_handle, text.data()));
+}
+
 void Window::Show()
 {
 	if(!_handle)
@@ -298,16 +303,19 @@ void Window::OnParentSized(Window const& parent)
 	}
 }
 
-void Window::OnMouseDown(MouseEvent const& e)
+bool Window::OnMouseDown(MouseEvent const& e)
 {
+	return false;
 }
 
-void Window::OnMouseUp(MouseEvent const& e)
+bool Window::OnMouseUp(MouseEvent const& e)
 {
+	return false;
 }
 
-void Window::OnMouseMove(MouseEvent const& e)
+bool Window::OnMouseMove(MouseEvent const& e)
 {
+	return false;
 }
 
 void Window::OnDestroy()
@@ -400,9 +408,7 @@ Window::MessageResult Window::RaiseOnMouseDown(WindowMessage const& message)
 	SetCapture(*_handle);
 	_previous_mouse_position = e.Position;
 
-	OnMouseDown(e);
-	OnMouseDownEvent(this, e);
-	return true;
+	return OnMouseDown(e) | (OnMouseDownEvent ? OnMouseDownEvent(this, e) : false);
 }
 
 Window::MessageResult Window::RaiseOnMouseUp(WindowMessage const& message)
@@ -412,9 +418,7 @@ Window::MessageResult Window::RaiseOnMouseUp(WindowMessage const& message)
 	SHOUJIN_ASSERT_WIN32(ReleaseCapture());
 	_previous_mouse_position = {};
 
-	OnMouseUp(e);
-	OnMouseUpEvent(this, e);
-	return true;
+	return OnMouseUp(e) | (OnMouseUpEvent ? OnMouseUpEvent(this, e) : false);
 }
 
 Window::MessageResult Window::RaiseOnMouseMove(WindowMessage const& message)
@@ -424,9 +428,7 @@ Window::MessageResult Window::RaiseOnMouseMove(WindowMessage const& message)
 	if(GetCapture() == *_handle)
 		e.Delta = e.Position - _previous_mouse_position;
 
-	OnMouseMove(e);
-	OnMouseMoveEvent(this, e);
-	return true;
+	return OnMouseMove(e) | (OnMouseMoveEvent ? OnMouseMoveEvent(this, e) : false);
 }
 
 Window* Window::Clone() const

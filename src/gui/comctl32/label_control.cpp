@@ -14,6 +14,14 @@ Window::CreateParam LabelControl::OnCreateParam()
 	return CreateParam{.classname = TEXT("STATIC"), .need_subclassing{true}};
 }
 
+void LabelControl::SetLayout(Layout const& layout)
+{
+	auto lo = layout;
+	lo.SetStyle(lo.style() | WS_BORDER, lo.exstyle());
+	lo.SetTabStop(false);
+	Window::SetLayout(lo);
+}
+
 Window* LabelControl::Clone() const
 {
 	return new LabelControl(*this);

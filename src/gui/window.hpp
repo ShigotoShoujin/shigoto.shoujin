@@ -73,6 +73,7 @@ public:
 	void Destroy();
 	bool ProcessMessageQueue();
 	void SetFocus();
+	void SetText(tstring_view text);
 	void Show();
 	void ShowModal();
 	void Invalidate();
@@ -85,9 +86,9 @@ public:
 	Event<bool> OnPaintEvent;
 	Event<bool, WPARAM, Rect*> OnSizingEvent;
 	Event<bool> OnSizingFinishedEvent;
-	Event<void, Window*, MouseEvent const&> OnMouseDownEvent;
-	Event<void, Window*, MouseEvent const&> OnMouseUpEvent;
-	Event<void, Window*, MouseEvent const&> OnMouseMoveEvent;
+	Event<bool, Window*, MouseEvent const&> OnMouseDownEvent;
+	Event<bool, Window*, MouseEvent const&> OnMouseUpEvent;
+	Event<bool, Window*, MouseEvent const&> OnMouseMoveEvent;
 	Event<> OnDestroyEvent;
 
 protected:
@@ -108,9 +109,9 @@ protected:
 	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
 	virtual bool OnSizingFinished();
 	virtual void OnParentSized(Window const& parent);
-	virtual void OnMouseDown(MouseEvent const& e);
-	virtual void OnMouseUp(MouseEvent const& e);
-	virtual void OnMouseMove(MouseEvent const& e);
+	virtual bool OnMouseDown(MouseEvent const& e);
+	virtual bool OnMouseUp(MouseEvent const& e);
+	virtual bool OnMouseMove(MouseEvent const& e);
 	virtual void OnDestroy();
 
 private:

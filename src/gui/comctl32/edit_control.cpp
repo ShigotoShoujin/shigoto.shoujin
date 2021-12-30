@@ -12,16 +12,21 @@ Window::CreateParam EditControl::OnCreateParam()
 	return CreateParam{.classname = TEXT("EDIT"), .need_subclassing = true};
 }
 
+void EditControl::SetLayout(Layout const& layout)
+{
+	auto lo = layout;
+	lo.SetStyle(lo.style(), lo.exstyle() | WS_EX_CLIENTEDGE);
+	Window::SetLayout(lo);
+}
+
 Window* EditControl::Clone() const
 {
 	return new EditControl(*this);
 }
 
-LayoutParam EditControl::BuildLayout(LayoutParam const& lp)
+LayoutParam EditControl::BuildLayout(LayoutParam layout)
 {
-	LayoutParam layout = lp;
-
-	if(!lp.window_size && !lp.client_size)
+	if(!layout.window_size && !layout.client_size)
 		layout.window_size = DefaultSize;
 
 	layout.exstyle = WS_EX_CLIENTEDGE;
