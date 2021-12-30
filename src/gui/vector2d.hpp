@@ -28,6 +28,10 @@ struct Vector2d {
 
 	friend bool operator==(Vector2d const& lhs, Vector2d const& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
 	friend bool operator!=(Vector2d const& lhs, Vector2d const& rhs) { return !(lhs == rhs); }
+
+	friend Vector2d operator+(Vector2d const& lhs, Vector2d const& rhs) { return {lhs.x + rhs.x, lhs.y + rhs.y}; }
+	friend Vector2d operator-(Vector2d const& lhs, Vector2d const& rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y}; }
+
 	friend Vector2d operator*(Vector2d const& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
 	friend Vector2d operator/(Vector2d const& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
 };

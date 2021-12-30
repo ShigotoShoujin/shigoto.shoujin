@@ -27,15 +27,17 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 
 	_gradient_map = new BitmapWindow(layout);
 	_gradient_map->OnInitializeEvent = GradientMap_OnInitialize;
-	_gradient_map->OnClickEvent = {GradientMap_OnClick, this};
+	_gradient_map->OnMouseDownEvent = {GradientMap_OnMouseDown, this};
 
 	_gradient_bar_h = new BitmapWindow(layout);
 	_gradient_bar_h->OnInitializeEvent = GradientBarH_OnInitialize;
-	_gradient_bar_h->OnClickEvent = {GradientBar_OnClick, this};
+	_gradient_bar_h->OnMouseDownEvent = {GradientBar_OnMouseDown, this};
+	_gradient_bar_h->OnMouseMoveEvent = {GradientBar_OnMouseMove, this};
 
 	_gradient_bar_v = new BitmapWindow(layout);
 	_gradient_bar_v->OnInitializeEvent = GradientBarV_OnInitialize;
-	_gradient_bar_v->OnClickEvent = {GradientBar_OnClick, this};
+	_gradient_bar_v->OnMouseDownEvent = {GradientBar_OnMouseDown, this};
+	_gradient_bar_v->OnMouseMoveEvent = {GradientBar_OnMouseMove, this};
 
 	auto window = [](LayoutParam const& lp) -> Window* { auto p{lp}; p.tabstop=false; return new Window(p); };
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
@@ -44,10 +46,10 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	LayoutStream stream{this};
 
 	stream
-		<< layout::window_size(client_size() / 2) << layout::exstyle(WS_EX_CLIENTEDGE)
+		<< layout::window_size(client_size() / 4) << layout::exstyle(WS_EX_CLIENTEDGE)
 		<< topleft << _gradient_map
-		<< push << layout::window_size({client_size().x / 2, 23}) << below << _gradient_bar_h << pop
-		<< layout::window_size({23, client_size().y / 2}) << after << _gradient_bar_v
+		<< push << layout::window_size({client_size().x / 4, 23}) << below << _gradient_bar_h << pop
+		<< layout::window_size({23, client_size().y / 4}) << after << _gradient_bar_v
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << create(this, edit) << pop << below
@@ -92,17 +94,17 @@ void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
 	RenderGradientMap(self->bitmap(), Color::Red);
 }
 
-void ColorControl::GradientMap_OnClick(Window* source, Point const& position, void* userdata)
+void ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
 {
 	auto self = static_cast<BitmapWindow*>(source);
-	auto color = self->bitmap().GetPixelColor(position);
+	auto color = self->bitmap().GetPixelColor(e.Position);
 
 	tstringstream tss;
-	tss << "X: " << position.x << " Y: " << position.y << '\n';
+	tss << "X: " << e.Position.x << " Y: " << e.Position.y << '\n';
 	tss << "RGB : {" << color.red() << ',' << color.green() << ',' << color.blue() << "}\n";
 
 	auto text = tss.str();
-	MessageBox(*source->handle(), text.c_str(), L"OnClick", MB_OK | MB_ICONINFORMATION);
+	MessageBox(source->hwnd(), text.c_str(), L"OnClick", MB_OK | MB_ICONINFORMATION);
 }
 
 void ColorControl::GradientBarH_OnInitialize(Window* source, void* userdata)
@@ -125,15 +127,42 @@ void ColorControl::GradientBarV_OnInitialize(Window* source, void* userdata)
 	bmp.SetBits(bits);
 }
 
-void ColorControl::GradientBar_OnClick(Window* source, Point const& position, void* userdata)
+void ColorControl::GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
 {
+	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
+		return;
+
 	auto parent = static_cast<ColorControl*>(userdata);
 	auto gradient_map = parent->_gradient_map;
 	auto self = static_cast<BitmapWindow*>(source);
-	auto color = self->bitmap().GetPixelColor(position);
+	auto color = self->bitmap().GetPixelColor(e.Position);
 
 	RenderGradientMap(gradient_map->bitmap(), color);
 	gradient_map->Invalidate();
+}
+
+void ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata)
+{
+	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
+		return;
+
+	auto self = static_cast<BitmapWindow*>(source);
+	auto& client_size = self->client_size();
+
+	MouseEvent new_e = e;
+	auto& p = new_e.Position;
+
+	if(p.x < 0)
+		p.x = 0;
+	else if(p.x >= client_size.x)
+		p.x = client_size.x - 1;
+
+	if(p.y < 0)
+		p.y = 0;
+	else if(p.y >= client_size.y)
+		p.y = client_size.y - 1;
+
+	GradientBar_OnMouseDown(source, new_e, userdata);
 }
 
 }

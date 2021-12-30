@@ -31,10 +31,11 @@ private:
 	BitmapWindow* _gradient_bar_v;
 
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
-	static void GradientMap_OnClick(Window* source, Point const& position, void* userdata);
+	static void GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
 	static void GradientBarH_OnInitialize(Window* source, void* userdata);
 	static void GradientBarV_OnInitialize(Window* source, void* userdata);
-	static void GradientBar_OnClick(Window* source, Point const& position, void* userdata);
+	static void GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
+	static void GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
 };
 
 }

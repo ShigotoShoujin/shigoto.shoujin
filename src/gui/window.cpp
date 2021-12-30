@@ -1,6 +1,7 @@
 #include "../assert/assert.hpp"
 #include "logging/message_logger.hpp"
 #include "window.hpp"
+#include <windowsx.h>
 
 template<typename T> static T GetWindowPtr(HWND hwnd, int index)
 {
@@ -18,6 +19,37 @@ static auto SetWindowPtr(HWND hwnd, int index, auto new_value) -> decltype(new_v
 namespace shoujin::gui {
 
 static Rect GetOnSizingMinRect(WPARAM wparam, Rect const& onsizing_rect, Size const& min_size);
+
+Window::MessageResult::MessageResult() :
+	handled{}, ret_code{} {}
+
+Window::MessageResult::MessageResult(bool handled, LRESULT ret_code) :
+	handled{handled}, ret_code{ret_code} {}
+
+Window::MessageResult::operator bool() const { return handled; }
+
+Window::MouseEvent::MouseEvent(WindowMessage const& message) :
+	Position{GET_X_LPARAM(message.lparam), GET_Y_LPARAM(message.lparam)}
+{
+	int flags{};
+
+	if(message.wparam & MK_LBUTTON)
+		flags |= MouseButtonLeft;
+
+	if(message.wparam & MK_RBUTTON)
+		flags |= MouseButtonRight;
+
+	if(message.wparam & MK_MBUTTON)
+		flags |= MouseButtonMiddle;
+
+	if(message.wparam & MK_XBUTTON1)
+		flags |= MouseButtonX1;
+
+	if(message.wparam & MK_XBUTTON2)
+		flags |= MouseButtonX2;
+
+	ButtonFlag = static_cast<MouseButton>(flags);
+}
 
 Window::Window(LayoutParam const& lp) :
 	Layout{lp},
@@ -184,7 +216,13 @@ bool Window::OnWndProc(WindowMessage const& message)
 		case WM_LBUTTONDOWN:
 		case WM_RBUTTONDOWN:
 		case WM_MBUTTONDOWN:
-			return RaiseOnClick(message);
+			return RaiseOnMouseDown(message);
+		case WM_LBUTTONUP:
+		case WM_RBUTTONUP:
+		case WM_MBUTTONUP:
+			return RaiseOnMouseUp(message);
+		case WM_MOUSEMOVE:
+			return RaiseOnMouseMove(message);
 		case WM_DESTROY:
 			return RaiseOnDestroy();
 	}
@@ -260,7 +298,15 @@ void Window::OnParentSized(Window const& parent)
 	}
 }
 
-void Window::OnClick(Point const& position)
+void Window::OnMouseDown(MouseEvent const& e)
+{
+}
+
+void Window::OnMouseUp(MouseEvent const& e)
+{
+}
+
+void Window::OnMouseMove(MouseEvent const& e)
 {
 }
 
@@ -347,13 +393,39 @@ void Window::RaiseOnParentSized()
 		child->OnParentSized(*this);
 }
 
-Window::MessageResult Window::RaiseOnClick(WindowMessage const& message)
+Window::MessageResult Window::RaiseOnMouseDown(WindowMessage const& message)
 {
-	Point position{LOWORD(message.lparam), HIWORD(message.lparam)};
+	MouseEvent e{message};
 
-	OnClick(position);
-	OnClickEvent(this, position);
+	SetCapture(*_handle);
+	_previous_mouse_position = e.Position;
 
+	OnMouseDown(e);
+	OnMouseDownEvent(this, e);
+	return true;
+}
+
+Window::MessageResult Window::RaiseOnMouseUp(WindowMessage const& message)
+{
+	MouseEvent e{message};
+
+	SHOUJIN_ASSERT_WIN32(ReleaseCapture());
+	_previous_mouse_position = {};
+
+	OnMouseUp(e);
+	OnMouseUpEvent(this, e);
+	return true;
+}
+
+Window::MessageResult Window::RaiseOnMouseMove(WindowMessage const& message)
+{
+	MouseEvent e{message};
+
+	if(GetCapture() == *_handle)
+		e.Delta = e.Position - _previous_mouse_position;
+
+	OnMouseMove(e);
+	OnMouseMoveEvent(this, e);
 	return true;
 }
 
@@ -488,5 +560,4 @@ static Rect GetOnSizingMinRect(WPARAM wparam, Rect const& onsizing_rect, Size co
 
 	return rect;
 }
-
 }

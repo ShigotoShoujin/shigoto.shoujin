@@ -32,7 +32,7 @@ bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 
 bool BitmapWindow::OnPaint()
 {
-	HWND hwnd = handle()->hwnd();
+	HWND hwnd = this->hwnd();
 	HDC source_hdc = _bitmap->hdc();
 
 	PAINTSTRUCT ps;
@@ -55,7 +55,7 @@ bool BitmapWindow::OnSizingFinished()
 	if(old_size != new_size) {
 		_bitmap = std::make_unique<Bitmap>(client_size());
 		_bitmap->Fill(Color::Lime);
-		InvalidateRect(*handle(), NULL, FALSE);
+		InvalidateRect(hwnd(), NULL, FALSE);
 	}
 
 	return true;

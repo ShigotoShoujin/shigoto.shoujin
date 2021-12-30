@@ -8,6 +8,9 @@
 #include <memory>
 #include <vector>
 
+#pragma warning(push)
+#pragma warning(disable : 26812)
+
 namespace shoujin::gui {
 
 class Window : public Layout {
@@ -16,6 +19,7 @@ class Window : public Layout {
 	std::unique_ptr<WindowHandle> _handle;
 	std::vector<std::unique_ptr<Window>> _child_vec;
 	std::unique_ptr<WindowTabOrder> _window_group;
+	Point _previous_mouse_position;
 
 public:
 	struct WindowMessage {
@@ -27,14 +31,27 @@ public:
 	struct MessageResult {
 		bool handled;
 		LRESULT ret_code;
+		MessageResult();
+		MessageResult(bool handled, LRESULT ret_code = {});
+		operator bool() const;
+	};
 
-		MessageResult() :
-			handled{}, ret_code{} {}
+	enum MouseButton : int {
+		MouseButtonNone = 0,
+		MouseButtonLeft = 1,
+		MouseButtonRight = 2,
+		MouseButtonMiddle = 4,
+		MouseButtonX1 = 8,
+		MouseButtonX2 = 16
+	};
 
-		MessageResult(bool handled, LRESULT ret_code = {}) :
-			handled{handled}, ret_code{ret_code} {}
+	struct MouseEvent {
+		MouseButton ButtonFlag{};
+		Point Position;
+		Point Delta;
 
-		operator bool() const { return handled; }
+		MouseEvent() = default;
+		explicit MouseEvent(WindowMessage const& message);
 	};
 
 	explicit Window(LayoutParam const& = {});
@@ -45,6 +62,7 @@ public:
 	virtual ~Window() = default;
 
 	[[nodiscard]] WindowHandle const* handle() const { return _handle.get(); }
+	[[nodiscard]] HWND hwnd() const { return _handle ? _handle->hwnd() : 0; }
 	[[nodiscard]] int const& taborder() const { return _taborder; }
 
 	static Window* FindWindowByHandle(HWND hwnd);
@@ -67,7 +85,9 @@ public:
 	Event<bool> OnPaintEvent;
 	Event<bool, WPARAM, Rect*> OnSizingEvent;
 	Event<bool> OnSizingFinishedEvent;
-	Event<void, Window*, Point const&> OnClickEvent;
+	Event<void, Window*, MouseEvent const&> OnMouseDownEvent;
+	Event<void, Window*, MouseEvent const&> OnMouseUpEvent;
+	Event<void, Window*, MouseEvent const&> OnMouseMoveEvent;
 	Event<> OnDestroyEvent;
 
 protected:
@@ -88,7 +108,9 @@ protected:
 	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
 	virtual bool OnSizingFinished();
 	virtual void OnParentSized(Window const& parent);
-	virtual void OnClick(Point const& position);
+	virtual void OnMouseDown(MouseEvent const& e);
+	virtual void OnMouseUp(MouseEvent const& e);
+	virtual void OnMouseMove(MouseEvent const& e);
 	virtual void OnDestroy();
 
 private:
@@ -101,7 +123,9 @@ private:
 	MessageResult RaiseOnSizing(WindowMessage const& message);
 	MessageResult RaiseOnSizingFinished();
 	void RaiseOnParentSized();
-	MessageResult RaiseOnClick(WindowMessage const& message);
+	MessageResult RaiseOnMouseDown(WindowMessage const& message);
+	MessageResult RaiseOnMouseUp(WindowMessage const& message);
+	MessageResult RaiseOnMouseMove(WindowMessage const& message);
 	MessageResult RaiseOnDestroy();
 
 	virtual Window* Clone() const;
@@ -115,5 +139,7 @@ private:
 };
 
 }
+
+#pragma warning(pop)
 
 #endif
