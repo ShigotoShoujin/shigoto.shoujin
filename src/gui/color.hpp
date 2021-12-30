@@ -3,16 +3,26 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <stdint.h>
+#include <cstdint>
 
 namespace shoujin::gui {
 
 struct ColorByteRGB {
-	uint8_t R, G, B;
+	uint8_t R;
+	uint8_t G;
+	uint8_t B;
 };
 
 struct ColorFloatRGB {
-	float R, G, B;
+	float R;
+	float G;
+	float B;
+};
+
+struct ColorHSL {
+	float H; //Hue
+	float S; //Saturation
+	float L; //Lightness
 };
 
 class Color {
@@ -20,16 +30,19 @@ class Color {
 
 public:
 	Color();
+	Color(COLORREF color);
 	Color(ColorByteRGB color);
 	Color(ColorFloatRGB color);
-	Color(COLORREF color);
 
+	operator COLORREF() const;
 	operator ColorByteRGB() const;
 	operator ColorFloatRGB() const;
-	operator COLORREF() const;
+	operator ColorHSL() const;
 
-	friend inline bool operator==(Color const& lhs, Color const& rhs) { return lhs._color == rhs._color; }
-	friend inline bool operator!=(Color const& lhs, Color const& rhs) { return !(lhs._color == rhs._color); }
+	friend inline bool operator==(Color const& lhs, Color const& rhs)
+	{
+		return lhs._color == rhs._color;
+	}
 
 	//Basic colors taken from https://www.rapidtables.com/web/color/RGB_Color.html
 	static Color const Black;

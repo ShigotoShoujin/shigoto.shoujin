@@ -1,6 +1,5 @@
 #include "color.hpp"
 #include <algorithm>
-#include <stdint.h>
 
 static uint8_t ToByte(float c)
 {
@@ -18,14 +17,19 @@ Color::Color() :
 	_color{}
 {}
 
+Color::Color(COLORREF color) :
+	_color{color} {}
+
 Color::Color(ColorByteRGB color) :
 	_color{RGB(color.R, color.G, color.B)} {}
 
 Color::Color(ColorFloatRGB color) :
 	_color{RGB(ToByte(color.R), ToByte(color.G), ToByte(color.B))} {}
 
-Color::Color(COLORREF color) :
-	_color{color} {}
+Color::operator COLORREF() const
+{
+	return _color;
+}
 
 Color::operator ColorByteRGB() const
 {
@@ -43,9 +47,31 @@ Color::operator ColorFloatRGB() const
 		ToFloat(GetBValue(_color))};
 }
 
-Color::operator COLORREF() const
+Color::operator ColorHSL() const
 {
-	return _color;
+	ColorFloatRGB rgb = *this;
+	auto max = max(max(rgb.R, rgb.G), rgb.B);
+	auto min = min(min(rgb.R, rgb.G), rgb.B);
+	auto delta = max - min;
+
+	//Hue
+	float H;
+	if(delta == 0.f)
+		H = 0.f;
+	else if(max == rgb.R)
+		H = 60.f * (static_cast<int>((rgb.G - rgb.B) / delta) % 6);
+	else if(max == rgb.G)
+		H = 60.f * ((rgb.B - rgb.R) / delta + 2);
+	else if(max == rgb.B)
+		H = 60.f * ((rgb.R - rgb.G) / delta + 4);
+
+	//Lightness
+	float L = (max + min) / 2;
+
+	//Saturation
+	float S = delta == 0.f ? 0.f : delta / (1 - abs(2 * L - 1));
+
+	return {H, S, L};
 }
 
 // clang-format off
