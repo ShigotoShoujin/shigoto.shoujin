@@ -1,15 +1,13 @@
 #include "color.hpp"
 #include <algorithm>
+#include <cmath>
 
-static uint8_t ToByte(float c)
-{
-	return static_cast<uint8_t>(0xff * std::clamp<float>(c, 0.f, 1.f));
-}
+using namespace shoujin::gui;
 
-static float ToFloat(uint8_t c)
-{
-	return std::clamp<float>(c, 0, 0xff) / 0xff;
-}
+static uint8_t ToByte(float c);
+static float ToFloat(uint8_t c);
+static ColorHSL ToHSL(ColorFloatRGB rgb);
+static ColorFloatRGB ToRGB(ColorHSL hsl);
 
 namespace shoujin::gui {
 
@@ -25,6 +23,9 @@ Color::Color(ColorByteRGB color) :
 
 Color::Color(ColorFloatRGB color) :
 	_color{RGB(ToByte(color.R), ToByte(color.G), ToByte(color.B))} {}
+
+Color::Color(ColorHSL color) :
+	_color{Color{ToRGB(color)}} {}
 
 Color::operator COLORREF() const
 {
@@ -49,29 +50,7 @@ Color::operator ColorFloatRGB() const
 
 Color::operator ColorHSL() const
 {
-	ColorFloatRGB rgb = *this;
-	auto max = max(max(rgb.R, rgb.G), rgb.B);
-	auto min = min(min(rgb.R, rgb.G), rgb.B);
-	auto delta = max - min;
-
-	//Hue
-	float H;
-	if(delta == 0.f)
-		H = 0.f;
-	else if(max == rgb.R)
-		H = 60.f * (static_cast<int>((rgb.G - rgb.B) / delta) % 6);
-	else if(max == rgb.G)
-		H = 60.f * ((rgb.B - rgb.R) / delta + 2);
-	else if(max == rgb.B)
-		H = 60.f * ((rgb.R - rgb.G) / delta + 4);
-
-	//Lightness
-	float L = (max + min) / 2;
-
-	//Saturation
-	float S = delta == 0.f ? 0.f : delta / (1 - abs(2 * L - 1));
-
-	return {H, S, L};
+	return ToHSL(*this);
 }
 
 // clang-format off
@@ -93,4 +72,65 @@ Color const Color::Teal    (ColorByteRGB {  0, 128, 128} );
 Color const Color::Navy    (ColorByteRGB {  0,   0, 128} );
 // clang-format on
 
+}
+
+static uint8_t ToByte(float c)
+{
+	auto b = 0xff * std::clamp<float>(c, 0.f, 1.f);
+	return static_cast<uint8_t>(std::roundf(b));
+}
+
+static float ToFloat(uint8_t c)
+{
+	return std::clamp<float>(c, 0, 0xff) / 0xff;
+}
+
+static ColorHSL ToHSL(ColorFloatRGB rgb)
+{
+	auto max = max(max(rgb.R, rgb.G), rgb.B);
+	auto min = min(min(rgb.R, rgb.G), rgb.B);
+	auto delta = max - min;
+
+	//Hue
+	float H;
+	if(delta == 0.f)
+		H = 0.f;
+	else if(max == rgb.R)
+		H = 60.f * fmodf((rgb.G - rgb.B) / delta, 6.f);
+	else if(max == rgb.G)
+		H = 60.f * ((rgb.B - rgb.R) / delta + 2);
+	else if(max == rgb.B)
+		H = 60.f * ((rgb.R - rgb.G) / delta + 4);
+
+	//Lightness
+	float L = (max + min) / 2;
+
+	//Saturation
+	float S = delta == 0.f ? 0.f : delta / (1 - abs(2 * L - 1));
+
+	return {H, S, L};
+}
+
+static ColorFloatRGB ToRGB(ColorHSL hsl)
+{
+	float C = (1 - abs(2 * hsl.L - 1)) * hsl.S;
+	float X = C * (1 - abs(fmodf(hsl.H / 60.f, 2.f) - 1));
+	float m = hsl.L - C / 2;
+
+	ColorFloatRGB rgb;
+
+	switch(static_cast<int>(hsl.H) / 60) {
+		case 0: rgb = {C, X, 0}; break;
+		case 1: rgb = {X, C, 0}; break;
+		case 2: rgb = {0, C, X}; break;
+		case 3: rgb = {0, X, C}; break;
+		case 4: rgb = {X, 0, C}; break;
+		case 5: rgb = {C, 0, X};
+	}
+
+	rgb.R += m;
+	rgb.G += m;
+	rgb.B += m;
+
+	return rgb;
 }

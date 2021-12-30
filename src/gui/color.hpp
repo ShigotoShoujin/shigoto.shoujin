@@ -8,21 +8,21 @@
 namespace shoujin::gui {
 
 struct ColorByteRGB {
-	uint8_t R;
-	uint8_t G;
-	uint8_t B;
+	uint8_t R{};
+	uint8_t G{};
+	uint8_t B{};
 };
 
 struct ColorFloatRGB {
-	float R;
-	float G;
-	float B;
+	float R{};
+	float G{};
+	float B{};
 };
 
 struct ColorHSL {
-	float H; //Hue
-	float S; //Saturation
-	float L; //Lightness
+	float H{}; //Hue
+	float S{}; //Saturation
+	float L{}; //Lightness
 };
 
 class Color {
@@ -33,6 +33,7 @@ public:
 	Color(COLORREF color);
 	Color(ColorByteRGB color);
 	Color(ColorFloatRGB color);
+	Color(ColorHSL color);
 
 	operator COLORREF() const;
 	operator ColorByteRGB() const;
