@@ -7,24 +7,29 @@
 
 namespace shoujin::gui {
 
+struct ColorByteRGB {
+	uint8_t R, G, B;
+};
+
+struct ColorFloatRGB {
+	float R, G, B;
+};
+
 class Color {
 	COLORREF _color;
 
-	friend inline bool operator==(Color const& lhs, Color const& rhs);
-	friend inline bool operator!=(Color const& lhs, Color const& rhs);
-
 public:
 	Color();
-	Color(uint8_t r, uint8_t g, uint8_t b);
+	Color(ColorByteRGB color);
+	Color(ColorFloatRGB color);
 	Color(COLORREF color);
 
-	[[nodiscard]] inline uint8_t red() const { return GetRValue(_color); }
-	[[nodiscard]] inline uint8_t green() const { return GetGValue(_color); }
-	[[nodiscard]] inline uint8_t blue() const { return GetBValue(_color); }
-
+	operator ColorByteRGB() const;
+	operator ColorFloatRGB() const;
 	operator COLORREF() const;
 
-	static Color FromFloat(float r, float g, float b);
+	friend inline bool operator==(Color const& lhs, Color const& rhs) { return lhs._color == rhs._color; }
+	friend inline bool operator!=(Color const& lhs, Color const& rhs) { return !(lhs._color == rhs._color); }
 
 	//Basic colors taken from https://www.rapidtables.com/web/color/RGB_Color.html
 	static Color const Black;

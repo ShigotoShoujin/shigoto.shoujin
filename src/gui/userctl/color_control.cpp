@@ -108,10 +108,11 @@ bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, 
 	auto color = self->bitmap().GetPixelColor(e.Position);
 
 	auto const fmt = TEXT("{:03d}");
-	parent->_edit_red->SetText(std::format(fmt, color.red()));
-	parent->_edit_green->SetText(std::format(fmt, color.green()));
-	parent->_edit_blue->SetText(std::format(fmt, color.blue()));
-	parent->_edit_hex->SetText(std::format(TEXT("{:02X}{:02X}{:02X}"), color.red(), color.green(), color.blue()));
+	ColorByteRGB cb = color;
+	parent->_edit_red->SetText(std::format(fmt, cb.R));
+	parent->_edit_green->SetText(std::format(fmt, cb.G));
+	parent->_edit_blue->SetText(std::format(fmt, cb.B));
+	parent->_edit_hex->SetText(std::format(TEXT("{:02X}{:02X}{:02X}"), cb.R, cb.G, cb.B));
 
 	return true;
 }

@@ -118,11 +118,7 @@ void Bitmap::Draw(Bitmap const& source)
 
 Color Bitmap::GetPixelColor(Point position)
 {
-	COLORREF color = GetPixel(_hdc, position.x, position.y);
-	return {
-		GetRValue(color),
-		GetGValue(color),
-		GetBValue(color)};
+	return SHOUJIN_ASSERT_WIN32_EXPLICIT(::GetPixel(_hdc, position.x, position.y), [](auto result) { return result != CLR_INVALID; });
 }
 
 BitmapBits Bitmap::GetBits() const

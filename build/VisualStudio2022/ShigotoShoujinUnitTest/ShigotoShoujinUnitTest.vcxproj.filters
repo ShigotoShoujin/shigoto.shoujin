@@ -45,6 +45,9 @@
     <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_bar_test.cpp">
       <Filter>gui\bitmap\effect</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\color_test.cpp">
+      <Filter>gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">
