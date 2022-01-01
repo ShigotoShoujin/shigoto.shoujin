@@ -13,12 +13,17 @@ public:
 	EditControl(LayoutParam const& lp = {});
 	virtual ~EditControl() = default;
 
+	[[nodiscard]] virtual bool selectall_on_focus() const;
+	virtual void selectall_on_focus(bool value);
+
 	virtual CreateParam OnCreateParam() override;
+	virtual bool OnCommand(int notification_code) override;
 	virtual void SetLayout(Layout const& layout) override;
 
 private:
 	virtual Window* Clone() const override;
 	static LayoutParam BuildLayout(LayoutParam layout);
+	bool _selectall_on_focus{};
 };
 
 }

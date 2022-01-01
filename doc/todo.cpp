@@ -1,3 +1,5 @@
+// TODO Replace SetLayout with GetDefaultLayout/GetDefaultCreateProperties
+
 // TODO Layout, Min/Max WindowSize and Min/Max ClientSize
 
 // TODO Try to make WindowHandle Parent a WindowHandle* instead of HWND, or remove WindowHandle class to replate with direct HWND

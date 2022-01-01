@@ -112,6 +112,15 @@ Window* Window::GetChild(int index)
 	return nullptr;
 }
 
+Window* Window::GetChild(HWND hwnd)
+{
+	auto&& it = std::find_if(_child_vec.cbegin(), _child_vec.cend(), [&hwnd](auto& v) { return v->hwnd() == hwnd; });
+	if(it != _child_vec.cend())
+		return &**it;
+
+	return nullptr;
+}
+
 void Window::Close()
 {
 	if(_handle)
@@ -178,11 +187,11 @@ void Window::Invalidate()
 void Window::CreateHandle(WindowHandle const* parent)
 {
 	ConstructWindow(parent);
-	_window_group = std::make_unique<WindowTabOrder>();
+	_window_taborder = std::make_unique<WindowTabOrder>();
 
 	for(auto&& child : _child_vec) {
 		child->CreateHandle(_handle.get());
-		_window_group->AddWindow(&*child, child->_taborder);
+		_window_taborder->AddWindow(&*child, child->_taborder);
 	}
 
 	RaiseOnParentSized();
@@ -198,7 +207,7 @@ bool Window::OnDispatchMessage(MSG const& msg)
 {
 	if(msg.message == WM_KEYDOWN && msg.wParam == VK_TAB) {
 		bool cycle_up = GetAsyncKeyState(VK_SHIFT);
-		_window_group->CycleTab(cycle_up);
+		_window_taborder->CycleTab(cycle_up);
 		return true;
 	}
 
@@ -212,6 +221,8 @@ bool Window::OnWndProc(WindowMessage const& message)
 			return RaiseOnCreate(message);
 		case WM_CLOSE:
 			return RaiseOnClose();
+		case WM_COMMAND:
+			return RaiseOnCommand(message);
 		case WM_PAINT:
 			return RaiseOnPaint();
 		case WM_SIZING:
@@ -245,6 +256,11 @@ void Window::OnInitialize(Window* source)
 }
 
 bool Window::OnClose()
+{
+	return false;
+}
+
+bool Window::OnCommand(int notification_code)
 {
 	return false;
 }
@@ -325,7 +341,9 @@ void Window::OnDestroy()
 Window::MessageResult Window::RaiseOnCreate(WindowMessage const& message)
 {
 	auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
-	auto result = OnCreate(createparam) | (OnCreateEvent ? OnCreateEvent(*this, createparam) : false);
+
+	auto result = OnCreate(createparam);
+	result |= OnCreateEvent ? OnCreateEvent(*this, createparam) : false;
 
 	if(result)
 		RaiseOnInitialize();
@@ -335,13 +353,15 @@ Window::MessageResult Window::RaiseOnCreate(WindowMessage const& message)
 
 Window::MessageResult Window::RaiseOnDispatchMessage(MSG const& msg)
 {
-	return OnDispatchMessage(msg) | (OnDispatchMessageEvent ? OnDispatchMessageEvent(msg) : false);
+	auto result = OnDispatchMessage(msg);
+	return result | (OnDispatchMessageEvent ? OnDispatchMessageEvent(msg) : false);
 }
 
 Window::MessageResult Window::RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	WindowMessage wmsg{msg, wparam, lparam};
-	return OnWndProc(wmsg) | (OnWndProcEvent ? OnWndProcEvent(wmsg) : false);
+	auto result = OnWndProc(wmsg);
+	return result | (OnWndProcEvent ? OnWndProcEvent(wmsg) : false);
 }
 
 void Window::RaiseOnInitialize()
@@ -355,12 +375,28 @@ void Window::RaiseOnInitialize()
 
 Window::MessageResult Window::RaiseOnClose()
 {
-	return OnClose() | (OnCloseEvent ? OnCloseEvent() : false);
+	auto result = OnClose();
+	return result | (OnCloseEvent ? OnCloseEvent() : false);
+}
+
+Window::MessageResult Window::RaiseOnCommand(WindowMessage const& message)
+{
+	HWND hwnd = reinterpret_cast<HWND>(message.lparam);
+	Window* child = GetChild(hwnd);
+
+	if(child) {
+		int notification_code = HIWORD(message.wparam);
+		auto result = child->OnCommand(notification_code);
+		return result | (child->OnCommandEvent ? child->OnCommandEvent(notification_code) : false);
+	}
+
+	return false;
 }
 
 Window::MessageResult Window::RaiseOnPaint()
 {
-	return OnPaint() | (OnPaintEvent ? OnPaintEvent() : false);
+	auto result = OnPaint();
+	return result | (OnPaintEvent ? OnPaintEvent() : false);
 }
 
 Window::MessageResult Window::RaiseOnSizing(WindowMessage const& message)
@@ -368,9 +404,10 @@ Window::MessageResult Window::RaiseOnSizing(WindowMessage const& message)
 	RECT* sizing_rect = reinterpret_cast<RECT*>(message.lparam);
 	Rect new_rect = *sizing_rect;
 
-	MessageResult onsizing_handled = OnSizing(message.wparam, &new_rect) | (OnSizingEvent ? OnSizingEvent(message.wparam, &new_rect) : false);
+	auto result = OnSizing(message.wparam, &new_rect);
+	result |= OnSizingEvent ? OnSizingEvent(message.wparam, &new_rect) : false;
 
-	if(onsizing_handled)
+	if(result)
 		*sizing_rect = new_rect;
 
 	RaiseOnParentSized();
@@ -381,7 +418,8 @@ Window::MessageResult Window::RaiseOnSizing(WindowMessage const& message)
 
 Window::MessageResult Window::RaiseOnSizingFinished()
 {
-	return OnSizingFinished() | (OnSizingFinishedEvent ? OnSizingFinishedEvent() : false);
+	auto result = OnSizingFinished();
+	return result | (OnSizingFinishedEvent ? OnSizingFinishedEvent() : false);
 }
 
 Window::MessageResult Window::RaiseOnDestroy()
@@ -390,7 +428,7 @@ Window::MessageResult Window::RaiseOnDestroy()
 	OnDestroyEvent();
 
 	_handle.release();
-	_window_group.release();
+	_window_taborder.release();
 
 	return true;
 }
@@ -408,7 +446,8 @@ Window::MessageResult Window::RaiseOnMouseDown(WindowMessage const& message)
 	SetCapture(*_handle);
 	_previous_mouse_position = e.Position;
 
-	return OnMouseDown(e) | (OnMouseDownEvent ? OnMouseDownEvent(this, e) : false);
+	auto result = OnMouseDown(e);
+	return result | (OnMouseDownEvent ? OnMouseDownEvent(this, e) : false);
 }
 
 Window::MessageResult Window::RaiseOnMouseUp(WindowMessage const& message)
@@ -418,7 +457,8 @@ Window::MessageResult Window::RaiseOnMouseUp(WindowMessage const& message)
 	SHOUJIN_ASSERT_WIN32(ReleaseCapture());
 	_previous_mouse_position = {};
 
-	return OnMouseUp(e) | (OnMouseUpEvent ? OnMouseUpEvent(this, e) : false);
+	auto result = OnMouseUp(e);
+	return result | (OnMouseUpEvent ? OnMouseUpEvent(this, e) : false);
 }
 
 Window::MessageResult Window::RaiseOnMouseMove(WindowMessage const& message)
@@ -428,7 +468,8 @@ Window::MessageResult Window::RaiseOnMouseMove(WindowMessage const& message)
 	if(GetCapture() == *_handle)
 		e.Delta = e.Position - _previous_mouse_position;
 
-	return OnMouseMove(e) | (OnMouseMoveEvent ? OnMouseMoveEvent(this, e) : false);
+	auto result = OnMouseMove(e);
+	return result | (OnMouseMoveEvent ? OnMouseMoveEvent(this, e) : false);
 }
 
 Window* Window::Clone() const
@@ -562,4 +603,5 @@ static Rect GetOnSizingMinRect(WPARAM wparam, Rect const& onsizing_rect, Size co
 
 	return rect;
 }
+
 }

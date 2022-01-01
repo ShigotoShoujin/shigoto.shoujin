@@ -18,7 +18,7 @@ class Window : public Layout {
 	int _taborder;
 	std::unique_ptr<WindowHandle> _handle;
 	std::vector<std::unique_ptr<Window>> _child_vec;
-	std::unique_ptr<WindowTabOrder> _window_group;
+	std::unique_ptr<WindowTabOrder> _window_taborder;
 	Point _previous_mouse_position;
 
 public:
@@ -69,6 +69,7 @@ public:
 
 	void AddChild(Window* child);
 	Window* GetChild(int index);
+	Window* GetChild(HWND hwnd);
 	void Close();
 	void Destroy();
 	bool ProcessMessageQueue();
@@ -83,6 +84,7 @@ public:
 	Event<bool, Window const&, CREATESTRUCT const&> OnCreateEvent;
 	Event<void, Window*> OnInitializeEvent;
 	Event<bool> OnCloseEvent;
+	Event<bool, int> OnCommandEvent;
 	Event<bool> OnPaintEvent;
 	Event<bool, WPARAM, Rect*> OnSizingEvent;
 	Event<bool> OnSizingFinishedEvent;
@@ -105,6 +107,7 @@ protected:
 	virtual bool OnCreate(CREATESTRUCT const& createparam);
 	virtual void OnInitialize(Window* source);
 	virtual bool OnClose();
+	virtual bool OnCommand(int notification_code);
 	virtual bool OnPaint();
 	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
 	virtual bool OnSizingFinished();
@@ -120,6 +123,7 @@ private:
 	MessageResult RaiseOnCreate(WindowMessage const& message);
 	void RaiseOnInitialize();
 	MessageResult RaiseOnClose();
+	MessageResult RaiseOnCommand(WindowMessage const& message);
 	MessageResult RaiseOnPaint();
 	MessageResult RaiseOnSizing(WindowMessage const& message);
 	MessageResult RaiseOnSizingFinished();

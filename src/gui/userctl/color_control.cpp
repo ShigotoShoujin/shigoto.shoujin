@@ -41,13 +41,19 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
 
-	_edit_red = new EditControl();
-	_edit_green = new EditControl();
-	_edit_blue = new EditControl();
-	_edit_hex = new EditControl();
-	_edit_hue = new EditControl();
-	_edit_saturation = new EditControl();
-	_edit_lightness = new EditControl();
+	auto new_edit = []() {
+		auto* edit = new EditControl();
+		edit->selectall_on_focus(true);
+		return edit;
+	};
+
+	_edit_red = new_edit();
+	_edit_green = new_edit();
+	_edit_blue = new_edit();
+	_edit_hex = new_edit();
+	_edit_hue = new_edit();
+	_edit_saturation = new_edit();
+	_edit_lightness = new_edit();
 
 	LayoutStream stream{this};
 
