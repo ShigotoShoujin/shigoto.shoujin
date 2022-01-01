@@ -46,9 +46,9 @@ private:
 	};
 
 public:
-	LayoutStream() = default;
+	LayoutStream();
 	LayoutStream(Window* parent);
-	LayoutStream& operator<<(LayoutStream& (*)(LayoutStream&));
+	LayoutStream& operator<<(LayoutStream& (*func)(LayoutStream&));
 	LayoutStream& operator<<(LayoutParam const&);
 	LayoutStream& operator<<(FromLayout const&);
 	LayoutStream& operator<<(WindowSize const&);
@@ -81,7 +81,7 @@ private:
 
 	void UpdateLayout(Window* window);
 
-	Window* _parent{};
+	Window* _parent;
 	int _padding;
 	LayoutParam _layout;
 	LayoutParam _from_layout;

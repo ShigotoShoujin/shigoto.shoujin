@@ -13,6 +13,11 @@ constexpr int RelationBetweenUnrelatedControls = 11;
 constexpr int RelationBetweenRelatedControls = 7;
 constexpr int RelationDefault = RelationBetweenRelatedControls;
 
+LayoutStream::LayoutStream() :
+	_parent{nullptr},
+	_padding{RelationDefault}
+{}
+
 LayoutStream::LayoutStream(Window* parent) :
 	_parent{parent},
 	_padding{RelationDefault}
