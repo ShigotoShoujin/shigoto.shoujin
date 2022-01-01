@@ -34,6 +34,9 @@ private:
 	EditControl* _edit_green;
 	EditControl* _edit_blue;
 	EditControl* _edit_hex;
+	EditControl* _edit_hue;
+	EditControl* _edit_saturation;
+	EditControl* _edit_lightness;
 
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
 	static bool GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);

@@ -4,10 +4,10 @@
 
 using namespace shoujin::gui;
 
-static uint8_t ToByte(float c);
-static float ToFloat(uint8_t c);
-static ColorHSL ToHSL(ColorFloatRGB rgb);
-static ColorFloatRGB ToRGB(ColorHSL hsl);
+static uint8_t ToByte(float channel);
+static float ToFloat(uint8_t channel);
+static ColorFloatHSL ToHSL(ColorFloatRGB rgb);
+static ColorFloatRGB ToRGB(ColorFloatHSL hsl);
 
 namespace shoujin::gui {
 
@@ -24,7 +24,10 @@ Color::Color(ColorByteRGB color) :
 Color::Color(ColorFloatRGB color) :
 	_color{RGB(ToByte(color.R), ToByte(color.G), ToByte(color.B))} {}
 
-Color::Color(ColorHSL color) :
+Color::Color(ColorByteHSL color) :
+	_color{Color{ToRGB(ColorFloatHSL{static_cast<float>(color.H), static_cast<float>(color.S), static_cast<float>(color.L)})}} {}
+
+Color::Color(ColorFloatHSL color) :
 	_color{Color{ToRGB(color)}} {}
 
 Color::operator COLORREF() const
@@ -48,7 +51,16 @@ Color::operator ColorFloatRGB() const
 		ToFloat(GetBValue(_color))};
 }
 
-Color::operator ColorHSL() const
+Color::operator ColorByteHSL() const
+{
+	auto cfhsl = ToHSL(*this);
+	return {
+		static_cast<uint16_t>(cfhsl.H),
+		static_cast<uint8_t>(cfhsl.S * 100),
+		static_cast<uint8_t>(cfhsl.L * 100)};
+}
+
+Color::operator ColorFloatHSL() const
 {
 	return ToHSL(*this);
 }
@@ -74,18 +86,18 @@ Color const Color::Navy    (ColorByteRGB {  0,   0, 128} );
 
 }
 
-static uint8_t ToByte(float c)
+static uint8_t ToByte(float channel)
 {
-	auto b = 0xff * std::clamp<float>(c, 0.f, 1.f);
+	auto b = 0xff * std::clamp<float>(channel, 0.f, 1.f);
 	return static_cast<uint8_t>(std::roundf(b));
 }
 
-static float ToFloat(uint8_t c)
+static float ToFloat(uint8_t channel)
 {
-	return std::clamp<float>(c, 0, 0xff) / 0xff;
+	return std::clamp<float>(channel, 0, 0xff) / 0xff;
 }
 
-static ColorHSL ToHSL(ColorFloatRGB rgb)
+static ColorFloatHSL ToHSL(ColorFloatRGB rgb)
 {
 	auto max = max(max(rgb.R, rgb.G), rgb.B);
 	auto min = min(min(rgb.R, rgb.G), rgb.B);
@@ -111,7 +123,7 @@ static ColorHSL ToHSL(ColorFloatRGB rgb)
 	return {H, S, L};
 }
 
-static ColorFloatRGB ToRGB(ColorHSL hsl)
+static ColorFloatRGB ToRGB(ColorFloatHSL hsl)
 {
 	float C = (1 - abs(2 * hsl.L - 1)) * hsl.S;
 	float X = C * (1 - abs(fmodf(hsl.H / 60.f, 2.f) - 1));

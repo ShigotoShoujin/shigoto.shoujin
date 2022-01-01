@@ -45,6 +45,9 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	_edit_green = new EditControl();
 	_edit_blue = new EditControl();
 	_edit_hex = new EditControl();
+	_edit_hue = new EditControl();
+	_edit_saturation = new EditControl();
+	_edit_lightness = new EditControl();
 
 	LayoutStream stream{this};
 
@@ -57,7 +60,10 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << _edit_red << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << _edit_green << pop << below
 		<< TEXT("Blue") << create(this, label) << push << after << TEXT("0") << _edit_blue << pop << below
-		<< TEXT("Hex") << create(this, label) << push << after << TEXT("0") << _edit_hex << pop << below;
+		<< TEXT("Hex") << create(this, label) << push << after << TEXT("0") << _edit_hex << pop << below
+		<< TEXT("Hue") << create(this, label) << push << after << TEXT("0") << _edit_hue << pop << below
+		<< TEXT("Saturation") << create(this, label) << push << after << TEXT("0") << _edit_saturation << pop << below
+		<< TEXT("Lightness") << create(this, label) << push << after << TEXT("0") << _edit_lightness << pop << below;
 
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorBottom}}));
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorTop}}));
@@ -107,12 +113,16 @@ bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, 
 	auto self = static_cast<BitmapWindow*>(source);
 	auto color = self->bitmap().GetPixelColor(e.Position);
 
-	auto const fmt = TEXT("{:03d}");
-	ColorByteRGB cb = color;
-	parent->_edit_red->SetText(std::format(fmt, cb.R));
-	parent->_edit_green->SetText(std::format(fmt, cb.G));
-	parent->_edit_blue->SetText(std::format(fmt, cb.B));
-	parent->_edit_hex->SetText(std::format(TEXT("{:02X}{:02X}{:02X}"), cb.R, cb.G, cb.B));
+	auto const fmt = TEXT("{:d}");
+	ColorByteRGB cbrgb = color;
+	ColorByteHSL cbhsl = color;
+	parent->_edit_red->SetText(std::format(fmt, cbrgb.R));
+	parent->_edit_green->SetText(std::format(fmt, cbrgb.G));
+	parent->_edit_blue->SetText(std::format(fmt, cbrgb.B));
+	parent->_edit_hex->SetText(std::format(TEXT("{:02X}{:02X}{:02X}"), cbrgb.R, cbrgb.G, cbrgb.B));
+	parent->_edit_hue->SetText(std::format(fmt, cbhsl.H));
+	parent->_edit_saturation->SetText(std::format(fmt, cbhsl.S));
+	parent->_edit_lightness->SetText(std::format(fmt, cbhsl.L));
 
 	return true;
 }

@@ -8,18 +8,24 @@
 namespace shoujin::gui {
 
 struct ColorByteRGB {
-	uint8_t R{};
-	uint8_t G{};
-	uint8_t B{};
+	uint8_t R{}; //Red
+	uint8_t G{}; //Green
+	uint8_t B{}; //Blue
 };
 
 struct ColorFloatRGB {
-	float R{};
-	float G{};
-	float B{};
+	float R{}; //Red
+	float G{}; //Green
+	float B{}; //Blue
 };
 
-struct ColorHSL {
+struct ColorByteHSL {
+	uint16_t H{}; //Hue
+	uint8_t S{}; //Saturation
+	uint8_t L{}; //Lightness
+};
+
+struct ColorFloatHSL {
 	float H{}; //Hue
 	float S{}; //Saturation
 	float L{}; //Lightness
@@ -33,12 +39,14 @@ public:
 	Color(COLORREF color);
 	Color(ColorByteRGB color);
 	Color(ColorFloatRGB color);
-	Color(ColorHSL color);
+	Color(ColorByteHSL color);
+	Color(ColorFloatHSL color);
 
 	operator COLORREF() const;
 	operator ColorByteRGB() const;
 	operator ColorFloatRGB() const;
-	operator ColorHSL() const;
+	operator ColorByteHSL() const;
+	operator ColorFloatHSL() const;
 
 	friend inline bool operator==(Color const& lhs, Color const& rhs)
 	{
