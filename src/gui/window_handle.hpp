@@ -1,7 +1,6 @@
 #ifndef SHOUJIN_SOURCE_GUI_WINDOW_HANDLE
 #define SHOUJIN_SOURCE_GUI_WINDOW_HANDLE
 
-#pragma once
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <memory>

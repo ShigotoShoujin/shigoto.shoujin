@@ -1,7 +1,6 @@
 #ifndef SHOUJIN_SOURCE_FILE_FILE
 #define SHOUJIN_SOURCE_FILE_FILE
 
-#pragma once
 #include "../tstring.hpp"
 
 namespace shoujin::file {

@@ -14,15 +14,15 @@ static void AdjustSizes(Size& window_size, Size& client_size, DWORD style, DWORD
 
 namespace shoujin::gui {
 
-Layout::Layout(LayoutParam const& lp) :
-	_position{lp.position},
-	_window_size{lp.window_size},
-	_client_size{lp.client_size},
-	_style{lp.style},
-	_exstyle{lp.exstyle},
-	_anchor{lp.anchor},
-	_tabstop{lp.tabstop},
-	_text{lp.text}
+Layout::Layout(LayoutParam const& layout_param) :
+	_position{layout_param.position},
+	_window_size{layout_param.window_size},
+	_client_size{layout_param.client_size},
+	_style{layout_param.style},
+	_exstyle{layout_param.exstyle},
+	_anchor{layout_param.anchor},
+	_tabstop{layout_param.tabstop},
+	_text{layout_param.text}
 {
 	HWND hparentwnd = GetDesktopWindow();
 
@@ -31,20 +31,8 @@ Layout::Layout(LayoutParam const& lp) :
 
 	AdjustSizes(_window_size, _client_size, _style, _exstyle);
 
-	if(lp.layout_mode == LayoutMode::CenterParent)
+	if(layout_param.layout_mode == LayoutMode::CenterParent)
 		_position = GetCenteredPosition(_window_size, hparentwnd);
-}
-
-void Layout::SetLayout(Layout const& layout)
-{
-	_position = layout._position;
-	_window_size = layout._window_size;
-	_client_size = layout._client_size;
-	_style = layout._style;
-	_exstyle = layout._exstyle;
-	_anchor = layout._anchor;
-	_tabstop = layout._tabstop;
-	_text = layout._text;
 }
 
 void Layout::SetTabStop(bool tabstop)
@@ -92,6 +80,20 @@ void Layout::SetLayoutFromHandle(HWND hwnd)
 
 	_style = gwlp(GWL_STYLE);
 	_exstyle = gwlp(GWL_EXSTYLE);
+}
+
+void Layout::SetLayout(Layout layout)
+{
+	OnLayoutResetEvent(layout);
+
+	_position = layout._position;
+	_window_size = layout._window_size;
+	_client_size = layout._client_size;
+	_style = layout._style;
+	_exstyle = layout._exstyle;
+	_anchor = layout._anchor;
+	_tabstop = layout._tabstop;
+	_text = layout._text;
 }
 
 }

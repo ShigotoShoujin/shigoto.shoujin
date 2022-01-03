@@ -38,7 +38,7 @@ public:
 	}
 
 	TEST_METHOD(ShowModalTextBox) {
-		HWND hwnd = CreateWindowEx(0, L"EDIT", L"Hello", WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE | ES_MULTILINE, 780, 310, 1000, 720, 0, 0, GetModuleHandle(0), 0);
+		HWND hwnd = CreateWindowEx(0, TEXT("EDIT"), TEXT("Hello"), WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE | ES_MULTILINE, 780, 310, 1000, 720, 0, 0, GetModuleHandle(0), 0);
 
 		LONG_PTR default_proc = SetWindowLongPtr(hwnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(WndProcSubClass));
 		LONG_PTR result = SetWindowLongPtr(hwnd, GWLP_USERDATA, default_proc);

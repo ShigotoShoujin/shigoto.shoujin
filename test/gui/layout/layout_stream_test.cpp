@@ -9,7 +9,7 @@ using namespace shoujin;
 using namespace shoujin::gui;
 using namespace shoujin::gui::layout;
 
-void AssertEmptyLayout(LayoutParam const& lp);
+void AssertEmptyLayout(LayoutParam const& layout_param);
 void AssertLayout(LayoutParam const& expected, LayoutParam const& actual);
 
 TEST_CLASS(LayoutStreamTest) {
@@ -103,18 +103,18 @@ public:
 	}
 };
 
-void AssertEmptyLayout(const LayoutParam& lp)
+void AssertEmptyLayout(const LayoutParam& layout_param)
 {
 	DWORD nostyle{};
 	//Assert::AreEqual(LayoutMode::Default, lp.layout_mode);
-	Assert::AreEqual(0, lp.position.x);
-	Assert::AreEqual(0, lp.position.y);
-	Assert::AreEqual(0, lp.window_size.x);
-	Assert::AreEqual(0, lp.window_size.y);
-	Assert::AreEqual(0, lp.client_size.y);
-	Assert::AreEqual(0, lp.client_size.y);
-	Assert::AreEqual(nostyle, lp.style);
-	Assert::AreEqual(nostyle, lp.exstyle);
+	Assert::AreEqual(0, layout_param.position.x);
+	Assert::AreEqual(0, layout_param.position.y);
+	Assert::AreEqual(0, layout_param.window_size.x);
+	Assert::AreEqual(0, layout_param.window_size.y);
+	Assert::AreEqual(0, layout_param.client_size.y);
+	Assert::AreEqual(0, layout_param.client_size.y);
+	Assert::AreEqual(nostyle, layout_param.style);
+	Assert::AreEqual(nostyle, layout_param.exstyle);
 }
 
 void AssertLayout(LayoutParam const& expected, LayoutParam const& actual)

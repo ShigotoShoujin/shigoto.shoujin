@@ -1,6 +1,7 @@
 #ifndef SHOUJIN_SOURCE_GUI_LAYOUT
 #define SHOUJIN_SOURCE_GUI_LAYOUT
 
+#include "../event.hpp"
 #include "../tstring.hpp"
 #include "types.hpp"
 #define WIN32_LEAN_AND_MEAN
@@ -14,7 +15,7 @@ enum class LayoutMode {
 	FillParent
 };
 
-enum Anchor : int{
+enum Anchor : int {
 	AnchorNone = 0,
 	AnchorLeft = 1,
 	AnchorTop = 2,
@@ -59,13 +60,14 @@ public:
 	[[nodiscard]] tstring const& text() const { return _text; }
 	[[nodiscard]] Rect window_rect() const { return Rect{_position, _window_size}; }
 
-	virtual void SetLayout(Layout const& layout);
+	Event<void, Layout&> OnLayoutResetEvent;
 
 	void SetTabStop(bool tabstop);
 	void SetStyle(DWORD style, DWORD exstyle);
 	void SetWindowSize(Size const& window_size);
 	void SetRectFromHandle(HWND hwnd);
 	void SetLayoutFromHandle(HWND hwnd);
+	void SetLayout(Layout layout);
 };
 
 }

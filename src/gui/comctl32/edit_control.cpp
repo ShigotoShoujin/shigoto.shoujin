@@ -2,10 +2,15 @@
 
 namespace shoujin::gui::comctl32 {
 
+static void OnLayoutReset(Layout& layout, void* userdata);
+
 Size const EditControl::DefaultSize{160, 23};
 
-EditControl::EditControl(LayoutParam const& lp) :
-	Window{BuildLayout(lp)} {}
+EditControl::EditControl(LayoutParam const& layout_param) :
+	Comctl32{TEXT("EDIT"), BuildLayout(layout_param)}
+{
+	OnLayoutResetEvent = {OnLayoutReset, this};
+}
 
 bool EditControl::selectall_on_focus() const
 {
@@ -15,11 +20,6 @@ bool EditControl::selectall_on_focus() const
 void EditControl::selectall_on_focus(bool value)
 {
 	_selectall_on_focus = value;
-}
-
-Window::CreateParam EditControl::OnCreateParam()
-{
-	return CreateParam{.classname = TEXT("EDIT"), .need_subclassing = true};
 }
 
 bool EditControl::OnCommand(int notification_code)
@@ -32,13 +32,6 @@ bool EditControl::OnCommand(int notification_code)
 	}
 
 	return false;
-}
-
-void EditControl::SetLayout(Layout const& layout)
-{
-	auto lo = layout;
-	lo.SetStyle(lo.style(), lo.exstyle() | WS_EX_CLIENTEDGE);
-	Window::SetLayout(lo);
 }
 
 Window* EditControl::Clone() const
@@ -54,6 +47,11 @@ LayoutParam EditControl::BuildLayout(LayoutParam layout)
 	layout.exstyle = WS_EX_CLIENTEDGE;
 
 	return layout;
+}
+
+static void OnLayoutReset(Layout& layout, void* userdata)
+{
+	layout.SetStyle(layout.style(), layout.exstyle() | WS_EX_CLIENTEDGE);
 }
 
 }

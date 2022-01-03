@@ -182,6 +182,7 @@
     <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_bar.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_map.hpp" />
     <ClInclude Include="..\..\..\src\gui\color.hpp" />
+    <ClInclude Include="..\..\..\src\gui\comctl32\comctl32.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp" />
@@ -209,6 +210,7 @@
     <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_bits.cpp" />
     <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_window.cpp" />
     <ClCompile Include="..\..\..\src\gui\color.cpp" />
+    <ClCompile Include="..\..\..\src\gui\comctl32\comctl32.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\label_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout\layout_stream.cpp" />
@@ -218,6 +220,7 @@
     <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp" />
     <ClCompile Include="..\..\..\src\gui\logging\message_string.cpp" />
     <ClCompile Include="..\..\..\src\gui\window.cpp" />
+    <ClCompile Include="..\..\..\src\tstring.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -16,7 +16,7 @@ public:
 	StreamToFileRedirector(StreamToFileRedirector&&) noexcept;
 	StreamToFileRedirector& operator=(StreamToFileRedirector&&) noexcept;
 
-	StreamToFileRedirector(FILE* stream_to_redirect, LPCTSTR output_file);
+	StreamToFileRedirector(FILE* stream_to_redirect, LPCWSTR output_file);
 	~StreamToFileRedirector();
 };
 

@@ -16,7 +16,7 @@ public:
 	BitmapWindow& operator=(BitmapWindow const&);
 	virtual ~BitmapWindow() = default;
 
-	virtual CreateParam OnCreateParam() override;
+	virtual void BeforeCreate(CreateParam& create_param) override;
 	virtual bool OnCreate(CREATESTRUCT const& createparam) override;
 	virtual bool OnPaint() override;
 	virtual bool OnSizingFinished() override;

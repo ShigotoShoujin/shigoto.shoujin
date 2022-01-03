@@ -95,12 +95,12 @@ public:
 
 protected:
 	struct CreateParam {
-		LPCTSTR classname;
-		bool need_subclassing{};
+		LPCTSTR classname{};
+		bool subclass_window{};
 	};
 
 	void CreateHandle(WindowHandle const* parent = nullptr);
-	virtual CreateParam OnCreateParam();
+	virtual void BeforeCreate(CreateParam& create_param);
 
 	virtual bool OnDispatchMessage(MSG const& msg);
 	virtual bool OnWndProc(WindowMessage const& message);

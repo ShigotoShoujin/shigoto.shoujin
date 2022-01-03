@@ -198,9 +198,8 @@ void Window::CreateHandle(WindowHandle const* parent)
 	SetFocus();
 }
 
-Window::CreateParam Window::OnCreateParam()
+void Window::BeforeCreate(CreateParam& create_param)
 {
-	return {.classname = TEXT("ShoujinWindow")};
 }
 
 bool Window::OnDispatchMessage(MSG const& msg)
@@ -479,6 +478,9 @@ Window* Window::Clone() const
 
 void Window::CopyChilds(Window const& rhs)
 {
+	if(rhs._child_vec.size() == 0)
+		return;
+
 	_child_vec.reserve(rhs._child_vec.size());
 	for(auto&& child : rhs._child_vec) {
 		auto clone = child->Clone();
@@ -488,11 +490,14 @@ void Window::CopyChilds(Window const& rhs)
 
 void Window::ConstructWindow(const WindowHandle* parent)
 {
-	CreateParam cp = OnCreateParam();
+	CreateParam create_param;
+	create_param.classname = TEXT("ShoujinWindow");
+	BeforeCreate(create_param);
+
 	HINSTANCE hinstance = SHOUJIN_ASSERT_WIN32(GetModuleHandle(nullptr));
 	WNDCLASSEX wc;
 
-	if(!cp.need_subclassing && !GetClassInfoEx(hinstance, cp.classname, &wc)) {
+	if(!create_param.subclass_window && !GetClassInfoEx(hinstance, create_param.classname, &wc)) {
 		wc.cbSize = sizeof(wc);
 		wc.style = CS_OWNDC;
 		wc.lpfnWndProc = WndProcStatic;
@@ -503,7 +508,7 @@ void Window::ConstructWindow(const WindowHandle* parent)
 		wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 		wc.hbrBackground = (HBRUSH)(COLOR_BTNFACE + 1);
 		wc.lpszMenuName = NULL;
-		wc.lpszClassName = cp.classname;
+		wc.lpszClassName = create_param.classname;
 		wc.hIconSm = NULL;
 
 		SHOUJIN_ASSERT_WIN32(RegisterClassEx(&wc));
@@ -520,15 +525,30 @@ void Window::ConstructWindow(const WindowHandle* parent)
 	auto pos = position();
 	auto size = window_size();
 	auto hwnd_parent = parent ? parent->hwnd() : nullptr;
-	HWND hwnd = SHOUJIN_ASSERT(CreateWindowEx(exstyle(), cp.classname, text().c_str(), style, pos.x, pos.y, size.x, size.y, hwnd_parent, nullptr, hinstance, this));
+	HWND hwnd =
+		SHOUJIN_ASSERT(
+			CreateWindowEx(
+				exstyle(),
+				create_param.classname,
+				text().c_str(),
+				style,
+				pos.x,
+				pos.y,
+				size.x,
+				size.y,
+				hwnd_parent,
+				nullptr,
+				hinstance,
+				this));
 
-	if(cp.need_subclassing) {
+	if(create_param.subclass_window) {
 		_handle = std::make_unique<WindowHandle>(hwnd, hwnd_parent);
 		SetWindowPtr(hwnd, GWLP_USERDATA, this);
 		_default_wndproc = SetWindowPtr(hwnd, GWLP_WNDPROC, WndProcSubclassStatic);
 	}
 
-	SHOUJIN_ASSERT(hwnd && _handle);
+	SHOUJIN_ASSERT(hwnd);
+	SHOUJIN_ASSERT((L"_handle not created. If creating a Comctl32 control, set subclass_window to true.", !!_handle));
 	Layout::SetLayoutFromHandle(hwnd);
 }
 

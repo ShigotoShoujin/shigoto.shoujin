@@ -4,8 +4,8 @@ using namespace shoujin::gui;
 
 namespace shoujin::gui::bitmap {
 
-BitmapWindow::BitmapWindow(LayoutParam const& lp) :
-	Window{lp} {}
+BitmapWindow::BitmapWindow(LayoutParam const& layout_param) :
+	Window{layout_param} {}
 
 BitmapWindow::BitmapWindow(BitmapWindow const& rhs)
 {
@@ -19,9 +19,9 @@ BitmapWindow& BitmapWindow::operator=(BitmapWindow const& rhs)
 	return *this;
 }
 
-Window::CreateParam BitmapWindow::OnCreateParam()
+void BitmapWindow::BeforeCreate(CreateParam& create_param)
 {
-	return CreateParam{.classname = TEXT("ShoujinBitmapWindow")};
+	create_param.classname = TEXT("ShoujinBitmapWindow");
 }
 
 bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)

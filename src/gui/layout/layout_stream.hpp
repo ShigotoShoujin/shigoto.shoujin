@@ -1,7 +1,6 @@
 #ifndef SHOUJIN_SOURCE_GUI_LAYOUT_LAYOUT_STREAM
 #define SHOUJIN_SOURCE_GUI_LAYOUT_LAYOUT_STREAM
 
-#pragma once
 #include "../layout.hpp"
 #include <stack>
 

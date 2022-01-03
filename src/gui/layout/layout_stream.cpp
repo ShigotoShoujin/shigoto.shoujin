@@ -1,4 +1,3 @@
-#pragma once
 #include "../../assert/assert.hpp"
 #include "../window.hpp"
 #include "layout_stream.hpp"

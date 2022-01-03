@@ -28,7 +28,7 @@ tstring LogFile::GetDebugFile()
 		file = path.replace_filename(SHOUJIN_DEBUG_LOGFILE);
 	}
 
-	return file;
+	return ToTString(file);
 }
 
 void LogFile::AppendDebug(tstring text)

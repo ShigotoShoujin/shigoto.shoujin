@@ -76,9 +76,9 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorLeft | AnchorBottom}}));
 }
 
-Window::CreateParam ColorControl::OnCreateParam()
+void ColorControl::BeforeCreate(CreateParam& create_param)
 {
-	return CreateParam{.classname = TEXT("ShoujinColorControl")};
+	create_param.classname = TEXT("ShoujinColorControl");
 }
 
 bool ColorControl::OnCreate(CREATESTRUCT const& createparam)

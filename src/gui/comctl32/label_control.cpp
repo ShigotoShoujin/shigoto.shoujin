@@ -1,25 +1,15 @@
 #include "label_control.hpp"
 
-using namespace shoujin::gui;
-
 namespace shoujin::gui::comctl32 {
+
+static void OnLayoutReset(Layout& layout, void* userdata);
 
 Size const LabelControl::DefaultSize{80, 23};
 
-LabelControl::LabelControl(LayoutParam const& lp) :
-	Window{BuildLayout(lp)} {}
-
-Window::CreateParam LabelControl::OnCreateParam()
+LabelControl::LabelControl(LayoutParam const& layout_param) :
+	Comctl32{TEXT("STATIC"), BuildLayout(layout_param)}
 {
-	return CreateParam{.classname = TEXT("STATIC"), .need_subclassing{true}};
-}
-
-void LabelControl::SetLayout(Layout const& layout)
-{
-	auto lo = layout;
-	lo.SetStyle(lo.style() | WS_BORDER, lo.exstyle());
-	lo.SetTabStop(false);
-	Window::SetLayout(lo);
+	OnLayoutResetEvent = {OnLayoutReset, this};
 }
 
 Window* LabelControl::Clone() const
@@ -27,17 +17,23 @@ Window* LabelControl::Clone() const
 	return new LabelControl(*this);
 }
 
-LayoutParam LabelControl::BuildLayout(LayoutParam const& lp)
+LayoutParam LabelControl::BuildLayout(LayoutParam const& layout_param)
 {
-	LayoutParam layout = lp;
+	LayoutParam layout = layout_param;
 
-	if(!lp.window_size && !lp.client_size)
+	if(!layout_param.window_size && !layout_param.client_size)
 		layout.window_size = DefaultSize;
 
 	layout.style = WS_BORDER;
 	layout.tabstop = false;
 
 	return layout;
+}
+
+static void OnLayoutReset(Layout& layout, void* userdata)
+{
+	layout.SetStyle(layout.style() | WS_BORDER, layout.exstyle());
+	layout.SetTabStop(false);
 }
 
 }

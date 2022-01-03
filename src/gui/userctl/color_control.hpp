@@ -18,7 +18,7 @@ public:
 	explicit ColorControl(LayoutParam const& layout_param = {});
 	virtual ~ColorControl() = default;
 
-	virtual CreateParam OnCreateParam() override;
+	virtual void BeforeCreate(CreateParam& create_param) override;
 	virtual bool OnCreate(CREATESTRUCT const& createparam) override;
 
 private:

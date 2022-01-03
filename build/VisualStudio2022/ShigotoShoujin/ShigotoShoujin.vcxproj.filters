@@ -138,6 +138,9 @@
     <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_bar.hpp">
       <Filter>src\gui\bitmap\effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\comctl32\comctl32.hpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
@@ -193,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_window.cpp">
       <Filter>src\gui\bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\comctl32\comctl32.cpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tstring.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
