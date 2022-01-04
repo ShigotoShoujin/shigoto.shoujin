@@ -17,7 +17,7 @@ static void RenderGradientMap(Bitmap& bitmap, Color const& color)
 	bitmap.SetBits(bits);
 }
 
-namespace shoujin::gui::comctl32 {
+namespace shoujin::gui::usercontrol {
 
 Size const ColorControl::kDefaultClientSize{768, 768};
 
@@ -61,10 +61,10 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	LayoutStream stream{this};
 
 	stream
-		<< layout::window_size(client_size() / 4) << layout::exstyle(WS_EX_CLIENTEDGE)
+		<< layout::window_size(client_size() / 2) << layout::exstyle(WS_EX_CLIENTEDGE)
 		<< topleft << _gradient_map
-		<< push << layout::window_size({client_size().x / 4, 23}) << below << _gradient_bar_h << pop
-		<< layout::window_size({23, client_size().y / 4}) << after << _gradient_bar_v
+		<< push << layout::window_size({client_size().x / 2, 23}) << below << _gradient_bar_h << pop
+		<< layout::window_size({23, client_size().y / 2}) << after << _gradient_bar_v
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << _edit_red << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << _edit_green << pop << below

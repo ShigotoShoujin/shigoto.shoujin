@@ -6,12 +6,13 @@
 #include <memory>
 
 using namespace shoujin::gui::bitmap;
+using namespace shoujin::gui::comctl32;
 
 namespace shoujin::gui::bitmap {
 class BitmapWindow;
 }
 
-namespace shoujin::gui::comctl32 {
+namespace shoujin::gui::usercontrol {
 
 class ColorControl : public Window {
 public:

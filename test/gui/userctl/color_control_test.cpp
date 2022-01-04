@@ -7,7 +7,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 using namespace shoujin;
 using namespace shoujin::gui;
-using namespace shoujin::gui::comctl32;
+using namespace shoujin::gui::usercontrol;
 
 TEST_CLASS(ColorControlTest) {
 public:
