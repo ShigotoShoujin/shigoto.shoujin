@@ -9,6 +9,7 @@ using namespace shoujin;
 using namespace shoujin::gui;
 using namespace shoujin::gui::comctl32;
 
+static bool OnCreatePostCloseMsg(Window const& window, CREATESTRUCT const& createparam, void* userdata);
 static bool OnErrorOutput(tstring message, void* userdata);
 
 class TestControl : public Comctl32 {
@@ -76,12 +77,20 @@ public:
 
 	TEST_METHOD(GivenAWindowWithAControl_WhenWindowIsCreated_ControlOnInitializeIsCalledOnce) {
 		TestWindow window{LayoutParam{.layout_mode = LayoutMode::CenterParent}};
+		window.OnCreateEvent = OnCreatePostCloseMsg;
 
 		window.ShowModal();
 
 		Assert::AreEqual(1, window.EditControl().OnInitializeCallCount());
 	}
 };
+
+static bool OnCreatePostCloseMsg(Window const& window, CREATESTRUCT const& createparam, void* userdata)
+{
+	SHOUJIN_ASSERT(window.handle());
+	PostMessage(window.handle()->hwnd(), WM_CLOSE, 0, 0);
+	return false;
+}
 
 static bool OnErrorOutput(tstring message, void* userdata)
 {

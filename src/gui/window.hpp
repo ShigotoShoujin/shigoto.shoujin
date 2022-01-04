@@ -48,6 +48,13 @@ public:
 		MouseButtonX2 = 16
 	};
 
+	struct KeyEvent {
+		uint8_t virtual_keycode;
+
+		KeyEvent() = default;
+		explicit KeyEvent(WindowMessage const& message);
+	};
+
 	struct MouseEvent {
 		MouseButton ButtonFlag{};
 		Point Position;
@@ -91,6 +98,9 @@ public:
 	Event<bool> OnPaintEvent;
 	Event<bool, WPARAM, Rect*> OnSizingEvent;
 	Event<bool> OnSizingFinishedEvent;
+	Event<bool, Window*, KeyEvent const&> OnKeyDownEvent;
+	Event<bool, Window*, KeyEvent const&> OnKeyUpEvent;
+	Event<bool, Window*, KeyEvent const&> OnKeyPressEvent;
 	Event<bool, Window*, MouseEvent const&> OnMouseDownEvent;
 	Event<bool, Window*, MouseEvent const&> OnMouseUpEvent;
 	Event<bool, Window*, MouseEvent const&> OnMouseMoveEvent;
@@ -115,6 +125,9 @@ protected:
 	virtual bool OnSizing(WPARAM wparam, Rect* onsizing_rect);
 	virtual bool OnSizingFinished();
 	virtual void OnParentSized(Window const& parent);
+	virtual bool OnKeyDown(KeyEvent const& e);
+	virtual bool OnKeyUp(KeyEvent const& e);
+	virtual bool OnKeyPress(KeyEvent const& e);
 	virtual bool OnMouseDown(MouseEvent const& e);
 	virtual bool OnMouseUp(MouseEvent const& e);
 	virtual bool OnMouseMove(MouseEvent const& e);
@@ -131,6 +144,9 @@ private:
 	MessageResult RaiseOnSizing(WindowMessage const& message);
 	MessageResult RaiseOnSizingFinished();
 	void RaiseOnParentSized();
+	MessageResult RaiseOnKeyDown(WindowMessage const& message);
+	MessageResult RaiseOnKeyUp(WindowMessage const& message);
+	MessageResult RaiseOnKeyPress(WindowMessage const& message);
 	MessageResult RaiseOnMouseDown(WindowMessage const& message);
 	MessageResult RaiseOnMouseUp(WindowMessage const& message);
 	MessageResult RaiseOnMouseMove(WindowMessage const& message);

@@ -52,6 +52,14 @@ bool EditControl::OnCommand(int notification_code)
 	return false;
 }
 
+bool EditControl::OnKeyPress(KeyEvent const& e)
+{
+	if(e.virtual_keycode == VK_TAB)
+		return Handled;
+
+	return NotHandled;
+}
+
 Window* EditControl::Clone() const
 {
 	return new EditControl(*this);

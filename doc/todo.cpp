@@ -1,3 +1,6 @@
+// TODO Enable visual styles
+// https://docs.microsoft.com/en-us/windows/win32/controls/cookbook-overview
+
 // TODO Get rid of the requirement to use the TEXT macro
 // Instead use L"" and allow for implicit convertion from L"" to "",
 // so that in UNICODE no conversion occurs since we give L"" and the functions expects L""

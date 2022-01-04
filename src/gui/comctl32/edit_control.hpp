@@ -20,6 +20,7 @@ public:
 
 	virtual void OnInitialize(Window* source) override;
 	virtual bool OnCommand(int notification_code) override;
+	virtual bool OnKeyPress(KeyEvent const& e) override;
 
 private:
 	virtual Window* Clone() const override;

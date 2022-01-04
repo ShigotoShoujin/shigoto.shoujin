@@ -28,6 +28,10 @@ Window::MessageResult::MessageResult(bool handled, LRESULT ret_code) :
 
 Window::MessageResult::operator bool() const { return handled; }
 
+Window::KeyEvent::KeyEvent(WindowMessage const& message) :
+	virtual_keycode{static_cast<decltype(virtual_keycode)>(message.wparam)}
+{}
+
 Window::MouseEvent::MouseEvent(WindowMessage const& message) :
 	Position{GET_X_LPARAM(message.lparam), GET_Y_LPARAM(message.lparam)}
 {
@@ -233,6 +237,12 @@ bool Window::OnWndProc(WindowMessage const& message)
 			return RaiseOnSizing(message);
 		case WM_EXITSIZEMOVE:
 			return RaiseOnSizingFinished();
+		case WM_KEYDOWN:
+			return RaiseOnKeyDown(message);
+		case WM_KEYUP:
+			return RaiseOnKeyUp(message);
+		case WM_CHAR:
+			return RaiseOnKeyPress(message);
 		case WM_LBUTTONDOWN:
 		case WM_RBUTTONDOWN:
 		case WM_MBUTTONDOWN:
@@ -321,6 +331,21 @@ void Window::OnParentSized(Window const& parent)
 		MoveWindow(*_handle, new_rect.x1, new_rect.y1, new_rect.width(), new_rect.height(), TRUE);
 		Layout::SetLayoutFromHandle(*_handle);
 	}
+}
+
+bool Window::OnKeyDown(KeyEvent const& e)
+{
+	return NotHandled;
+}
+
+bool Window::OnKeyUp(KeyEvent const& e)
+{
+	return NotHandled;
+}
+
+bool Window::OnKeyPress(KeyEvent const& e)
+{
+	return NotHandled;
 }
 
 bool Window::OnMouseDown(MouseEvent const& e)
@@ -438,6 +463,27 @@ void Window::RaiseOnParentSized()
 {
 	for(auto&& child : _child_vec)
 		child->OnParentSized(*this);
+}
+
+Window::MessageResult Window::RaiseOnKeyDown(WindowMessage const& message)
+{
+	KeyEvent e{message};
+	auto result = OnKeyDown(e);
+	return result | (OnKeyDownEvent ? OnKeyDownEvent(this, e) : false);
+}
+
+Window::MessageResult Window::RaiseOnKeyUp(WindowMessage const& message)
+{
+	KeyEvent e{message};
+	auto result = OnKeyUp(e);
+	return result | (OnKeyUpEvent ? OnKeyUpEvent(this, e) : false);
+}
+
+Window::MessageResult Window::RaiseOnKeyPress(WindowMessage const& message)
+{
+	KeyEvent e{message};
+	auto result = OnKeyPress(e);
+	return result | (OnKeyPressEvent ? OnKeyPressEvent(this, e) : false);
 }
 
 Window::MessageResult Window::RaiseOnMouseDown(WindowMessage const& message)
