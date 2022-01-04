@@ -1,4 +1,5 @@
 #include "tstring.hpp"
+#include <tchar.h>
 #include <vector>
 
 namespace shoujin {
@@ -65,6 +66,11 @@ std::wstring ToWideString(std::string const& string)
 std::wstring ToWideString(std::wstring const& string)
 {
 	return string;
+}
+
+int ToInt(tstring_view text)
+{
+	return _tcstol(text.data(), 0, 10);
 }
 
 }

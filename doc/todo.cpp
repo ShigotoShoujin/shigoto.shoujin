@@ -1,3 +1,7 @@
+// Change SHOUJIN_ASSERT* to use C++20 std::source_location and get rid of macros
+
+// TODO Consider moving all API call that needs Assertions into their own namespace to avoid repeating complex assertions
+
 // TODO Enable visual styles
 // https://docs.microsoft.com/en-us/windows/win32/controls/cookbook-overview
 

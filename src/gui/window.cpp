@@ -2,6 +2,7 @@
 #include "logging/message_logger.hpp"
 #include "window.hpp"
 #include <windowsx.h>
+#include <vector>
 
 template<typename T> static T GetWindowPtr(HWND hwnd, int index)
 {
@@ -159,6 +160,24 @@ void Window::SetFocus()
 {
 	HWND hwnd = _child_vec.size() ? *_child_vec[0]->_handle : *_handle;
 	SHOUJIN_ASSERT_WIN32(::SetFocus(hwnd));
+}
+
+tstring Window::GetText() const
+{
+	HWND hwnd = this->hwnd();
+
+	if(!hwnd)
+		return text();
+
+	auto result_ok = [](int r) { return !(r == 0 && GetLastError()); };
+	auto text_length = SHOUJIN_ASSERT_WIN32_EXPLICIT(GetWindowTextLength(hwnd), result_ok);
+	if(text_length == 0)
+		return text();
+
+	std::vector<TCHAR> buffer(text_length + 1);
+	SHOUJIN_ASSERT_WIN32_EXPLICIT(GetWindowText(hwnd, buffer.data(), text_length + 1), result_ok);
+
+	return buffer.data();
 }
 
 void Window::SetText(tstring_view text)
@@ -372,7 +391,7 @@ Window::MessageResult Window::RaiseOnCreate(WindowMessage const& message)
 	auto& createparam = *reinterpret_cast<CREATESTRUCT*>(message.lparam);
 
 	auto result = OnCreate(createparam);
-	result |= OnCreateEvent ? OnCreateEvent(*this, createparam) : false;
+	result |= OnCreateEvent ? OnCreateEvent(*this, createparam) : NotHandled;
 
 	return result;
 }
@@ -380,14 +399,14 @@ Window::MessageResult Window::RaiseOnCreate(WindowMessage const& message)
 Window::MessageResult Window::RaiseOnDispatchMessage(MSG const& msg)
 {
 	auto result = OnDispatchMessage(msg);
-	return result | (OnDispatchMessageEvent ? OnDispatchMessageEvent(msg) : false);
+	return result | (OnDispatchMessageEvent ? OnDispatchMessageEvent(msg) : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	WindowMessage wmsg{msg, wparam, lparam};
 	auto result = OnWndProc(wmsg);
-	return result | (OnWndProcEvent ? OnWndProcEvent(wmsg) : false);
+	return result | (OnWndProcEvent ? OnWndProcEvent(wmsg) : NotHandled);
 }
 
 void Window::RaiseOnInitialize()
@@ -402,7 +421,7 @@ void Window::RaiseOnInitialize()
 Window::MessageResult Window::RaiseOnClose()
 {
 	auto result = OnClose();
-	return result | (OnCloseEvent ? OnCloseEvent() : false);
+	return result | (OnCloseEvent ? OnCloseEvent() : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnCommand(WindowMessage const& message)
@@ -413,7 +432,7 @@ Window::MessageResult Window::RaiseOnCommand(WindowMessage const& message)
 	if(child) {
 		int notification_code = HIWORD(message.wparam);
 		auto result = child->OnCommand(notification_code);
-		return result | (child->OnCommandEvent ? child->OnCommandEvent(notification_code) : false);
+		return result | (child->OnCommandEvent ? child->OnCommandEvent(notification_code) : NotHandled);
 	}
 
 	return NotHandled;
@@ -422,7 +441,7 @@ Window::MessageResult Window::RaiseOnCommand(WindowMessage const& message)
 Window::MessageResult Window::RaiseOnPaint()
 {
 	auto result = OnPaint();
-	return result | (OnPaintEvent ? OnPaintEvent() : false);
+	return result | (OnPaintEvent ? OnPaintEvent() : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnSizing(WindowMessage const& message)
@@ -431,7 +450,7 @@ Window::MessageResult Window::RaiseOnSizing(WindowMessage const& message)
 	Rect new_rect = *sizing_rect;
 
 	auto result = OnSizing(message.wparam, &new_rect);
-	result |= OnSizingEvent ? OnSizingEvent(message.wparam, &new_rect) : false;
+	result |= OnSizingEvent ? OnSizingEvent(message.wparam, &new_rect) : NotHandled;
 
 	if(result)
 		*sizing_rect = new_rect;
@@ -445,7 +464,7 @@ Window::MessageResult Window::RaiseOnSizing(WindowMessage const& message)
 Window::MessageResult Window::RaiseOnSizingFinished()
 {
 	auto result = OnSizingFinished();
-	return result | (OnSizingFinishedEvent ? OnSizingFinishedEvent() : false);
+	return result | (OnSizingFinishedEvent ? OnSizingFinishedEvent() : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnDestroy()
@@ -469,21 +488,21 @@ Window::MessageResult Window::RaiseOnKeyDown(WindowMessage const& message)
 {
 	KeyEvent e{message};
 	auto result = OnKeyDown(e);
-	return result | (OnKeyDownEvent ? OnKeyDownEvent(this, e) : false);
+	return result | (OnKeyDownEvent ? OnKeyDownEvent(this, e) : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnKeyUp(WindowMessage const& message)
 {
 	KeyEvent e{message};
 	auto result = OnKeyUp(e);
-	return result | (OnKeyUpEvent ? OnKeyUpEvent(this, e) : false);
+	return result | (OnKeyUpEvent ? OnKeyUpEvent(this, e) : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnKeyPress(WindowMessage const& message)
 {
 	KeyEvent e{message};
 	auto result = OnKeyPress(e);
-	return result | (OnKeyPressEvent ? OnKeyPressEvent(this, e) : false);
+	return result | (OnKeyPressEvent ? OnKeyPressEvent(this, e) : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnMouseDown(WindowMessage const& message)
@@ -494,7 +513,7 @@ Window::MessageResult Window::RaiseOnMouseDown(WindowMessage const& message)
 	_previous_mouse_position = e.Position;
 
 	auto result = OnMouseDown(e);
-	return result | (OnMouseDownEvent ? OnMouseDownEvent(this, e) : false);
+	return result | (OnMouseDownEvent ? OnMouseDownEvent(this, e) : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnMouseUp(WindowMessage const& message)
@@ -505,7 +524,7 @@ Window::MessageResult Window::RaiseOnMouseUp(WindowMessage const& message)
 	_previous_mouse_position = {};
 
 	auto result = OnMouseUp(e);
-	return result | (OnMouseUpEvent ? OnMouseUpEvent(this, e) : false);
+	return result | (OnMouseUpEvent ? OnMouseUpEvent(this, e) : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnMouseMove(WindowMessage const& message)
@@ -516,7 +535,7 @@ Window::MessageResult Window::RaiseOnMouseMove(WindowMessage const& message)
 		e.Delta = e.Position - _previous_mouse_position;
 
 	auto result = OnMouseMove(e);
-	return result | (OnMouseMoveEvent ? OnMouseMoveEvent(this, e) : false);
+	return result | (OnMouseMoveEvent ? OnMouseMoveEvent(this, e) : NotHandled);
 }
 
 Window* Window::Clone() const

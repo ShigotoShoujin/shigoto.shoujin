@@ -43,6 +43,8 @@ void EditControl::OnInitialize(Window* source)
 bool EditControl::OnCommand(int notification_code)
 {
 	switch(notification_code) {
+		case EN_CHANGE:
+			return RaiseOnChange();
 		case EN_SETFOCUS:
 			if(_autoselect)
 				PostMessage(hwnd(), EM_SETSEL, 0, -1);
@@ -52,12 +54,23 @@ bool EditControl::OnCommand(int notification_code)
 	return false;
 }
 
+bool EditControl::OnChange(EditControl* source)
+{
+	return NotHandled;
+}
+
 bool EditControl::OnKeyPress(KeyEvent const& e)
 {
 	if(e.virtual_keycode == VK_TAB)
 		return Handled;
 
 	return NotHandled;
+}
+
+Window::MessageResult EditControl::RaiseOnChange()
+{
+	auto result = OnChange(this);
+	return result | (OnChangeEvent ? OnChangeEvent(this) : NotHandled);
 }
 
 Window* EditControl::Clone() const

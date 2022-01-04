@@ -48,8 +48,13 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	};
 
 	_edit_red = new_edit();
+	_edit_red->OnChangeEvent = {EditRGB_OnChange, this};
+
 	_edit_green = new_edit();
+	_edit_green->OnChangeEvent = {EditRGB_OnChange, this};
+
 	_edit_blue = new_edit();
+	_edit_blue->OnChangeEvent = {EditRGB_OnChange, this};
 
 	_edit_hex = new_edit();
 	_edit_hex->readonly(true);
@@ -107,6 +112,23 @@ LayoutParam ColorControl::BuildLayout(LayoutParam const& layout_param)
 	return layout;
 }
 
+void ColorControl::SetTextRGB(ColorByteRGB const& cbrgb)
+{
+	auto const fmt = TEXT("{:d}");
+	_edit_red->SetText(std::format(fmt, cbrgb.R));
+	_edit_green->SetText(std::format(fmt, cbrgb.G));
+	_edit_blue->SetText(std::format(fmt, cbrgb.B));
+	_edit_hex->SetText(std::format(TEXT("{:02X}{:02X}{:02X}"), cbrgb.R, cbrgb.G, cbrgb.B));
+}
+
+void ColorControl::SetTextHSL(ColorByteHSL const& cbhsl)
+{
+	auto const fmt = TEXT("{:d}");
+	_edit_hue->SetText(std::format(fmt, cbhsl.H));
+	_edit_saturation->SetText(std::format(fmt, cbhsl.S));
+	_edit_lightness->SetText(std::format(fmt, cbhsl.L));
+}
+
 void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
 {
 	auto self = static_cast<BitmapWindow*>(source);
@@ -123,15 +145,8 @@ bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, 
 	auto color = self->bitmap().GetPixelColor(e.Position);
 
 	auto const fmt = TEXT("{:d}");
-	ColorByteRGB cbrgb = color;
-	ColorByteHSL cbhsl = color;
-	parent->_edit_red->SetText(std::format(fmt, cbrgb.R));
-	parent->_edit_green->SetText(std::format(fmt, cbrgb.G));
-	parent->_edit_blue->SetText(std::format(fmt, cbrgb.B));
-	parent->_edit_hex->SetText(std::format(TEXT("{:02X}{:02X}{:02X}"), cbrgb.R, cbrgb.G, cbrgb.B));
-	parent->_edit_hue->SetText(std::format(fmt, cbhsl.H));
-	parent->_edit_saturation->SetText(std::format(fmt, cbhsl.S));
-	parent->_edit_lightness->SetText(std::format(fmt, cbhsl.L));
+	parent->SetTextRGB(color);
+	parent->SetTextHSL(color);
 
 	return Handled;
 }
@@ -201,6 +216,20 @@ bool ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, 
 	GradientBar_OnMouseDown(source, mouse_down_e, userdata);
 
 	return Handled;
+}
+
+bool ColorControl::EditRGB_OnChange(EditControl* source, void* userdata)
+{
+	auto parent = static_cast<ColorControl*>(userdata);
+
+	ColorByteRGB cbrgb{
+		static_cast<uint8_t>(ToInt(parent->_edit_red->GetText())),
+		static_cast<uint8_t>(ToInt(parent->_edit_green->GetText())),
+		static_cast<uint8_t>(ToInt(parent->_edit_blue->GetText()))};
+
+	parent->SetTextHSL(Color{cbrgb});
+
+	return NotHandled;
 }
 
 }

@@ -27,6 +27,8 @@ std::string ToMbString(std::wstring const& string);
 std::wstring ToWideString(std::string const& string);
 std::wstring ToWideString(std::wstring const& string);
 
+int ToInt(tstring_view text);
+
 #ifdef UNICODE
 #else
 #endif

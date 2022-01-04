@@ -18,11 +18,17 @@ public:
 	virtual void autoselect(bool value);
 	virtual void readonly(bool value);
 
+	Event<bool, EditControl*> OnChangeEvent;
+
+protected:
 	virtual void OnInitialize(Window* source) override;
 	virtual bool OnCommand(int notification_code) override;
+	virtual bool OnChange(EditControl* source);
 	virtual bool OnKeyPress(KeyEvent const& e) override;
 
 private:
+	virtual MessageResult RaiseOnChange();
+
 	virtual Window* Clone() const override;
 	static LayoutParam BuildLayout(LayoutParam layout);
 	bool _autoselect{};

@@ -84,6 +84,7 @@ public:
 	void Destroy();
 	bool ProcessMessageQueue();
 	void SetFocus();
+	[[nodiscard]] tstring GetText() const;
 	void SetText(tstring_view text);
 	void Show();
 	void ShowModal();
