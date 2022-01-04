@@ -51,6 +51,9 @@ Window::MouseEvent::MouseEvent(WindowMessage const& message) :
 	ButtonFlag = static_cast<MouseButton>(flags);
 }
 
+const bool Window::Handled = true;
+const bool Window::NotHandled = false;
+
 Window::Window(LayoutParam const& lp) :
 	Layout{lp},
 	_default_wndproc{nullptr},
@@ -161,8 +164,10 @@ void Window::SetText(tstring_view text)
 
 void Window::Show()
 {
-	if(!_handle)
+	if(!_handle) {
 		CreateHandle();
+		RaiseOnInitialize();
+	}
 
 	ShowWindow(*_handle, SW_SHOW);
 	SHOUJIN_ASSERT(UpdateWindow(*_handle));
@@ -207,10 +212,10 @@ bool Window::OnDispatchMessage(MSG const& msg)
 	if(msg.message == WM_KEYDOWN && msg.wParam == VK_TAB) {
 		bool cycle_up = GetAsyncKeyState(VK_SHIFT);
 		_window_taborder->CycleTab(cycle_up);
-		return true;
+		return Handled;
 	}
 
-	return false;
+	return NotHandled;
 }
 
 bool Window::OnWndProc(WindowMessage const& message)
@@ -242,12 +247,12 @@ bool Window::OnWndProc(WindowMessage const& message)
 			return RaiseOnDestroy();
 	}
 
-	return false;
+	return NotHandled;
 }
 
 bool Window::OnCreate(CREATESTRUCT const& createparam)
 {
-	return false;
+	return NotHandled;
 }
 
 void Window::OnInitialize(Window* source)
@@ -256,29 +261,29 @@ void Window::OnInitialize(Window* source)
 
 bool Window::OnClose()
 {
-	return false;
+	return NotHandled;
 }
 
 bool Window::OnCommand(int notification_code)
 {
-	return false;
+	return NotHandled;
 }
 
 bool Window::OnPaint()
 {
-	return false;
+	return NotHandled;
 }
 
 bool Window::OnSizing(WPARAM wparam, Rect* onsizing_rect)
 {
 	*onsizing_rect = GetOnSizingMinRect(wparam, *onsizing_rect, {512, 512});
 	Layout::SetWindowSize(RectToSize(*onsizing_rect));
-	return true;
+	return Handled;
 }
 
 bool Window::OnSizingFinished()
 {
-	return false;
+	return NotHandled;
 }
 
 void Window::OnParentSized(Window const& parent)
@@ -320,17 +325,17 @@ void Window::OnParentSized(Window const& parent)
 
 bool Window::OnMouseDown(MouseEvent const& e)
 {
-	return false;
+	return NotHandled;
 }
 
 bool Window::OnMouseUp(MouseEvent const& e)
 {
-	return false;
+	return NotHandled;
 }
 
 bool Window::OnMouseMove(MouseEvent const& e)
 {
-	return false;
+	return NotHandled;
 }
 
 void Window::OnDestroy()
@@ -343,9 +348,6 @@ Window::MessageResult Window::RaiseOnCreate(WindowMessage const& message)
 
 	auto result = OnCreate(createparam);
 	result |= OnCreateEvent ? OnCreateEvent(*this, createparam) : false;
-
-	if(result)
-		RaiseOnInitialize();
 
 	return result;
 }
@@ -389,7 +391,7 @@ Window::MessageResult Window::RaiseOnCommand(WindowMessage const& message)
 		return result | (child->OnCommandEvent ? child->OnCommandEvent(notification_code) : false);
 	}
 
-	return false;
+	return NotHandled;
 }
 
 Window::MessageResult Window::RaiseOnPaint()
@@ -412,7 +414,7 @@ Window::MessageResult Window::RaiseOnSizing(WindowMessage const& message)
 	RaiseOnParentSized();
 
 	//WM_SIZING - An application should return TRUE if it processes this message
-	return MessageResult{true, TRUE};
+	return MessageResult{Handled, TRUE};
 }
 
 Window::MessageResult Window::RaiseOnSizingFinished()
@@ -429,7 +431,7 @@ Window::MessageResult Window::RaiseOnDestroy()
 	_handle.release();
 	_window_taborder.release();
 
-	return true;
+	return Handled;
 }
 
 void Window::RaiseOnParentSized()

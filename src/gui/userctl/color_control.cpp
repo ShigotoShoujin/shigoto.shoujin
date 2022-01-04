@@ -43,14 +43,17 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 
 	auto new_edit = []() {
 		auto* edit = new EditControl();
-		edit->selectall_on_focus(true);
+		edit->autoselect(true);
 		return edit;
 	};
 
 	_edit_red = new_edit();
 	_edit_green = new_edit();
 	_edit_blue = new_edit();
+
 	_edit_hex = new_edit();
+	_edit_hex->readonly(true);
+
 	_edit_hue = new_edit();
 	_edit_saturation = new_edit();
 	_edit_lightness = new_edit();
@@ -113,7 +116,7 @@ void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
 bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
 {
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
-		return false;
+		return NotHandled;
 
 	auto parent = static_cast<ColorControl*>(userdata);
 	auto self = static_cast<BitmapWindow*>(source);
@@ -130,13 +133,13 @@ bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, 
 	parent->_edit_saturation->SetText(std::format(fmt, cbhsl.S));
 	parent->_edit_lightness->SetText(std::format(fmt, cbhsl.L));
 
-	return true;
+	return Handled;
 }
 
 bool ColorControl::GradientMap_OnMouseMove(Window* source, MouseEvent const& e, void* userdata)
 {
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
-		return false;
+		return NotHandled;
 
 	auto self = static_cast<BitmapWindow*>(source);
 	auto& client_size = self->client_size();
@@ -145,7 +148,7 @@ bool ColorControl::GradientMap_OnMouseMove(Window* source, MouseEvent const& e, 
 	mouse_down_e.Position.ClampPoint(client_size);
 	GradientMap_OnMouseDown(source, mouse_down_e, userdata);
 
-	return true;
+	return Handled;
 }
 
 void ColorControl::GradientBarH_OnInitialize(Window* source, void* userdata)
@@ -171,7 +174,7 @@ void ColorControl::GradientBarV_OnInitialize(Window* source, void* userdata)
 bool ColorControl::GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
 {
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
-		return false;
+		return NotHandled;
 
 	auto parent = static_cast<ColorControl*>(userdata);
 	auto gradient_map = parent->_gradient_map;
@@ -181,13 +184,13 @@ bool ColorControl::GradientBar_OnMouseDown(Window* source, MouseEvent const& e, 
 	RenderGradientMap(gradient_map->bitmap(), color);
 	gradient_map->Invalidate();
 
-	return true;
+	return Handled;
 }
 
 bool ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata)
 {
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
-		return false;
+		return NotHandled;
 
 	auto self = static_cast<BitmapWindow*>(source);
 	auto& client_size = self->client_size();
@@ -196,7 +199,7 @@ bool ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, 
 	mouse_down_e.Position.ClampPoint(client_size);
 	GradientBar_OnMouseDown(source, mouse_down_e, userdata);
 
-	return true;
+	return Handled;
 }
 
 }

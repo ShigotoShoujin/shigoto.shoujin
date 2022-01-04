@@ -48,6 +48,9 @@
     <ClCompile Include="..\..\..\test\gui\color_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\comctl32\comctl32_test.cpp">
+      <Filter>gui\comctl32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">
@@ -70,6 +73,9 @@
     </Filter>
     <Filter Include="gui\bitmap\effect">
       <UniqueIdentifier>{df22ca12-9cd6-4280-a186-3555128fee8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui\comctl32">
+      <UniqueIdentifier>{bbff9e74-b3c6-412f-9344-b19b81dba330}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

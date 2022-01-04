@@ -12,21 +12,39 @@ EditControl::EditControl(LayoutParam const& layout_param) :
 	OnLayoutResetEvent = {OnLayoutReset, this};
 }
 
-bool EditControl::selectall_on_focus() const
+bool EditControl::autoselect() const
 {
-	return _selectall_on_focus;
+	return _autoselect;
 }
 
-void EditControl::selectall_on_focus(bool value)
+bool EditControl::readonly() const
 {
-	_selectall_on_focus = value;
+	return _readonly;
+}
+
+void EditControl::autoselect(bool value)
+{
+	_autoselect = value;
+}
+
+void EditControl::readonly(bool value)
+{
+	_readonly = value;
+
+	if(hwnd())
+		SendMessage(hwnd(), EM_SETREADONLY, _readonly, 0);
+}
+
+void EditControl::OnInitialize(Window* source)
+{
+	readonly(_readonly);
 }
 
 bool EditControl::OnCommand(int notification_code)
 {
 	switch(notification_code) {
 		case EN_SETFOCUS:
-			if(_selectall_on_focus)
+			if(_autoselect)
 				PostMessage(hwnd(), EM_SETSEL, 0, -1);
 			return true;
 	}

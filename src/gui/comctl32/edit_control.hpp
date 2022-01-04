@@ -12,15 +12,20 @@ public:
 	EditControl(LayoutParam const& = {});
 	virtual ~EditControl() = default;
 
-	[[nodiscard]] virtual bool selectall_on_focus() const;
-	virtual void selectall_on_focus(bool value);
+	[[nodiscard]] virtual bool autoselect() const;
+	[[nodiscard]] virtual bool readonly() const;
 
+	virtual void autoselect(bool value);
+	virtual void readonly(bool value);
+
+	virtual void OnInitialize(Window* source) override;
 	virtual bool OnCommand(int notification_code) override;
 
 private:
 	virtual Window* Clone() const override;
 	static LayoutParam BuildLayout(LayoutParam layout);
-	bool _selectall_on_focus{};
+	bool _autoselect{};
+	bool _readonly{};
 };
 
 }

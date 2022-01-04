@@ -24,13 +24,13 @@ enum Anchor : int {
 };
 
 struct LayoutParam {
+	int anchor{};
 	LayoutMode layout_mode{};
 	Point position{};
 	Size window_size{};
 	Size client_size{};
 	DWORD style{};
 	DWORD exstyle{};
-	int anchor{};
 	bool tabstop{true};
 	tstring text{};
 };

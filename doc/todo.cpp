@@ -1,3 +1,6 @@
+// TODO Rewrite Layout / LayoutParam / Window concept so that getters / setters
+// exists for all properties and that they work before and after handle creation.
+
 // TODO Replace SetLayout with GetDefaultLayout/GetDefaultCreateProperties
 
 // TODO Layout, Min/Max WindowSize and Min/Max ClientSize

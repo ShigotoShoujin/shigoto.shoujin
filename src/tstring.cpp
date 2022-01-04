@@ -4,47 +4,20 @@
 namespace shoujin {
 
 #ifdef UNICODE
+//This line will stop clang-format from malformating the function following a preprocessor instruction
 
-tstring ToTString(CHAR const* string)
-{
-	return ToWideString(string);
-}
-
-tstring ToTString(WCHAR const* string)
-{
-	return string;
-}
-
-tstring ToTString(std::string const& string)
-{
-	return ToTString(string.c_str());
-}
-
-tstring ToTString(std::wstring const& string)
-{
-	return string;
-}
+tstring ToTString(CHAR const* string) { return ToWideString(string); }
+tstring ToTString(WCHAR const* string) { return string; }
+tstring ToTString(std::string const& string) { return ToTString(string.c_str()); }
+tstring ToTString(std::wstring const& string) { return string; }
 
 #else
+//This line will stop clang-format from malformating the function following a preprocessor instruction
 
-tstring ToTString(CHAR const* string)
-{
-	return string;
-}
-
-tstring ToTString(WCHAR const* string)
-{
-	return ToMbString(string);
-}
-
-tstring ToTString(std::string const& string)
-{
-	return string;
-}
-tstring ToTString(std::wstring const& string)
-{
-	return ToTString(string.c_str());
-}
+tstring ToTString(CHAR const* string) { return string; }
+tstring ToTString(WCHAR const* string) { return ToMbString(string); }
+tstring ToTString(std::string const& string) { return string; }
+tstring ToTString(std::wstring const& string) { return ToTString(string.c_str()); }
 
 #endif
 

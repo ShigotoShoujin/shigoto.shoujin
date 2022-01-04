@@ -22,6 +22,9 @@ class Window : public Layout {
 	Point _previous_mouse_position;
 
 public:
+	static const bool Handled;
+	static const bool NotHandled;
+
 	struct WindowMessage {
 		UINT msg;
 		WPARAM wparam;
