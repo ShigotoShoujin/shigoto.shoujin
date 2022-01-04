@@ -25,7 +25,7 @@ Color::Color(ColorFloatRGB color) :
 	_color{RGB(ToByte(color.R), ToByte(color.G), ToByte(color.B))} {}
 
 Color::Color(ColorByteHSL color) :
-	_color{Color{ToRGB(ColorFloatHSL{static_cast<float>(color.H), static_cast<float>(color.S), static_cast<float>(color.L)})}} {}
+	_color{Color{ToRGB(ColorFloatHSL{static_cast<float>(color.H), static_cast<float>(color.S) / 100, static_cast<float>(color.L) / 100})}} {}
 
 Color::Color(ColorFloatHSL color) :
 	_color{Color{ToRGB(color)}} {}
@@ -113,6 +113,11 @@ static ColorFloatHSL ToHSL(ColorFloatRGB rgb)
 		H = 60.f * ((rgb.B - rgb.R) / delta + 2);
 	else if(max == rgb.B)
 		H = 60.f * ((rgb.R - rgb.G) / delta + 4);
+
+	//While converting RGB(255, 254, 255), H will be -60 but should be 300.
+	//Fixed by adding 360 when H is negative.
+	if(H < 0)
+		H += 360;
 
 	//Lightness
 	float L = (max + min) / 2;

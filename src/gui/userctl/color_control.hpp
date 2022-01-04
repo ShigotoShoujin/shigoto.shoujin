@@ -39,6 +39,8 @@ private:
 	EditControl* _edit_saturation;
 	EditControl* _edit_lightness;
 
+	bool _edit_events_enabled{true};
+
 	void SetTextRGB(ColorByteRGB const& cbrgb);
 	void SetTextHSL(ColorByteHSL const& cbhsl);
 
@@ -50,6 +52,7 @@ private:
 	static bool GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
 	static bool GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
 	static bool EditRGB_OnChange(EditControl* source, void* userdata);
+	static bool EditHSL_OnChange(EditControl* source, void* userdata);
 };
 
 }

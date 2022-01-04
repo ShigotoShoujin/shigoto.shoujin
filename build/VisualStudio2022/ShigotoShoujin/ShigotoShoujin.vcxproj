@@ -186,6 +186,7 @@
     <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp" />
+    <ClInclude Include="..\..\..\src\gui\scope_flag.hpp" />
     <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_taborder.hpp" />
     <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp" />

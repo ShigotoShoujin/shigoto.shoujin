@@ -101,9 +101,27 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
+	TEST_METHOD(ConvertToColorFloatHSL_WhenWhite_H0S0L100) {
+		Color color = ColorByteRGB(255, 255, 255);
+		ColorFloatHSL expected{.0f, .0f, 1.f};
+
+		ColorFloatHSL cfhsl = color;
+
+		Assert::AreEqual(expected, cfhsl);
+	}
+
 	TEST_METHOD(ConvertToColorFloatHSL_WhenR91G48B156_H264S53L40) {
 		Color color = ColorByteRGB(91, 48, 156);
 		ColorFloatHSL expected{264.f, .53f, .40f};
+
+		ColorFloatHSL cfhsl = color;
+
+		Assert::AreEqual(expected, cfhsl);
+	}
+
+	TEST_METHOD(ConvertToColorFloatHSL_WhenR255G254B255_H300S100L100) {
+		Color color = ColorByteRGB(255, 254, 255);
+		ColorFloatHSL expected{300.f, 1.f, 1.f};
 
 		ColorFloatHSL cfhsl = color;
 

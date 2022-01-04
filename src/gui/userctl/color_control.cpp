@@ -60,8 +60,13 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	_edit_hex->readonly(true);
 
 	_edit_hue = new_edit();
+	_edit_hue->OnChangeEvent = {EditHSL_OnChange, this};
+
 	_edit_saturation = new_edit();
+	_edit_saturation->OnChangeEvent = {EditHSL_OnChange, this};
+
 	_edit_lightness = new_edit();
+	_edit_lightness->OnChangeEvent = {EditHSL_OnChange, this};
 
 	LayoutStream stream{this};
 
@@ -144,6 +149,8 @@ bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, 
 	auto self = static_cast<BitmapWindow*>(source);
 	auto color = self->bitmap().GetPixelColor(e.Position);
 
+	ScopeFlag enabled(parent->_edit_events_enabled, false);
+
 	auto const fmt = TEXT("{:d}");
 	parent->SetTextRGB(color);
 	parent->SetTextHSL(color);
@@ -222,14 +229,36 @@ bool ColorControl::EditRGB_OnChange(EditControl* source, void* userdata)
 {
 	auto parent = static_cast<ColorControl*>(userdata);
 
-	ColorByteRGB cbrgb{
-		static_cast<uint8_t>(ToInt(parent->_edit_red->GetText())),
-		static_cast<uint8_t>(ToInt(parent->_edit_green->GetText())),
-		static_cast<uint8_t>(ToInt(parent->_edit_blue->GetText()))};
+	if(parent->_edit_events_enabled) {
+		ScopeFlag enabled{parent->_edit_events_enabled, false};
 
-	parent->SetTextHSL(Color{cbrgb});
+		ColorByteRGB cbrgb{
+			ToInt(parent->_edit_red->GetText()),
+			ToInt(parent->_edit_green->GetText()),
+			ToInt(parent->_edit_blue->GetText())};
 
-	return NotHandled;
+		parent->SetTextHSL(Color{cbrgb});
+	}
+
+	return Handled;
+}
+
+bool ColorControl::EditHSL_OnChange(EditControl* source, void* userdata)
+{
+	auto parent = static_cast<ColorControl*>(userdata);
+
+	if(parent->_edit_events_enabled) {
+		ScopeFlag enabled{parent->_edit_events_enabled, false};
+
+		ColorByteHSL cbhsl{
+			ToInt(parent->_edit_hue->GetText()),
+			ToInt(parent->_edit_saturation->GetText()),
+			ToInt(parent->_edit_lightness->GetText())};
+
+		parent->SetTextRGB(Color{cbhsl});
+	}
+
+	return Handled;
 }
 
 }
