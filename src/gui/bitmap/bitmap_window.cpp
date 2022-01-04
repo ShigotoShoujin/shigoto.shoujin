@@ -27,7 +27,7 @@ void BitmapWindow::BeforeCreate(CreateParam& create_param)
 bool BitmapWindow::OnCreate(CREATESTRUCT const& createparam)
 {
 	_bitmap = std::make_unique<Bitmap>(client_size());
-	return true;
+	return Handled;
 }
 
 bool BitmapWindow::OnPaint()
@@ -44,7 +44,7 @@ bool BitmapWindow::OnPaint()
 	BitBlt(ps.hdc, x, y, w, h, source_hdc, x, y, SRCCOPY);
 	EndPaint(hwnd, &ps);
 
-	return true;
+	return Handled;
 }
 
 bool BitmapWindow::OnSizingFinished()
@@ -58,7 +58,13 @@ bool BitmapWindow::OnSizingFinished()
 		InvalidateRect(hwnd(), NULL, FALSE);
 	}
 
-	return true;
+	return Handled;
+}
+
+void BitmapWindow::ForceRepaint()
+{
+	if(hwnd())
+		SendMessage(hwnd(), WM_PAINT, 0, 0);
 }
 
 Window* BitmapWindow::Clone() const

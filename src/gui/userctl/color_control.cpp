@@ -6,6 +6,9 @@
 #include "color_control.hpp"
 #include <format>
 
+#include <chrono>
+#include "../../file/logfile.hpp"
+
 using namespace shoujin::gui;
 using namespace shoujin::gui::bitmap;
 using namespace shoujin::gui::layout;
@@ -61,10 +64,10 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	LayoutStream stream{this};
 
 	stream
-		<< layout::window_size(client_size() / 2) << layout::exstyle(WS_EX_CLIENTEDGE)
+		<< layout::window_size(client_size() / 1) << layout::exstyle(WS_EX_CLIENTEDGE)
 		<< topleft << _gradient_map
-		<< push << layout::window_size({client_size().x / 2, 23}) << below << _gradient_bar_h << pop
-		<< layout::window_size({23, client_size().y / 2}) << after << _gradient_bar_v
+		<< push << layout::window_size({client_size().x / 1, 23}) << below << _gradient_bar_h << pop
+		<< layout::window_size({23, client_size().y / 1}) << after << _gradient_bar_v
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << _edit_red << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << _edit_green << pop << below
@@ -179,10 +182,19 @@ bool ColorControl::GradientBar_OnMouseDown(Window* source, MouseEvent const& e, 
 	auto parent = static_cast<ColorControl*>(userdata);
 	auto gradient_map = parent->_gradient_map;
 	auto self = static_cast<BitmapWindow*>(source);
+
 	auto color = self->bitmap().GetPixelColor(e.Position);
+
+	auto start = std::chrono::system_clock::now();
 
 	RenderGradientMap(gradient_map->bitmap(), color);
 	gradient_map->Invalidate();
+	gradient_map->ForceRepaint();
+
+	auto end = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - start);
+	tstringstream tss;
+	tss << L"Duration in microseconds: " << end.count() << L" or " << 1'000'000 / end.count() << L"FPS.";
+	shoujin::file::LogFile::AppendLineDebug(tss.str());
 
 	return Handled;
 }

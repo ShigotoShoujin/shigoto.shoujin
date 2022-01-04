@@ -1,3 +1,8 @@
+// TODO Get rid of the requirement to use the TEXT macro
+// Instead use L"" and allow for implicit convertion from L"" to "",
+// so that in UNICODE no conversion occurs since we give L"" and the functions expects L""
+// and in non-unicode our L"" gets automatically converted to ""
+
 // TODO Rewrite Layout / LayoutParam / Window concept so that getters / setters
 // exists for all properties and that they work before and after handle creation.
 

@@ -23,6 +23,8 @@ public:
 
 	[[nodiscard]] virtual Bitmap& bitmap() const { return *_bitmap; }
 
+	virtual void ForceRepaint();
+
 private:
 	virtual Window* Clone() const override;
 };
