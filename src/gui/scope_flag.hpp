@@ -4,8 +4,8 @@
 namespace shoujin::gui {
 
 /// <summary>
-/// Invert the specified bool reference when going out of scope
-/// Used to ensure that a flag always gets reset
+/// Invert the specified bool reference when going out of scope.
+/// Used to ensure that a flag always gets reset.
 /// </summary>
 class ScopeFlag {
 public:

@@ -144,6 +144,9 @@
     <ClInclude Include="..\..\..\src\gui\scope_flag.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\comctl32\numeric_control.hpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\assert\assert.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\tstring.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\comctl32\numeric_control.cpp">
+      <Filter>src\gui\comctl32</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

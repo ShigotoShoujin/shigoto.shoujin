@@ -1,3 +1,8 @@
+// Consider making tstring a class with a constructor accepting va_args or something with std::format so we can format text directly
+
+// In class Event, reconsider making void* userdata a template, using Event<TReturn, <TArgs...>, TUserData>
+// Maybe the inner <> to confine TArgs... could solve the goal of keeping TUserData as the last argument.
+
 // Change SHOUJIN_ASSERT* to use C++20 std::source_location and get rid of macros
 
 // TODO Consider moving all API call that needs Assertions into their own namespace to avoid repeating complex assertions

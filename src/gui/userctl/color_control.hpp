@@ -2,6 +2,8 @@
 #define SHOUJIN_SOURCE_GUI_USERCTL_COLOR_CONTROL
 
 #include "../bitmap/bitmap.hpp"
+#include "../comctl32/label_control.hpp"
+#include "../comctl32/numeric_control.hpp"
 #include "../window.hpp"
 #include <memory>
 
@@ -19,8 +21,10 @@ public:
 	explicit ColorControl(LayoutParam const& layout_param = {});
 	virtual ~ColorControl() = default;
 
+protected:
 	virtual void BeforeCreate(CreateParam& create_param) override;
 	virtual bool OnCreate(CREATESTRUCT const& createparam) override;
+	virtual void OnInitialize(Window* source) override;
 
 private:
 	static Size const kDefaultClientSize;
@@ -31,17 +35,18 @@ private:
 	BitmapWindow* _gradient_bar_h;
 	BitmapWindow* _gradient_bar_v;
 
-	EditControl* _edit_red;
-	EditControl* _edit_green;
-	EditControl* _edit_blue;
+	NumericControl* _numeric_red;
+	NumericControl* _numeric_green;
+	NumericControl* _numeric_blue;
 	EditControl* _edit_hex;
-	EditControl* _edit_hue;
-	EditControl* _edit_saturation;
-	EditControl* _edit_lightness;
+	NumericControl* _numeric_hue;
+	NumericControl* _numeric_saturation;
+	NumericControl* _numeric_lightness;
 
-	bool _edit_events_enabled{true};
+	bool _numeric_events_enabled{true};
 
 	void SetTextRGB(ColorByteRGB const& cbrgb);
+	void SetTextHex(ColorByteRGB const& cbrgb);
 	void SetTextHSL(ColorByteHSL const& cbhsl);
 
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
@@ -51,8 +56,8 @@ private:
 	static void GradientBarV_OnInitialize(Window* source, void* userdata);
 	static bool GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
 	static bool GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
-	static bool EditRGB_OnChange(EditControl* source, void* userdata);
-	static bool EditHSL_OnChange(EditControl* source, void* userdata);
+	static bool NumericRGB_OnChange(EditControl* source, void* userdata);
+	static bool NumericHSL_OnChange(EditControl* source, void* userdata);
 };
 
 }

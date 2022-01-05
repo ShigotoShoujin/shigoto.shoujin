@@ -185,6 +185,7 @@
     <ClInclude Include="..\..\..\src\gui\comctl32\comctl32.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp" />
+    <ClInclude Include="..\..\..\src\gui\comctl32\numeric_control.hpp" />
     <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp" />
     <ClInclude Include="..\..\..\src\gui\scope_flag.hpp" />
     <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp" />
@@ -214,6 +215,7 @@
     <ClCompile Include="..\..\..\src\gui\comctl32\comctl32.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\label_control.cpp" />
+    <ClCompile Include="..\..\..\src\gui\comctl32\numeric_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout\layout_stream.cpp" />
     <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\window_taborder.cpp" />

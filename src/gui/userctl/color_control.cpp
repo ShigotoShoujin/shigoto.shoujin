@@ -1,7 +1,5 @@
 #include "../../assert/assert.hpp"
 #include "../bitmap/bitmap_window.hpp"
-#include "../comctl32/edit_control.hpp"
-#include "../comctl32/label_control.hpp"
 #include "../layout/layout_stream.hpp"
 #include "color_control.hpp"
 #include <format>
@@ -39,34 +37,30 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	_gradient_bar_v->OnMouseDownEvent = {GradientBar_OnMouseDown, this};
 	_gradient_bar_v->OnMouseMoveEvent = {GradientBar_OnMouseMove, this};
 
-	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
+	for(auto** it : {&_numeric_red, &_numeric_green, &_numeric_blue}) {
+		*it = new NumericControl();
+		(*it)->autoselect(true);
+		(*it)->OnChangeEvent = {NumericRGB_OnChange, this};
+		(*it)->min_value(0);
+		(*it)->max_value(255);
+	}
 
-	auto new_edit = []() {
-		auto* edit = new EditControl();
-		edit->autoselect(true);
-		return edit;
-	};
-
-	_edit_red = new_edit();
-	_edit_red->OnChangeEvent = {EditRGB_OnChange, this};
-
-	_edit_green = new_edit();
-	_edit_green->OnChangeEvent = {EditRGB_OnChange, this};
-
-	_edit_blue = new_edit();
-	_edit_blue->OnChangeEvent = {EditRGB_OnChange, this};
-
-	_edit_hex = new_edit();
+	_edit_hex = new EditControl();
+	_edit_hex->autoselect(true);
 	_edit_hex->readonly(true);
 
-	_edit_hue = new_edit();
-	_edit_hue->OnChangeEvent = {EditHSL_OnChange, this};
+	for(auto** it : {&_numeric_hue, &_numeric_saturation, &_numeric_lightness}) {
+		*it = new NumericControl();
+		(*it)->autoselect(true);
+		(*it)->OnChangeEvent = {NumericHSL_OnChange, this};
+		(*it)->min_value(0);
+		(*it)->max_value(100);
+	}
 
-	_edit_saturation = new_edit();
-	_edit_saturation->OnChangeEvent = {EditHSL_OnChange, this};
+	_numeric_hue->min_value(0);
+	_numeric_hue->max_value(360);
 
-	_edit_lightness = new_edit();
-	_edit_lightness->OnChangeEvent = {EditHSL_OnChange, this};
+	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
 
 	LayoutStream stream{this};
 
@@ -76,13 +70,13 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 		<< push << layout::window_size({client_size().x / 4, 23}) << below << _gradient_bar_h << pop
 		<< layout::window_size({23, client_size().y / 4}) << after << _gradient_bar_v
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
-		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << _edit_red << pop << below
-		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << _edit_green << pop << below
-		<< TEXT("Blue") << create(this, label) << push << after << TEXT("0") << _edit_blue << pop << below
+		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << _numeric_red << pop << below
+		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << _numeric_green << pop << below
+		<< TEXT("Blue") << create(this, label) << push << after << TEXT("0") << _numeric_blue << pop << below
 		<< TEXT("Hex") << create(this, label) << push << after << TEXT("0") << _edit_hex << pop << below
-		<< TEXT("Hue") << create(this, label) << push << after << TEXT("0") << _edit_hue << pop << below
-		<< TEXT("Saturation") << create(this, label) << push << after << TEXT("0") << _edit_saturation << pop << below
-		<< TEXT("Lightness") << create(this, label) << push << after << TEXT("0") << _edit_lightness << pop << below;
+		<< TEXT("Hue") << create(this, label) << push << after << TEXT("0") << _numeric_hue << pop << below
+		<< TEXT("Saturation") << create(this, label) << push << after << TEXT("0") << _numeric_saturation << pop << below
+		<< TEXT("Lightness") << create(this, label) << push << after << TEXT("0") << _numeric_lightness << pop << below;
 
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorBottom}}));
 	AddChild(new EditControl(LayoutParam{.anchor{AnchorRight | AnchorTop}}));
@@ -97,6 +91,11 @@ void ColorControl::BeforeCreate(CreateParam& create_param)
 bool ColorControl::OnCreate(CREATESTRUCT const& createparam)
 {
 	return Window::OnCreate(createparam);
+}
+
+void ColorControl::OnInitialize(Window* source)
+{
+	SetTextHex({});
 }
 
 Window* ColorControl::Clone() const
@@ -119,19 +118,21 @@ LayoutParam ColorControl::BuildLayout(LayoutParam const& layout_param)
 
 void ColorControl::SetTextRGB(ColorByteRGB const& cbrgb)
 {
-	auto const fmt = TEXT("{:d}");
-	_edit_red->SetText(std::format(fmt, cbrgb.R));
-	_edit_green->SetText(std::format(fmt, cbrgb.G));
-	_edit_blue->SetText(std::format(fmt, cbrgb.B));
-	_edit_hex->SetText(std::format(TEXT("{:02X}{:02X}{:02X}"), cbrgb.R, cbrgb.G, cbrgb.B));
+	_numeric_red->SetValue(cbrgb.R);
+	_numeric_green->SetValue(cbrgb.G);
+	_numeric_blue->SetValue(cbrgb.B);
+}
+
+void ColorControl::SetTextHex(ColorByteRGB const& cbrgb)
+{
+	_edit_hex->SetText(std::format(TEXT("0x{:02x}{:02x}{:02x}"), cbrgb.R, cbrgb.G, cbrgb.B));
 }
 
 void ColorControl::SetTextHSL(ColorByteHSL const& cbhsl)
 {
-	auto const fmt = TEXT("{:d}");
-	_edit_hue->SetText(std::format(fmt, cbhsl.H));
-	_edit_saturation->SetText(std::format(fmt, cbhsl.S));
-	_edit_lightness->SetText(std::format(fmt, cbhsl.L));
+	_numeric_hue->SetValue(cbhsl.H);
+	_numeric_saturation->SetValue(cbhsl.S);
+	_numeric_lightness->SetValue(cbhsl.L);
 }
 
 void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
@@ -149,10 +150,11 @@ bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, 
 	auto self = static_cast<BitmapWindow*>(source);
 	auto color = self->bitmap().GetPixelColor(e.Position);
 
-	ScopeFlag enabled(parent->_edit_events_enabled, false);
+	ScopeFlag enabled(parent->_numeric_events_enabled, false);
 
 	auto const fmt = TEXT("{:d}");
 	parent->SetTextRGB(color);
+	parent->SetTextHex(color);
 	parent->SetTextHSL(color);
 
 	return Handled;
@@ -225,37 +227,40 @@ bool ColorControl::GradientBar_OnMouseMove(Window* source, MouseEvent const& e, 
 	return Handled;
 }
 
-bool ColorControl::EditRGB_OnChange(EditControl* source, void* userdata)
+bool ColorControl::NumericRGB_OnChange(EditControl* source, void* userdata)
 {
 	auto parent = static_cast<ColorControl*>(userdata);
 
-	if(parent->_edit_events_enabled) {
-		ScopeFlag enabled{parent->_edit_events_enabled, false};
+	if(parent->_numeric_events_enabled) {
+		ScopeFlag enabled{parent->_numeric_events_enabled, false};
 
 		ColorByteRGB cbrgb{
-			ToInt(parent->_edit_red->GetText()),
-			ToInt(parent->_edit_green->GetText()),
-			ToInt(parent->_edit_blue->GetText())};
+			parent->_numeric_red->GetValue(),
+			parent->_numeric_green->GetValue(),
+			parent->_numeric_blue->GetValue()};
 
+		parent->SetTextHex(cbrgb);
 		parent->SetTextHSL(Color{cbrgb});
 	}
 
 	return Handled;
 }
 
-bool ColorControl::EditHSL_OnChange(EditControl* source, void* userdata)
+bool ColorControl::NumericHSL_OnChange(EditControl* source, void* userdata)
 {
 	auto parent = static_cast<ColorControl*>(userdata);
 
-	if(parent->_edit_events_enabled) {
-		ScopeFlag enabled{parent->_edit_events_enabled, false};
+	if(parent->_numeric_events_enabled) {
+		ScopeFlag enabled{parent->_numeric_events_enabled, false};
 
 		ColorByteHSL cbhsl{
-			ToInt(parent->_edit_hue->GetText()),
-			ToInt(parent->_edit_saturation->GetText()),
-			ToInt(parent->_edit_lightness->GetText())};
+			parent->_numeric_hue->GetValue(),
+			parent->_numeric_saturation->GetValue(),
+			parent->_numeric_lightness->GetValue()};
 
-		parent->SetTextRGB(Color{cbhsl});
+		auto color = Color{cbhsl};
+		parent->SetTextRGB(color);
+		parent->SetTextHex(color);
 	}
 
 	return Handled;

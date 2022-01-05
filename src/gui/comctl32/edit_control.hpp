@@ -23,7 +23,7 @@ public:
 protected:
 	virtual void OnInitialize(Window* source) override;
 	virtual bool OnCommand(int notification_code) override;
-	virtual bool OnChange(EditControl* source);
+	virtual bool OnChange();
 	virtual bool OnKeyPress(KeyEvent const& e) override;
 
 private:

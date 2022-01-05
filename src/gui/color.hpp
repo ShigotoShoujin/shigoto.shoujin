@@ -12,6 +12,8 @@ struct ColorByteRGB {
 	uint8_t G{}; //Green
 	uint8_t B{}; //Blue
 
+	ColorByteRGB() = default;
+
 	ColorByteRGB(int red, int green, int blue) :
 		R{static_cast<uint8_t>(red)},
 		G{static_cast<uint8_t>(green)},
@@ -29,6 +31,8 @@ struct ColorByteHSL {
 	uint16_t H{}; //Hue
 	uint8_t S{}; //Saturation
 	uint8_t L{}; //Lightness
+
+	ColorByteHSL() = default;
 
 	ColorByteHSL(int hue, int saturation, int lightness) :
 		H{static_cast<uint16_t>(hue)},

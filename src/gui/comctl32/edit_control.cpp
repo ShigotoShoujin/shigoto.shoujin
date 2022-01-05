@@ -54,7 +54,7 @@ bool EditControl::OnCommand(int notification_code)
 	return false;
 }
 
-bool EditControl::OnChange(EditControl* source)
+bool EditControl::OnChange()
 {
 	return NotHandled;
 }
@@ -69,7 +69,7 @@ bool EditControl::OnKeyPress(KeyEvent const& e)
 
 Window::MessageResult EditControl::RaiseOnChange()
 {
-	auto result = OnChange(this);
+	auto result = OnChange();
 	return result | (OnChangeEvent ? OnChangeEvent(this) : NotHandled);
 }
 
