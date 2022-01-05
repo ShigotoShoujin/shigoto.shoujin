@@ -65,7 +65,7 @@ public:
 		Assert::AreEqual<Color>(color, cfrgb);
 	}
 
-	TEST_METHOD(ConvertToColorFloatHSL_WhenBlack_HSLZero) {
+	TEST_METHOD(ConvertRgbToHsl_WhenBlack_HSLZero) {
 		Color color = 0;
 		ColorFloatHSL expected{0.f, 0.f, 0.f};
 
@@ -74,7 +74,7 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
-	TEST_METHOD(ConvertToColorFloatHSL_WhenRed_H0S100L50) {
+	TEST_METHOD(ConvertRgbToHsl_WhenRed_H0S100L50) {
 		Color color = ColorByteRGB(255, 0, 0);
 		ColorFloatHSL expected{0.f, 1.f, .5f};
 
@@ -83,7 +83,7 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
-	TEST_METHOD(ConvertToColorFloatHSL_WhenGreen_H120S100L50) {
+	TEST_METHOD(ConvertRgbToHsl_WhenGreen_H120S100L50) {
 		Color color = ColorByteRGB(0, 255, 0);
 		ColorFloatHSL expected{120.f, 1.f, .5f};
 
@@ -92,7 +92,7 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
-	TEST_METHOD(ConvertToColorFloatHSL_WhenBlue_H240S100L50) {
+	TEST_METHOD(ConvertRgbToHsl_WhenBlue_H240S100L50) {
 		Color color = ColorByteRGB(0, 0, 255);
 		ColorFloatHSL expected{240.f, 1.f, .5f};
 
@@ -101,7 +101,7 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
-	TEST_METHOD(ConvertToColorFloatHSL_WhenWhite_H0S0L100) {
+	TEST_METHOD(ConvertRgbToHsl_WhenWhite_H0S0L100) {
 		Color color = ColorByteRGB(255, 255, 255);
 		ColorFloatHSL expected{.0f, .0f, 1.f};
 
@@ -110,7 +110,7 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
-	TEST_METHOD(ConvertToColorFloatHSL_WhenR91G48B156_H264S53L40) {
+	TEST_METHOD(ConvertRgbToHsl_WhenR91G48B156_H264S53L40) {
 		Color color = ColorByteRGB(91, 48, 156);
 		ColorFloatHSL expected{264.f, .53f, .40f};
 
@@ -119,7 +119,7 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
-	TEST_METHOD(ConvertToColorFloatHSL_WhenR255G254B255_H300S100L100) {
+	TEST_METHOD(ConvertRgbToHsl_WhenR255G254B255_H300S100L100) {
 		Color color = ColorByteRGB(255, 254, 255);
 		ColorFloatHSL expected{300.f, 1.f, 1.f};
 
@@ -128,7 +128,7 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
-	TEST_METHOD(ConvertToColorFloatHSL_WhenR127G127B127_H0S0L50) {
+	TEST_METHOD(ConvertRgbToHsl_WhenR127G127B127_H0S0L50) {
 		Color color = ColorByteRGB(127, 127, 127);
 		ColorFloatHSL expected{0.f, 0.f, .5f};
 
@@ -137,7 +137,7 @@ public:
 		Assert::AreEqual(expected, cfhsl);
 	}
 
-	TEST_METHOD(ConvertFromColorFloatHSL_WhenHSLZero_Black) {
+	TEST_METHOD(ConvertHslToRgb_WhenHSLZero_Black) {
 		ColorFloatHSL cfhsl{};
 		Color expected;
 
@@ -146,7 +146,7 @@ public:
 		Assert::AreEqual(expected, color);
 	}
 
-	TEST_METHOD(ConvertFromColorFloatHSL_WhenH0S100L50_Red) {
+	TEST_METHOD(ConvertHslToRgb_WhenH0S100L50_Red) {
 		ColorFloatHSL cfhsl{0.f, 1.f, .5f};
 		Color expected{ColorByteRGB{255, 0, 0}};
 
@@ -155,7 +155,7 @@ public:
 		Assert::AreEqual(expected, color);
 	}
 
-	TEST_METHOD(ConvertFromColorFloatHSL_WhenH120S100L50_Green) {
+	TEST_METHOD(ConvertHslToRgb_WhenH120S100L50_Green) {
 		ColorFloatHSL cfhsl{120.f, 1.f, .5f};
 		Color expected{ColorByteRGB{0, 255, 0}};
 
@@ -164,7 +164,7 @@ public:
 		Assert::AreEqual(expected, color);
 	}
 
-	TEST_METHOD(ConvertFromColorFloatHSL_WhenH240S100L50_Blue) {
+	TEST_METHOD(ConvertHslToRgb_WhenH240S100L50_Blue) {
 		ColorFloatHSL cfhsl{240.f, 1.f, .5f};
 		Color expected{ColorByteRGB{0, 0, 255}};
 
@@ -173,7 +173,7 @@ public:
 		Assert::AreEqual(expected, color);
 	}
 
-	TEST_METHOD(ConvertFromColorFloatHSL_WhenH264S53L40_R91G48B156) {
+	TEST_METHOD(ConvertHslToRgb_WhenH264S53L40_R91G48B156) {
 		ColorFloatHSL cfhsl{264.f, .53f, .4f};
 		Color expected{ColorByteRGB{91, 48, 156}};
 
@@ -182,7 +182,16 @@ public:
 		Assert::AreEqual(expected, color);
 	}
 
-	TEST_METHOD(ConvertFromColorFloatHSL_WhenH0S0L50_R128G128B128) {
+	TEST_METHOD(ConvertHslToRgb_WhenH360S100L50_R255G0B0) {
+		ColorFloatHSL cfhsl{360.f, 1.f, .5f};
+		Color expected{ColorByteRGB{255, 0, 0}};
+
+		Color color = cfhsl;
+
+		Assert::AreEqual(expected, color);
+	}
+
+	TEST_METHOD(ConvertHslToRgb_WhenH0S0L50_R128G128B128) {
 		ColorFloatHSL cfhsl{0.f, 0.f, .5f};
 		Color expected{ColorByteRGB{128, 128, 128}};
 

@@ -137,6 +137,7 @@ static ColorFloatRGB ToRGB(ColorFloatHSL hsl)
 	ColorFloatRGB rgb;
 
 	switch(static_cast<int>(hsl.H) / 60) {
+		case 6:
 		case 0: rgb = {C, X, 0}; break;
 		case 1: rgb = {X, C, 0}; break;
 		case 2: rgb = {0, C, X}; break;
