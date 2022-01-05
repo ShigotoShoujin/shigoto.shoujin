@@ -51,6 +51,9 @@
     <ClCompile Include="..\..\..\test\gui\comctl32\comctl32_test.cpp">
       <Filter>gui\comctl32</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\gui\bitmap\brush_cache_test.cpp">
+      <Filter>gui\bitmap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="assert">

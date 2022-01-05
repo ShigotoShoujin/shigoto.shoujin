@@ -179,6 +179,7 @@
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\brush_cache.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_bar.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_map.hpp" />
     <ClInclude Include="..\..\..\src\gui\color.hpp" />
@@ -211,6 +212,7 @@
     <ClCompile Include="..\..\..\src\gui\bitmap\bitmap.cpp" />
     <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_bits.cpp" />
     <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_window.cpp" />
+    <ClCompile Include="..\..\..\src\gui\bitmap\brush_cache.cpp" />
     <ClCompile Include="..\..\..\src\gui\color.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\comctl32.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp" />
