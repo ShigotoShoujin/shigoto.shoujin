@@ -10,13 +10,36 @@ namespace shoujin::gui::bitmap {
 
 class GdiObjCache {
 public:
+	class Brush {
+	public:
+		explicit Brush(Color color);
+		Brush(Brush&&) noexcept;
+		~Brush();
+		friend void swap(Brush& first, Brush& second);
+		operator HBRUSH() { return _hbrush; }
+
+	private:
+		HBRUSH _hbrush;
+	};
+
+	class Pen {
+	public:
+		explicit Pen(Color color);
+		Pen(Pen&&) noexcept;
+		~Pen();
+		friend void swap(Pen& first, Pen& second);
+		operator HPEN() { return _hpen; }
+
+	private:
+		HPEN _hpen;
+	};
+
 	HBRUSH GetBrush(Color const& color);
 	HPEN GetPen(Color const& color);
-	~GdiObjCache();
 
 private:
-	std::unordered_map<COLORREF, HBRUSH> _brush_map;
-	std::unordered_map<COLORREF, HPEN> _pen_map;
+	std::unordered_map<COLORREF, Brush> _brush_cache;
+	std::unordered_map<COLORREF, Pen> _pen_cache;
 };
 
 }
