@@ -1,6 +1,6 @@
 #include "../../assert/assert.hpp"
-#include "bitmap.hpp"
 #include "../types.hpp"
+#include "bitmap.hpp"
 #include <utility>
 
 using namespace shoujin::gui;
@@ -9,6 +9,22 @@ static void CreateBitmap(HDC hsourcedc, Size size, HDC& out_hdc, HBITMAP& out_hb
 static WORD const kBitmapInfoBitCount = 32;
 
 namespace shoujin::gui::bitmap {
+
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::SrcCopy{SRCCOPY};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::SrcPaint{SRCPAINT};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::SrcAnd{SRCAND};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::SrcInvert{SRCINVERT};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::SrcErase{SRCERASE};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::NotSrcCopy{NOTSRCCOPY};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::NotSrcErase{NOTSRCERASE};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::MergeCopy{MERGECOPY};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::MergePaint{MERGEPAINT};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::PatCopy{PATCOPY};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::PatPaint{PATPAINT};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::PatInvert{PATINVERT};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::DstInvert{DSTINVERT};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::Blackness{BLACKNESS};
+Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::Whiteness{WHITENESS};
 
 void swap(Bitmap& first, Bitmap& second) noexcept
 {
@@ -87,26 +103,30 @@ void Bitmap::Reset(Size const& size)
 	_size = size;
 }
 
-void Bitmap::Fill(RECT const& rect, Color color)
+void Bitmap::Fill(RECT const& rect, Color const& color)
 {
-	HBRUSH brush = SHOUJIN_ASSERT_WIN32(CreateSolidBrush(color));
-	SHOUJIN_ASSERT_WIN32(::FillRect(_hdc, &rect, brush));
-	SHOUJIN_ASSERT_WIN32(DeleteObject(brush));
+	HBRUSH brush = _gdiobj_cache.GetBrush(color);
+	SHOUJIN_ASSERT(::FillRect(_hdc, &rect, brush));
 }
 
-void Bitmap::Fill(Point position, Size size, Color color)
+void Bitmap::Fill(Point const& position, Size const& size, Color const& color)
 {
 	Fill({position.x, position.y, position.x + size.x, position.y + size.y}, color);
 }
 
-void Bitmap::Fill(Color color)
+void Bitmap::Fill(Color const& color)
 {
 	Fill({0, 0, _size.x, _size.y}, color);
 }
 
-void Bitmap::Draw(HDC source, Point position, Size size, Point src_position)
+void Bitmap::Draw(HDC source, Point const& position, Size const& size, Point const& src_position, RasterMode rop)
 {
-	BitBlt(_hdc, position.x, position.y, size.x, size.y, source, src_position.x, src_position.y, SRCCOPY);
+	SHOUJIN_ASSERT_WIN32(BitBlt(_hdc, position.x, position.y, size.x, size.y, source, src_position.x, src_position.y, rop));
+}
+
+void Bitmap::Draw(Bitmap const& source, Point const& position, Size const& size, Point const& src_position, RasterMode rop)
+{
+	Draw(source.hdc(), position, size, src_position, rop);
 }
 
 void Bitmap::Draw(Bitmap const& source)
@@ -116,7 +136,18 @@ void Bitmap::Draw(Bitmap const& source)
 	Draw(source._hdc, {}, {w, h});
 }
 
-Color Bitmap::GetPixelColor(Point position)
+void Bitmap::DrawLine(Point const& start, Point const& end, Color const& color)
+{
+	HPEN pen = _gdiobj_cache.GetPen(color);
+	auto previous_obj = SelectObject(_hdc, pen);
+
+	SHOUJIN_ASSERT(MoveToEx(_hdc, start.x, start.y, nullptr));
+	SHOUJIN_ASSERT(LineTo(_hdc, end.x, end.y));
+
+	SelectObject(_hdc, previous_obj);
+}
+
+Color Bitmap::GetPixelColor(Point const& position)
 {
 	return SHOUJIN_ASSERT_WIN32_EXPLICIT(::GetPixel(_hdc, position.x, position.y), [](auto result) { return result != CLR_INVALID; });
 }

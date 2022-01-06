@@ -31,7 +31,7 @@
     <ClCompile Include="..\..\..\test\grid_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_window_test.cpp" />
-    <ClCompile Include="..\..\..\test\gui\bitmap\brush_cache_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui\bitmap\gdiobj_cache_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_bar_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_map_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\color_test.cpp" />

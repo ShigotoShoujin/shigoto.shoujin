@@ -63,8 +63,10 @@ bool BitmapWindow::OnSizingFinished()
 
 void BitmapWindow::ForceRepaint()
 {
-	if(hwnd())
+	if(hwnd()) {
+		Invalidate();
 		SendMessage(hwnd(), WM_PAINT, 0, 0);
+	}
 }
 
 Window* BitmapWindow::Clone() const

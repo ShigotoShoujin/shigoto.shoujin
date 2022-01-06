@@ -32,8 +32,9 @@ private:
 	static LayoutParam BuildLayout(LayoutParam const& layout_param);
 
 	BitmapWindow* _gradient_map;
-	BitmapWindow* _gradient_bar_h;
-	BitmapWindow* _gradient_bar_v;
+	BitmapWindow* _hue_bar;
+	Bitmap _hue_bar_caret;
+	int _hue_bar_selector_position{};
 
 	NumericControl* _numeric_red;
 	NumericControl* _numeric_green;
@@ -49,13 +50,14 @@ private:
 	void SetTextHex(ColorByteRGB const& cbrgb);
 	void SetTextHSL(ColorByteHSL const& cbhsl);
 
+	void DrawHueBarCaret();
+
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
 	static bool GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
 	static bool GradientMap_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
-	static void GradientBarH_OnInitialize(Window* source, void* userdata);
-	static void GradientBarV_OnInitialize(Window* source, void* userdata);
-	static bool GradientBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
-	static bool GradientBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
+	static void HueBar_OnInitialize(Window* source, void* userdata);
+	static bool HueBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
+	static bool HueBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
 	static bool NumericRGB_OnChange(EditControl* source, void* userdata);
 	static bool NumericHSL_OnChange(EditControl* source, void* userdata);
 };

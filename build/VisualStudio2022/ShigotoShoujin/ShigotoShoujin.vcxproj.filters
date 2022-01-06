@@ -147,7 +147,7 @@
     <ClInclude Include="..\..\..\src\gui\comctl32\numeric_control.hpp">
       <Filter>src\gui\comctl32</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap\brush_cache.hpp">
+    <ClInclude Include="..\..\..\src\gui\bitmap\gdiobj_cache.hpp">
       <Filter>src\gui\bitmap</Filter>
     </ClInclude>
   </ItemGroup>
@@ -215,7 +215,7 @@
     <ClCompile Include="..\..\..\src\gui\comctl32\numeric_control.cpp">
       <Filter>src\gui\comctl32</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap\brush_cache.cpp">
+    <ClCompile Include="..\..\..\src\gui\bitmap\gdiobj_cache.cpp">
       <Filter>src\gui\bitmap</Filter>
     </ClCompile>
   </ItemGroup>
