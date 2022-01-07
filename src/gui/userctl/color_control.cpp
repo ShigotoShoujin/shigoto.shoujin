@@ -113,21 +113,21 @@ LayoutParam ColorControl::BuildLayout(LayoutParam const& layout_param)
 
 void ColorControl::SetTextRGB(ColorByteRGB const& cbrgb)
 {
-	_numeric_red->SetValue(cbrgb.R);
-	_numeric_green->SetValue(cbrgb.G);
-	_numeric_blue->SetValue(cbrgb.B);
+	_numeric_red->SetValue(cbrgb.red);
+	_numeric_green->SetValue(cbrgb.green);
+	_numeric_blue->SetValue(cbrgb.blue);
 }
 
 void ColorControl::SetTextHex(ColorByteRGB const& cbrgb)
 {
-	_edit_hex->SetText(std::format(TEXT("0x{:02x}{:02x}{:02x}"), cbrgb.R, cbrgb.G, cbrgb.B));
+	_edit_hex->SetText(std::format(TEXT("0x{:02x}{:02x}{:02x}"), cbrgb.red, cbrgb.green, cbrgb.blue));
 }
 
 void ColorControl::SetTextHSL(ColorByteHSL const& cbhsl)
 {
-	_numeric_hue->SetValue(cbhsl.H);
-	_numeric_saturation->SetValue(cbhsl.S);
-	_numeric_lightness->SetValue(cbhsl.L);
+	_numeric_hue->SetValue(cbhsl.hue);
+	_numeric_saturation->SetValue(cbhsl.saturation);
+	_numeric_lightness->SetValue(cbhsl.lightness);
 }
 
 void ColorControl::SetHueBarFromPos(int x_pos)
@@ -270,12 +270,13 @@ bool ColorControl::NumericRGB_OnChange(EditControl* source, void* userdata)
 bool ColorControl::NumericHSL_OnChange(EditControl* source, void* userdata)
 {
 	auto parent = static_cast<ColorControl*>(userdata);
+	auto hue = parent->_numeric_hue->GetValue();
 
 	if(parent->_numeric_events_enabled) {
 		ScopeFlag enabled{parent->_numeric_events_enabled, false};
 
 		ColorByteHSL cbhsl{
-			parent->_numeric_hue->GetValue(),
+			hue,
 			parent->_numeric_saturation->GetValue(),
 			parent->_numeric_lightness->GetValue()};
 
@@ -283,9 +284,10 @@ bool ColorControl::NumericHSL_OnChange(EditControl* source, void* userdata)
 		parent->SetTextRGB(color);
 		parent->SetTextHex(color);
 
+	} else {
 		auto sender = static_cast<NumericControl*>(source);
 		if(sender == parent->_numeric_hue)
-			parent->SetHueBarFromHue(cbhsl.H);
+			parent->SetHueBarFromHue(hue);
 	}
 
 	return Handled;

@@ -7,44 +7,71 @@
 
 namespace shoujin::gui {
 
+struct ColorByteRGB;
+struct ColorByteHSL;
+struct ColorByteHSV;
+struct ColorFloatRGB;
+struct ColorFloatHSL;
+struct ColorFloatHSV;
+
 struct ColorByteRGB {
-	uint8_t R{}; //Red
-	uint8_t G{}; //Green
-	uint8_t B{}; //Blue
+	uint8_t red{};
+	uint8_t green{};
+	uint8_t blue{};
 
 	ColorByteRGB() = default;
-
-	ColorByteRGB(int red, int green, int blue) :
-		R{static_cast<uint8_t>(red)},
-		G{static_cast<uint8_t>(green)},
-		B{static_cast<uint8_t>(blue)}
-	{}
+	ColorByteRGB(int red, int green, int blue);
+	ColorByteRGB(ColorFloatRGB const& cfrgb);
 };
 
 struct ColorFloatRGB {
-	float R{}; //Red
-	float G{}; //Green
-	float B{}; //Blue
+	float red{};
+	float green{};
+	float blue{};
+
+	ColorFloatRGB() = default;
+	ColorFloatRGB(float red, float green, float blue);
+	ColorFloatRGB(ColorByteRGB const& cbhsl);
 };
 
 struct ColorByteHSL {
-	uint16_t H{}; //Hue
-	uint8_t S{}; //Saturation
-	uint8_t L{}; //Lightness
+	uint16_t hue{};
+	uint8_t saturation{};
+	uint8_t lightness{};
 
 	ColorByteHSL() = default;
-
-	ColorByteHSL(int hue, int saturation, int lightness) :
-		H{static_cast<uint16_t>(hue)},
-		S{static_cast<uint8_t>(saturation)},
-		L{static_cast<uint8_t>(lightness)}
-	{}
+	ColorByteHSL(int hue, int saturation, int lightness);
+	ColorByteHSL(ColorFloatHSL const& cfhsl);
 };
 
 struct ColorFloatHSL {
-	float H{}; //Hue
-	float S{}; //Saturation
-	float L{}; //Lightness
+	float hue{};
+	float saturation{};
+	float lightness{};
+
+	ColorFloatHSL() = default;
+	ColorFloatHSL(float hue, float saturation, float lightness);
+	ColorFloatHSL(ColorByteHSL const& cbhsl);
+};
+
+struct ColorByteHSV {
+	uint16_t hue{};
+	uint8_t saturation{};
+	uint8_t value{};
+
+	ColorByteHSV() = default;
+	ColorByteHSV(int hue, int saturation, int value);
+	ColorByteHSV(ColorFloatHSV const& cfhsv);
+};
+
+struct ColorFloatHSV {
+	float hue{};
+	float saturation{};
+	float value{};
+
+	ColorFloatHSV() = default;
+	ColorFloatHSV(float hue, float saturation, float value);
+	ColorFloatHSV(ColorByteHSV const& cbhsv);
 };
 
 class Color {
@@ -57,12 +84,16 @@ public:
 	Color(ColorFloatRGB color);
 	Color(ColorByteHSL color);
 	Color(ColorFloatHSL color);
+	Color(ColorByteHSV color);
+	Color(ColorFloatHSV color);
 
 	operator COLORREF() const;
 	operator ColorByteRGB() const;
 	operator ColorFloatRGB() const;
 	operator ColorByteHSL() const;
 	operator ColorFloatHSL() const;
+	operator ColorByteHSV() const;
+	operator ColorFloatHSV() const;
 
 	friend inline bool operator==(Color const& lhs, Color const& rhs)
 	{

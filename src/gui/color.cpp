@@ -7,9 +7,83 @@ using namespace shoujin::gui;
 static uint8_t ToByte(float channel);
 static float ToFloat(uint8_t channel);
 static ColorFloatHSL ToHSL(ColorFloatRGB rgb);
+static ColorFloatHSV ToHSV(ColorFloatRGB rgb);
 static ColorFloatRGB ToRGB(ColorFloatHSL hsl);
+static ColorFloatRGB ToRGB(ColorFloatHSV hsv);
 
 namespace shoujin::gui {
+
+ColorByteRGB::ColorByteRGB(int red, int green, int blue) :
+	red{static_cast<uint8_t>(red)},
+	green{static_cast<uint8_t>(green)},
+	blue{static_cast<uint8_t>(blue)}
+{}
+
+ColorByteRGB::ColorByteRGB(ColorFloatRGB const& cfrgb) :
+	red{static_cast<uint8_t>(cfrgb.red * 255)},
+	green{static_cast<uint8_t>(cfrgb.green * 255)},
+	blue{static_cast<uint8_t>(cfrgb.blue * 255)}
+{}
+
+ColorFloatRGB::ColorFloatRGB(float red, float green, float blue) :
+	red{red},
+	green{green},
+	blue{blue}
+{}
+
+ColorFloatRGB::ColorFloatRGB(ColorByteRGB const& cbhsl) :
+	red{cbhsl.red / 255.f},
+	green{cbhsl.green / 255.f},
+	blue{cbhsl.blue / 255.f}
+{}
+
+ColorByteHSL::ColorByteHSL(int hue, int saturation, int lightness) :
+	hue{static_cast<uint16_t>(hue)},
+	saturation{static_cast<uint8_t>(saturation)},
+	lightness{static_cast<uint8_t>(lightness)}
+{}
+
+ColorByteHSL::ColorByteHSL(ColorFloatHSL const& cfhsl) :
+	hue{static_cast<uint16_t>(cfhsl.hue)},
+	saturation{static_cast<uint8_t>(cfhsl.saturation * 100)},
+	lightness{static_cast<uint8_t>(cfhsl.lightness * 100)}
+{}
+
+ColorFloatHSL::ColorFloatHSL(float hue, float saturation, float lightness) :
+	hue{hue},
+	saturation{saturation},
+	lightness{lightness}
+{}
+
+ColorFloatHSL::ColorFloatHSL(ColorByteHSL const& cbhsl) :
+	hue{cbhsl.hue * 1.f},
+	saturation{cbhsl.saturation / 100.f},
+	lightness{cbhsl.lightness / 100.f}
+{}
+
+ColorByteHSV::ColorByteHSV(int hue, int saturation, int value) :
+	hue{static_cast<uint16_t>(hue)},
+	saturation{static_cast<uint8_t>(saturation)},
+	value{static_cast<uint8_t>(value)}
+{}
+
+ColorByteHSV::ColorByteHSV(ColorFloatHSV const& cfhsv) :
+	hue{static_cast<uint16_t>(cfhsv.hue)},
+	saturation{static_cast<uint8_t>(cfhsv.saturation * 100)},
+	value{static_cast<uint8_t>(cfhsv.value * 100)}
+{}
+
+ColorFloatHSV::ColorFloatHSV(float hue, float saturation, float value) :
+	hue{hue},
+	saturation{saturation},
+	value{value}
+{}
+
+ColorFloatHSV::ColorFloatHSV(ColorByteHSV const& cbhsv) :
+	hue{cbhsv.hue * 1.f},
+	saturation{cbhsv.saturation / 100.f},
+	value{cbhsv.value / 100.f}
+{}
 
 Color::Color() :
 	_color{}
@@ -19,15 +93,21 @@ Color::Color(COLORREF color) :
 	_color{color} {}
 
 Color::Color(ColorByteRGB color) :
-	_color{RGB(color.R, color.G, color.B)} {}
+	_color{RGB(color.red, color.green, color.blue)} {}
 
 Color::Color(ColorFloatRGB color) :
-	_color{RGB(ToByte(color.R), ToByte(color.G), ToByte(color.B))} {}
+	_color{RGB(ToByte(color.red), ToByte(color.green), ToByte(color.blue))} {}
 
 Color::Color(ColorByteHSL color) :
-	_color{Color{ToRGB(ColorFloatHSL{static_cast<float>(color.H), static_cast<float>(color.S) / 100, static_cast<float>(color.L) / 100})}} {}
+	_color{Color{ToRGB(color)}} {}
 
 Color::Color(ColorFloatHSL color) :
+	_color{Color{ToRGB(color)}} {}
+
+Color::Color(ColorByteHSV color) :
+	_color{Color{ToRGB(color)}} {}
+
+Color::Color(ColorFloatHSV color) :
 	_color{Color{ToRGB(color)}} {}
 
 Color::operator COLORREF() const
@@ -53,16 +133,22 @@ Color::operator ColorFloatRGB() const
 
 Color::operator ColorByteHSL() const
 {
-	auto cfhsl = ToHSL(*this);
-	return {
-		static_cast<uint16_t>(cfhsl.H),
-		static_cast<uint8_t>(cfhsl.S * 100),
-		static_cast<uint8_t>(cfhsl.L * 100)};
+	return ToHSL(*this);
 }
 
 Color::operator ColorFloatHSL() const
 {
 	return ToHSL(*this);
+}
+
+Color::operator ColorByteHSV() const
+{
+	return ToHSV(*this);
+}
+
+Color::operator ColorFloatHSV() const
+{
+	return ToHSV(*this);
 }
 
 // clang-format off
@@ -99,20 +185,20 @@ static float ToFloat(uint8_t channel)
 
 static ColorFloatHSL ToHSL(ColorFloatRGB rgb)
 {
-	auto max = max(max(rgb.R, rgb.G), rgb.B);
-	auto min = min(min(rgb.R, rgb.G), rgb.B);
+	auto max = max(max(rgb.red, rgb.green), rgb.blue);
+	auto min = min(min(rgb.red, rgb.green), rgb.blue);
 	auto delta = max - min;
 
 	//Hue
 	float H;
 	if(delta == 0.f)
 		H = 0.f;
-	else if(max == rgb.R)
-		H = 60.f * fmodf((rgb.G - rgb.B) / delta, 6.f);
-	else if(max == rgb.G)
-		H = 60.f * ((rgb.B - rgb.R) / delta + 2);
-	else if(max == rgb.B)
-		H = 60.f * ((rgb.R - rgb.G) / delta + 4);
+	else if(max == rgb.red)
+		H = 60.f * fmodf((rgb.green - rgb.blue) / delta, 6.f);
+	else if(max == rgb.green)
+		H = 60.f * ((rgb.blue - rgb.red) / delta + 2);
+	else if(max == rgb.blue)
+		H = 60.f * ((rgb.red - rgb.green) / delta + 4);
 
 	//While converting RGB(255, 254, 255), H will be -60 but should be 300.
 	//Fixed by adding 360 when H is negative.
@@ -128,15 +214,20 @@ static ColorFloatHSL ToHSL(ColorFloatRGB rgb)
 	return {H, S, L};
 }
 
+static ColorFloatHSV ToHSV(ColorFloatRGB rgb)
+{
+	return {};
+}
+
 static ColorFloatRGB ToRGB(ColorFloatHSL hsl)
 {
-	float C = (1 - abs(2 * hsl.L - 1)) * hsl.S;
-	float X = C * (1 - abs(fmodf(hsl.H / 60.f, 2.f) - 1));
-	float m = hsl.L - C / 2;
+	float C = (1 - abs(2 * hsl.lightness - 1)) * hsl.saturation;
+	float X = C * (1 - abs(fmodf(hsl.hue / 60.f, 2.f) - 1));
+	float m = hsl.lightness - C / 2;
 
 	ColorFloatRGB rgb;
 
-	switch(static_cast<int>(hsl.H) / 60) {
+	switch(static_cast<int>(hsl.hue) / 60) {
 		case 6:
 		case 0: rgb = {C, X, 0}; break;
 		case 1: rgb = {X, C, 0}; break;
@@ -146,9 +237,14 @@ static ColorFloatRGB ToRGB(ColorFloatHSL hsl)
 		case 5: rgb = {C, 0, X};
 	}
 
-	rgb.R += m;
-	rgb.G += m;
-	rgb.B += m;
+	rgb.red += m;
+	rgb.green += m;
+	rgb.blue += m;
 
 	return rgb;
+}
+
+static ColorFloatRGB ToRGB(ColorFloatHSV hsv)
+{
+	return {};
 }
