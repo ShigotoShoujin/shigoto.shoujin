@@ -130,9 +130,38 @@ void ColorControl::SetTextHSL(ColorByteHSL const& cbhsl)
 	_numeric_lightness->SetValue(cbhsl.L);
 }
 
+void ColorControl::SetHueBarFromPos(int x_pos)
+{
+	auto hue = 360 - static_cast<int>(360.f / _hue_bar->client_size().x * x_pos);
+	SHOUJIN_ASSERT(hue >= 0 && hue <= 360);
+	SetHueBar(x_pos, hue);
+}
+
+void ColorControl::SetHueBarFromHue(int hue)
+{
+	auto x_pos = static_cast<int>(hue / (360.f / _hue_bar->client_size().x));
+	SetHueBar(x_pos, hue);
+}
+
+void ColorControl::SetHueBar(int x_pos, int hue)
+{
+	UpdateHueBarCaret(x_pos);
+	_hue_bar->ForceRepaint();
+
+	RenderGradientMap(_gradient_map->bitmap(), ColorByteHSL{hue, 100, 50});
+	_gradient_map->ForceRepaint();
+}
+
 void ColorControl::DrawHueBarCaret()
 {
 	_hue_bar->bitmap().Draw(_hue_bar_caret, {_hue_bar_selector_position - kHueBarCaretSize / 2, 0}, _hue_bar_caret.size(), {}, Bitmap::RasterMode::SrcInvert);
+}
+
+void ColorControl::UpdateHueBarCaret(int hue)
+{
+	DrawHueBarCaret();
+	_hue_bar_selector_position = hue;
+	DrawHueBarCaret();
 }
 
 void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
@@ -199,23 +228,7 @@ bool ColorControl::HueBar_OnMouseDown(Window* source, MouseEvent const& e, void*
 		return NotHandled;
 
 	auto parent = static_cast<ColorControl*>(userdata);
-	auto gradient_map = parent->_gradient_map;
-	auto self = static_cast<BitmapWindow*>(source);
-
-	auto get_color = [](int position, int size) -> Color {
-		SHOUJIN_ASSERT(size);
-		auto hue = 360 - std::clamp(static_cast<int>(360.f / size * position), 0, 360);
-		return ColorByteHSL{hue, 100, 50};
-	};
-
-	parent->DrawHueBarCaret();
-	parent->_hue_bar_selector_position = e.Position.x;
-	parent->DrawHueBarCaret();
-	self->ForceRepaint();
-
-	auto color = get_color(e.Position.x, self->client_size().x);
-	RenderGradientMap(gradient_map->bitmap(), color);
-	gradient_map->ForceRepaint();
+	parent->SetHueBarFromPos(e.Position.x);
 
 	return Handled;
 }
@@ -269,6 +282,10 @@ bool ColorControl::NumericHSL_OnChange(EditControl* source, void* userdata)
 		auto color = Color{cbhsl};
 		parent->SetTextRGB(color);
 		parent->SetTextHex(color);
+
+		auto sender = static_cast<NumericControl*>(source);
+		if(sender == parent->_numeric_hue)
+			parent->SetHueBarFromHue(cbhsl.H);
 	}
 
 	return Handled;

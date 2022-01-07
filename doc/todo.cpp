@@ -2,6 +2,8 @@
 
 // In class Event, reconsider making void* userdata a template, using Event<TReturn, <TArgs...>, TUserData>
 // Maybe the inner <> to confine TArgs... could solve the goal of keeping TUserData as the last argument.
+// Also strongly reconsider removing the limitation to have only one handler per event,
+// even though this makes events handler always return void.
 
 // Change SHOUJIN_ASSERT* to use C++20 std::source_location and get rid of macros
 

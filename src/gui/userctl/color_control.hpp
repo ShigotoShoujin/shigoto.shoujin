@@ -50,7 +50,12 @@ private:
 	void SetTextHex(ColorByteRGB const& cbrgb);
 	void SetTextHSL(ColorByteHSL const& cbhsl);
 
+	void SetHueBarFromPos(int x);
+	void SetHueBarFromHue(int hue);
+	void SetHueBar(int x, int hue);
+
 	void DrawHueBarCaret();
+	void UpdateHueBarCaret(int hue);
 
 	static void GradientMap_OnInitialize(Window* source, void* userdata);
 	static bool GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
