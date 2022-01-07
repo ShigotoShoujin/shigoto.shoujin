@@ -9,8 +9,9 @@ using namespace shoujin::gui;
 using namespace shoujin::gui::bitmap;
 using namespace shoujin::gui::layout;
 
-static int const kHueBarHeight = 23;
-static int const kHueBarCaretSize = 5;
+int constexpr kGradientCaretSize = 7;
+int constexpr kHueBarHeight = 23;
+int constexpr kHueBarCaretSize = 5;
 
 static void RenderGradientMap(Bitmap& target, Color const& color)
 {
@@ -25,6 +26,7 @@ Size const ColorControl::kDefaultClientSize{768, 768};
 
 ColorControl::ColorControl(LayoutParam const& layout_param) :
 	Window{BuildLayout(layout_param)},
+	_gradient_caret{{kGradientCaretSize, kGradientCaretSize}},
 	_hue_bar_caret{{kHueBarCaretSize, kHueBarHeight}}
 {
 	_gradient_map = new BitmapWindow();
@@ -149,7 +151,20 @@ void ColorControl::SetHueBar(int x_pos, int hue)
 	_hue_bar->ForceRepaint();
 
 	RenderGradientMap(_gradient_map->bitmap(), ColorByteHSL{hue, 100, 50});
+	DrawGradientCaret();
 	_gradient_map->ForceRepaint();
+}
+
+void ColorControl::DrawGradientCaret()
+{
+	_gradient_map->bitmap().Draw(_gradient_caret, _gradient_selector_position - (kGradientCaretSize / 2), _gradient_caret.size(), {}, Bitmap::RasterMode::SrcInvert);
+}
+
+void ColorControl::UpdateGradientCaret(Point const& position)
+{
+	DrawGradientCaret();
+	_gradient_selector_position = position;
+	DrawGradientCaret();
 }
 
 void ColorControl::DrawHueBarCaret()
@@ -166,8 +181,22 @@ void ColorControl::UpdateHueBarCaret(int hue)
 
 void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
 {
+	auto parent = static_cast<ColorControl*>(userdata);
 	auto self = static_cast<BitmapWindow*>(source);
 	RenderGradientMap(self->bitmap(), Color::Red);
+
+	parent->_gradient_selector_position = source->client_size() / 2;
+	auto constexpr size = kGradientCaretSize;
+	auto constexpr half = kGradientCaretSize / 2;
+
+	parent->_gradient_caret.Fill({}, {half, half}, Color::White); //TopLeft
+	parent->_gradient_caret.Fill({half + 1, half + 1}, {half, half}, Color::White); //TopRight
+	parent->_gradient_caret.Fill({0, half + 1}, {half, half}, Color::White); //BottomLeft
+	parent->_gradient_caret.Fill({half + 1, 0}, {half, half}, Color::White); //BottomRight
+	parent->_gradient_caret.DrawLine({0, 0}, {size, size}, Color::Black);
+	parent->_gradient_caret.DrawLine({size - 1, 0}, {-1, size}, Color::Black);
+
+	parent->DrawGradientCaret();
 }
 
 bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
@@ -177,7 +206,12 @@ bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, 
 
 	auto parent = static_cast<ColorControl*>(userdata);
 	auto self = static_cast<BitmapWindow*>(source);
-	auto color = self->bitmap().GetPixelColor(e.Position);
+	//auto color = self->bitmap().GetPixelColor(e.Position);
+
+	auto H = static_cast<float>(parent->_numeric_hue->GetValue());
+	auto S = e.Position.x / static_cast<float>(self->client_size().x);
+	auto V = 1 - e.Position.y / static_cast<float>(self->client_size().y);
+	auto color = Color{ColorFloatHSV{H, S, V}};
 
 	ScopeFlag enabled(parent->_numeric_events_enabled, false);
 
@@ -185,6 +219,9 @@ bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, 
 	parent->SetTextRGB(color);
 	parent->SetTextHex(color);
 	parent->SetTextHSL(color);
+
+	parent->UpdateGradientCaret(e.Position);
+	self->ForceRepaint();
 
 	return Handled;
 }

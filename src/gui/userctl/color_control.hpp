@@ -32,6 +32,9 @@ private:
 	static LayoutParam BuildLayout(LayoutParam const& layout_param);
 
 	BitmapWindow* _gradient_map;
+	Bitmap _gradient_caret;
+	Point _gradient_selector_position{};
+
 	BitmapWindow* _hue_bar;
 	Bitmap _hue_bar_caret;
 	int _hue_bar_selector_position{};
@@ -54,6 +57,8 @@ private:
 	void SetHueBarFromHue(int hue);
 	void SetHueBar(int x, int hue);
 
+	void DrawGradientCaret();
+	void UpdateGradientCaret(Point const& position);
 	void DrawHueBarCaret();
 	void UpdateHueBarCaret(int hue);
 
