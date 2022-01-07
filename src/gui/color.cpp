@@ -6,10 +6,10 @@ using namespace shoujin::gui;
 
 static uint8_t ToByte(float channel);
 static float ToFloat(uint8_t channel);
-static ColorFloatHSL ToHSL(ColorFloatRGB rgb);
-static ColorFloatHSV ToHSV(ColorFloatRGB rgb);
-static ColorFloatRGB ToRGB(ColorFloatHSL hsl);
-static ColorFloatRGB ToRGB(ColorFloatHSV hsv);
+static ColorFloatHSL ToHSL(ColorFloatRGB const& rgb);
+static ColorFloatHSV ToHSV(ColorFloatRGB const& rgb);
+static ColorFloatRGB ToRGB(ColorFloatHSL const& hsl);
+static ColorFloatRGB ToRGB(ColorFloatHSV const& hsv);
 
 namespace shoujin::gui {
 
@@ -183,51 +183,54 @@ static float ToFloat(uint8_t channel)
 	return std::clamp<float>(channel, 0, 0xff) / 0xff;
 }
 
-static ColorFloatHSL ToHSL(ColorFloatRGB rgb)
+static void CHMMRGB(ColorFloatRGB const& rgb, float& H, float& C, float& min, float& max)
 {
-	auto max = max(max(rgb.red, rgb.green), rgb.blue);
-	auto min = min(min(rgb.red, rgb.green), rgb.blue);
-	auto delta = max - min;
+	min = min(min(rgb.red, rgb.green), rgb.blue);
+	max = max(max(rgb.red, rgb.green), rgb.blue);
+	C = max - min;
 
-	//Hue
-	float H;
-	if(delta == 0.f)
+	if(C == 0.f)
 		H = 0.f;
 	else if(max == rgb.red)
-		H = 60.f * fmodf((rgb.green - rgb.blue) / delta, 6.f);
+		H = 60.f * ((rgb.green - rgb.blue) / C);
 	else if(max == rgb.green)
-		H = 60.f * ((rgb.blue - rgb.red) / delta + 2);
+		H = 60.f * ((rgb.blue - rgb.red) / C + 2);
 	else if(max == rgb.blue)
-		H = 60.f * ((rgb.red - rgb.green) / delta + 4);
+		H = 60.f * ((rgb.red - rgb.green) / C + 4);
 
 	//While converting RGB(255, 254, 255), H will be -60 but should be 300.
 	//Fixed by adding 360 when H is negative.
 	if(H < 0)
 		H += 360;
+}
 
-	//Lightness
+static ColorFloatHSL ToHSL(ColorFloatRGB const& rgb)
+{
+	float H, C, min, max;
+
+	CHMMRGB(rgb, H, C, min, max);
 	float L = (max + min) / 2;
-
-	//Saturation
-	float S = delta == 0.f ? 0.f : delta / (1 - abs(2 * L - 1));
+	float S = C == 0.f ? 0.f : C / (1 - abs(2 * L - 1));
 
 	return {H, S, L};
 }
 
-static ColorFloatHSV ToHSV(ColorFloatRGB rgb)
+static ColorFloatHSV ToHSV(ColorFloatRGB const& rgb)
 {
-	return {};
+	float H, C, min, max;
+
+	CHMMRGB(rgb, H, C, min, max);
+	float L = max;
+	float S = C == 0.f ? 0.f : C / L;
+
+	return {H, S, L};
 }
 
-static ColorFloatRGB ToRGB(ColorFloatHSL hsl)
+static ColorFloatRGB HCXmRGB(float H, float C, float X, float m)
 {
-	float C = (1 - abs(2 * hsl.lightness - 1)) * hsl.saturation;
-	float X = C * (1 - abs(fmodf(hsl.hue / 60.f, 2.f) - 1));
-	float m = hsl.lightness - C / 2;
-
 	ColorFloatRGB rgb;
 
-	switch(static_cast<int>(hsl.hue) / 60) {
+	switch(static_cast<int>(H)) {
 		case 6:
 		case 0: rgb = {C, X, 0}; break;
 		case 1: rgb = {X, C, 0}; break;
@@ -244,7 +247,21 @@ static ColorFloatRGB ToRGB(ColorFloatHSL hsl)
 	return rgb;
 }
 
-static ColorFloatRGB ToRGB(ColorFloatHSV hsv)
+static ColorFloatRGB ToRGB(ColorFloatHSL const& hsl)
 {
-	return {};
+	auto H = hsl.hue / 60.f;
+	float C = (1 - abs(2 * hsl.lightness - 1)) * hsl.saturation;
+	float X = C * (1 - abs(std::fmodf(H, 2) - 1));
+	float m = hsl.lightness - C / 2;
+	return HCXmRGB(H, C, X, m);
+}
+
+static ColorFloatRGB ToRGB(ColorFloatHSV const& hsv)
+{
+	auto H = hsv.hue / 60.f;
+	float C = hsv.value * hsv.saturation;
+	float X = C * (1 - abs(std::fmodf(H, 2) - 1));
+	float m = hsv.value - C;
+
+	return HCXmRGB(H, C, X, m);
 }

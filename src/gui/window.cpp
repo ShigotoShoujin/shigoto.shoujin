@@ -174,7 +174,7 @@ tstring Window::GetText() const
 	if(text_length == 0)
 		return text();
 
-	std::vector<TCHAR> buffer(text_length + 1);
+	std::vector<TCHAR> buffer(static_cast<size_t>(text_length) + 1);
 	SHOUJIN_ASSERT_WIN32_EXPLICIT(GetWindowText(hwnd, buffer.data(), text_length + 1), result_ok);
 
 	return buffer.data();

@@ -284,7 +284,6 @@ bool ColorControl::NumericHSL_OnChange(EditControl* source, void* userdata)
 		parent->SetTextRGB(color);
 		parent->SetTextHex(color);
 
-	} else {
 		auto sender = static_cast<NumericControl*>(source);
 		if(sender == parent->_numeric_hue)
 			parent->SetHueBarFromHue(hue);
