@@ -21,7 +21,8 @@ namespace internal {
 class GradientMap : public BitmapWindow {
 public:
 	GradientMap();
-	Event<void, Color const&> OnColorChangedEvent;
+	Event<void, GradientMap*, Color const&> OnColorChangedEvent;
+	void SetHue(int hue);
 
 private:
 	Bitmap _caret;
@@ -34,9 +35,12 @@ private:
 
 	void InitializeCaret();
 	void DrawCaret();
+	Color ColorFromPosition(Point const& pos) const;
 };
 
 }
+
+using namespace internal;
 
 class ColorControl : public Window {
 public:
@@ -53,9 +57,7 @@ private:
 	virtual Window* Clone() const override;
 	static LayoutParam BuildLayout(LayoutParam const& layout_param);
 
-	BitmapWindow* _gradient_map;
-	Bitmap _gradient_caret;
-	Point _gradient_selector_position{};
+	GradientMap* _gradient_map_ctrl{};
 
 	BitmapWindow* _hue_bar;
 	Bitmap _hue_bar_caret;
@@ -71,8 +73,7 @@ private:
 
 	bool _numeric_events_enabled{true};
 
-	internal::GradientMap* _gradient_map_ctrl{};
-
+	void SetText(Color const& color);
 	void SetTextRGB(ColorByteRGB const& cbrgb);
 	void SetTextHex(ColorByteRGB const& cbrgb);
 	void SetTextHSL(ColorByteHSL const& cbhsl);
@@ -80,15 +81,10 @@ private:
 	void SetHueBarFromPos(int x);
 	void SetHueBarFromHue(int hue);
 	void SetHueBar(int x, int hue);
-
-	void DrawGradientCaret();
-	void UpdateGradientCaret(Point const& position);
 	void DrawHueBarCaret();
 	void UpdateHueBarCaret(int hue);
 
-	static void GradientMap_OnInitialize(Window* source, void* userdata);
-	static bool GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
-	static bool GradientMap_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
+	static void GradientMap_OnColorChanged(GradientMap* source, Color const& color, void* userdata);
 	static void HueBar_OnInitialize(Window* source, void* userdata);
 	static bool HueBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
 	static bool HueBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);

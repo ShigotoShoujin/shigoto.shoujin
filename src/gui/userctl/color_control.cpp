@@ -30,10 +30,18 @@ GradientMap::GradientMap()
 {
 }
 
+void GradientMap::SetHue(int hue)
+{
+	ColorByteHSL hsl(hue, 100, 50);
+	ColorByteRGB color = Color(hsl);
+	RenderGradientMap(*this, color);
+	OnColorChangedEvent(this, color);
+}
+
 void GradientMap::OnInitialize()
 {
 	Resize(client_size());
-	RenderGradientMap(*this, Color::Red);
+	SetHue(0);
 
 	_selector = client_size() / 2;
 	InitializeCaret();
@@ -45,26 +53,14 @@ bool GradientMap::OnMouseDown(MouseEvent const& e)
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
 		return NotHandled;
 
-	auto color = GetPixelColor(e.Position);
-
-	//auto H = static_cast<float>(parent->_numeric_hue->GetValue());
-	//auto S = e.Position.x / static_cast<float>(self->client_size().x);
-	//auto V = 1 - e.Position.y / static_cast<float>(self->client_size().y);
-	//auto color = Color{ColorFloatHSV{H, S, V}};
-
-	OnColorChangedEvent(color);
-	//ScopeFlag enabled(parent->_numeric_events_enabled, false);
-
-	//auto const fmt = TEXT("{:d}");
-	//parent->SetTextRGB(color);
-	//parent->SetTextHex(color);
-	//parent->SetTextHSL(color);
-
 	DrawCaret();
 	_selector = e.Position;
 	DrawCaret();
 
 	ForceRepaint();
+
+	_color = ColorFromPosition(e.Position);
+	OnColorChangedEvent(this, _color);
 
 	return Handled;
 }
@@ -100,19 +96,26 @@ void GradientMap::DrawCaret()
 	Draw(_caret, _selector - (kGradientCaretSize / 2), _caret.size(), {}, Bitmap::RasterMode::SrcInvert);
 }
 
+Color GradientMap::ColorFromPosition(Point const& pos) const
+{
+	ColorByteHSL hsl = _color;
+	auto [sx, sy] = client_size();
+	auto H = static_cast<float>(hsl.hue);
+	auto S = _selector.x / static_cast<float>(sx - 1);
+	auto V = 1 - _selector.y / static_cast<float>(sy - 1);
+	return ColorFloatHSV{H, S, V};
+}
+
 }
 
 Size const ColorControl::kDefaultClientSize{768, 768};
 
 ColorControl::ColorControl(LayoutParam const& layout_param) :
 	Window{BuildLayout(layout_param)},
-	_gradient_caret{{kGradientCaretSize, kGradientCaretSize}},
 	_hue_bar_caret{{kHueBarCaretSize, kHueBarHeight}}
 {
-	_gradient_map = new BitmapWindow();
-	_gradient_map->OnInitializeEvent = {GradientMap_OnInitialize, this};
-	_gradient_map->OnMouseDownEvent = {GradientMap_OnMouseDown, this};
-	_gradient_map->OnMouseMoveEvent = {GradientMap_OnMouseMove, this};
+	_gradient_map_ctrl = new internal::GradientMap();
+	_gradient_map_ctrl->OnColorChangedEvent = {GradientMap_OnColorChanged, this};
 
 	_hue_bar = new BitmapWindow();
 	_hue_bar->OnInitializeEvent = {HueBar_OnInitialize, this};
@@ -142,18 +145,14 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	_numeric_hue->min_value(0);
 	_numeric_hue->max_value(360);
 
-	_gradient_map_ctrl = new internal::GradientMap();
-	_gradient_map_ctrl->OnColorChangedEvent = [](Color const& c, void*) -> void { MessageBox(0, L"here", nullptr, MB_OK); };
-
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
 
 	LayoutStream stream{this};
 
 	stream
 		<< layout::window_size(client_size() / 4) << layout::exstyle(WS_EX_CLIENTEDGE)
-		<< topleft << _gradient_map
-		<< push << layout::window_size({client_size().x / 4, kHueBarHeight}) << below << _hue_bar
-		<< layout::window_size({client_size() / 2}) << below << _gradient_map_ctrl << pop
+		<< topleft << _gradient_map_ctrl
+		<< push << layout::window_size({client_size().x / 4, kHueBarHeight}) << below << _hue_bar << pop
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << _numeric_red << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << _numeric_green << pop << below
@@ -197,6 +196,14 @@ LayoutParam ColorControl::BuildLayout(LayoutParam const& layout_param)
 	return layout;
 }
 
+void ColorControl::SetText(Color const& color)
+{
+	ScopeFlag enabled{_numeric_events_enabled, false};
+	SetTextRGB(color);
+	SetTextHex(color);
+	SetTextHSL(color);
+}
+
 void ColorControl::SetTextRGB(ColorByteRGB const& cbrgb)
 {
 	_numeric_red->SetValue(cbrgb.red);
@@ -231,24 +238,12 @@ void ColorControl::SetHueBarFromHue(int hue)
 
 void ColorControl::SetHueBar(int x_pos, int hue)
 {
-	UpdateHueBarCaret(x_pos);
-	_hue_bar->ForceRepaint();
+	//UpdateHueBarCaret(x_pos);
+	//_hue_bar->ForceRepaint();
 
-	RenderGradientMap(*_gradient_map, ColorByteHSL{hue, 100, 50});
-	DrawGradientCaret();
-	_gradient_map->ForceRepaint();
-}
-
-void ColorControl::DrawGradientCaret()
-{
-	_gradient_map->Draw(_gradient_caret, _gradient_selector_position - (kGradientCaretSize / 2), _gradient_caret.size(), {}, Bitmap::RasterMode::SrcInvert);
-}
-
-void ColorControl::UpdateGradientCaret(Point const& position)
-{
-	DrawGradientCaret();
-	_gradient_selector_position = position;
-	DrawGradientCaret();
+	//RenderGradientMap(*_gradient_map, ColorByteHSL{hue, 100, 50});
+	//DrawGradientCaret();
+	//_gradient_map->ForceRepaint();
 }
 
 void ColorControl::DrawHueBarCaret()
@@ -263,66 +258,10 @@ void ColorControl::UpdateHueBarCaret(int hue)
 	DrawHueBarCaret();
 }
 
-void ColorControl::GradientMap_OnInitialize(Window* source, void* userdata)
+void ColorControl::GradientMap_OnColorChanged(GradientMap* source, Color const& color, void* userdata)
 {
 	auto parent = static_cast<ColorControl*>(userdata);
-	auto self = static_cast<BitmapWindow*>(source);
-	RenderGradientMap(*self, Color::Red);
-
-	parent->_gradient_selector_position = source->client_size() / 2;
-	auto constexpr size = kGradientCaretSize;
-	auto constexpr half = kGradientCaretSize / 2;
-
-	parent->_gradient_caret.Fill({}, {half, half}, Color::White); //TopLeft
-	parent->_gradient_caret.Fill({half + 1, half + 1}, {half, half}, Color::White); //TopRight
-	parent->_gradient_caret.Fill({0, half + 1}, {half, half}, Color::White); //BottomLeft
-	parent->_gradient_caret.Fill({half + 1, 0}, {half, half}, Color::White); //BottomRight
-	parent->_gradient_caret.DrawLine({0, 0}, {size, size}, Color::Black);
-	parent->_gradient_caret.DrawLine({size - 1, 0}, {-1, size}, Color::Black);
-
-	parent->DrawGradientCaret();
-}
-
-bool ColorControl::GradientMap_OnMouseDown(Window* source, MouseEvent const& e, void* userdata)
-{
-	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
-		return NotHandled;
-
-	auto parent = static_cast<ColorControl*>(userdata);
-	auto self = static_cast<BitmapWindow*>(source);
-	//auto color = self->GetPixelColor(e.Position);
-
-	auto H = static_cast<float>(parent->_numeric_hue->GetValue());
-	auto S = e.Position.x / static_cast<float>(self->client_size().x);
-	auto V = 1 - e.Position.y / static_cast<float>(self->client_size().y);
-	auto color = Color{ColorFloatHSV{H, S, V}};
-
-	ScopeFlag enabled(parent->_numeric_events_enabled, false);
-
-	auto const fmt = TEXT("{:d}");
-	parent->SetTextRGB(color);
-	parent->SetTextHex(color);
-	parent->SetTextHSL(color);
-
-	parent->UpdateGradientCaret(e.Position);
-	self->ForceRepaint();
-
-	return Handled;
-}
-
-bool ColorControl::GradientMap_OnMouseMove(Window* source, MouseEvent const& e, void* userdata)
-{
-	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
-		return NotHandled;
-
-	auto self = static_cast<BitmapWindow*>(source);
-	auto& client_size = self->client_size();
-
-	MouseEvent mouse_down_e = e;
-	mouse_down_e.Position.ClampPoint(client_size);
-	GradientMap_OnMouseDown(source, mouse_down_e, userdata);
-
-	return Handled;
+	parent->SetText(color);
 }
 
 void ColorControl::HueBar_OnInitialize(Window* source, void* userdata)
