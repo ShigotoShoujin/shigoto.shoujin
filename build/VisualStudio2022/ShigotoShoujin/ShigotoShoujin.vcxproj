@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{6c28db54-8607-461f-bdf8-090518e3ad4d}</ProjectGuid>
+    <ProjectGuid>{bafa1d68-0cd1-4790-8f0a-78baa5559b0d}</ProjectGuid>
     <RootNamespace>ShigotoShoujin</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -38,7 +38,6 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -52,7 +51,6 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -74,13 +72,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -92,15 +86,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <StringPooling>true</StringPooling>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -110,17 +102,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <StringPooling>true</StringPooling>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -130,15 +118,13 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <StringPooling>true</StringPooling>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -148,60 +134,20 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <StringPooling>true</StringPooling>
-      <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\shoujin\assert.hpp" />
-    <ClInclude Include="..\..\..\include\shoujin\event.hpp" />
-    <ClInclude Include="..\..\..\include\shoujin\file.hpp" />
-    <ClInclude Include="..\..\..\include\shoujin\gui.hpp" />
-    <ClInclude Include="..\..\..\include\shoujin\tstring.hpp" />
-    <ClInclude Include="..\..\..\src\assert\assert.hpp" />
-    <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp" />
-    <ClInclude Include="..\..\..\src\event.hpp" />
-    <ClInclude Include="..\..\..\src\file\file.hpp" />
-    <ClInclude Include="..\..\..\src\file\logfile.hpp" />
-    <ClInclude Include="..\..\..\src\grid.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap\gdiobj_cache.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_bar.hpp" />
-    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_map.hpp" />
-    <ClInclude Include="..\..\..\src\gui\color.hpp" />
-    <ClInclude Include="..\..\..\src\gui\comctl32\comctl32.hpp" />
-    <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp" />
-    <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp" />
-    <ClInclude Include="..\..\..\src\gui\comctl32\numeric_control.hpp" />
-    <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp" />
-    <ClInclude Include="..\..\..\src\gui\scope_flag.hpp" />
-    <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp" />
-    <ClInclude Include="..\..\..\src\gui\window_taborder.hpp" />
-    <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp" />
-    <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp" />
-    <ClInclude Include="..\..\..\src\gui\point.hpp" />
-    <ClInclude Include="..\..\..\src\gui\rect.hpp" />
-    <ClInclude Include="..\..\..\src\gui\size.hpp" />
-    <ClInclude Include="..\..\..\src\gui\types.hpp" />
-    <ClInclude Include="..\..\..\src\gui\vector2d.hpp" />
-    <ClInclude Include="..\..\..\src\gui\layout.hpp" />
-    <ClInclude Include="..\..\..\src\gui\window.hpp" />
-    <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
-    <ClInclude Include="..\..\..\src\tstring.hpp" />
+    <None Include="..\..\..\doc\ColorPicker.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\doc\todo.cpp" />
@@ -218,14 +164,53 @@
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\label_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\comctl32\numeric_control.cpp" />
-    <ClCompile Include="..\..\..\src\gui\layout\layout_stream.cpp" />
-    <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp" />
-    <ClCompile Include="..\..\..\src\gui\window_taborder.cpp" />
     <ClCompile Include="..\..\..\src\gui\layout.cpp" />
+    <ClCompile Include="..\..\..\src\gui\layout\layout_stream.cpp" />
     <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp" />
     <ClCompile Include="..\..\..\src\gui\logging\message_string.cpp" />
+    <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\window.cpp" />
+    <ClCompile Include="..\..\..\src\gui\window_taborder.cpp" />
     <ClCompile Include="..\..\..\src\tstring.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\shoujin\assert.hpp" />
+    <ClInclude Include="..\..\..\include\shoujin\event.hpp" />
+    <ClInclude Include="..\..\..\include\shoujin\file.hpp" />
+    <ClInclude Include="..\..\..\include\shoujin\gui.hpp" />
+    <ClInclude Include="..\..\..\include\shoujin\tstring.hpp" />
+    <ClInclude Include="..\..\..\src\assert\assert.hpp" />
+    <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp" />
+    <ClInclude Include="..\..\..\src\event.hpp" />
+    <ClInclude Include="..\..\..\src\file\file.hpp" />
+    <ClInclude Include="..\..\..\src\file\logfile.hpp" />
+    <ClInclude Include="..\..\..\src\grid.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_bar.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_map.hpp" />
+    <ClInclude Include="..\..\..\src\gui\bitmap\gdiobj_cache.hpp" />
+    <ClInclude Include="..\..\..\src\gui\color.hpp" />
+    <ClInclude Include="..\..\..\src\gui\comctl32\comctl32.hpp" />
+    <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp" />
+    <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp" />
+    <ClInclude Include="..\..\..\src\gui\comctl32\numeric_control.hpp" />
+    <ClInclude Include="..\..\..\src\gui\layout.hpp" />
+    <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp" />
+    <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp" />
+    <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp" />
+    <ClInclude Include="..\..\..\src\gui\point.hpp" />
+    <ClInclude Include="..\..\..\src\gui\rect.hpp" />
+    <ClInclude Include="..\..\..\src\gui\scope_flag.hpp" />
+    <ClInclude Include="..\..\..\src\gui\size.hpp" />
+    <ClInclude Include="..\..\..\src\gui\types.hpp" />
+    <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp" />
+    <ClInclude Include="..\..\..\src\gui\vector2d.hpp" />
+    <ClInclude Include="..\..\..\src\gui\window.hpp" />
+    <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
+    <ClInclude Include="..\..\..\src\gui\window_taborder.hpp" />
+    <ClInclude Include="..\..\..\src\tstring.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

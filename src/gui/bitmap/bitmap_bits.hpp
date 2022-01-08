@@ -17,6 +17,8 @@ class BitmapBits : public Grid<Pixel> {
 	using Grid = Grid<Pixel>;
 
 public:
+	BitmapBits() = default;
+
 	BitmapBits(int width, int height) :
 		Grid{width, height} {}
 

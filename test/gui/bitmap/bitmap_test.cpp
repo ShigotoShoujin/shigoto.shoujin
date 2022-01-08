@@ -9,6 +9,11 @@ using namespace shoujin::gui::bitmap;
 
 TEST_CLASS(BitmapTest) {
 public:
+	TEST_METHOD_CLEANUP(TestCleanup)
+	{
+		shoujin::assert::OnErrorEvent = nullptr;
+	}
+
 	TEST_METHOD(IsCopyConstructible) {
 		Assert::IsTrue(std::is_copy_constructible_v<Bitmap>);
 	}
@@ -30,21 +35,6 @@ public:
 		int* count = reinterpret_cast<int*>(userdata);
 		++*count;
 		return true;
-	}
-
-	TEST_METHOD(CreateWithSizeZero_Assert) {
-		//Arrange
-		int count{};
-		shoujin::assert::OnErrorEvent = {OnError, &count};
-
-		//Act
-		Bitmap bitmap{{}};
-
-		//Assert
-		Assert::AreEqual(2, count);
-
-		//Cleanup
-		shoujin::assert::OnErrorEvent = nullptr;
 	}
 
 	TEST_METHOD(CopyConstructor) {

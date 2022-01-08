@@ -16,6 +16,28 @@ class BitmapWindow;
 
 namespace shoujin::gui::usercontrol {
 
+namespace internal {
+
+class GradientMap : public BitmapWindow {
+public:
+	GradientMap();
+	Event<void, Color const&> OnColorChangedEvent;
+
+private:
+	Bitmap _caret;
+	Point _selector;
+	Color _color;
+
+	void OnInitialize() override;
+	bool OnMouseDown(MouseEvent const& e) override;
+	bool OnMouseMove(MouseEvent const& e) override;
+
+	void InitializeCaret();
+	void DrawCaret();
+};
+
+}
+
 class ColorControl : public Window {
 public:
 	explicit ColorControl(LayoutParam const& layout_param = {});
@@ -24,7 +46,7 @@ public:
 protected:
 	virtual void BeforeCreate(CreateParam& create_param) override;
 	virtual bool OnCreate(CREATESTRUCT const& createparam) override;
-	virtual void OnInitialize(Window* source) override;
+	virtual void OnInitialize() override;
 
 private:
 	static Size const kDefaultClientSize;
@@ -48,6 +70,8 @@ private:
 	NumericControl* _numeric_lightness;
 
 	bool _numeric_events_enabled{true};
+
+	internal::GradientMap* _gradient_map_ctrl{};
 
 	void SetTextRGB(ColorByteRGB const& cbrgb);
 	void SetTextHex(ColorByteRGB const& cbrgb);

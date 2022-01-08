@@ -35,7 +35,7 @@ void EditControl::readonly(bool value)
 		SendMessage(hwnd(), EM_SETREADONLY, _readonly, 0);
 }
 
-void EditControl::OnInitialize(Window* source)
+void EditControl::OnInitialize()
 {
 	readonly(_readonly);
 }

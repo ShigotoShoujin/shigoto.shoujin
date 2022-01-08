@@ -85,6 +85,8 @@ public:
 	bool ProcessMessageQueue();
 	void SetFocus();
 	[[nodiscard]] tstring GetText() const;
+	void AppendText(tstring_view text);
+	void AppendLine(tstring_view text);
 	void SetText(tstring_view text);
 	void Show();
 	void ShowModal();
@@ -104,6 +106,7 @@ public:
 	Event<bool, Window*, KeyEvent const&> OnKeyPressEvent;
 	Event<bool, Window*, MouseEvent const&> OnMouseDownEvent;
 	Event<bool, Window*, MouseEvent const&> OnMouseUpEvent;
+	Event<bool, Window*, MouseEvent const&> OnMouseClickEvent;
 	Event<bool, Window*, MouseEvent const&> OnMouseMoveEvent;
 	Event<> OnDestroyEvent;
 
@@ -119,7 +122,7 @@ protected:
 	virtual bool OnDispatchMessage(MSG const& msg);
 	virtual bool OnWndProc(WindowMessage const& message);
 	virtual bool OnCreate(CREATESTRUCT const& createparam);
-	virtual void OnInitialize(Window* source);
+	virtual void OnInitialize();
 	virtual bool OnClose();
 	virtual bool OnCommand(int notification_code);
 	virtual bool OnPaint();
@@ -132,6 +135,7 @@ protected:
 	virtual bool OnMouseDown(MouseEvent const& e);
 	virtual bool OnMouseUp(MouseEvent const& e);
 	virtual bool OnMouseMove(MouseEvent const& e);
+	virtual bool OnMouseClick(MouseEvent const& e);
 	virtual void OnDestroy();
 
 private:
@@ -150,6 +154,7 @@ private:
 	MessageResult RaiseOnKeyPress(WindowMessage const& message);
 	MessageResult RaiseOnMouseDown(WindowMessage const& message);
 	MessageResult RaiseOnMouseUp(WindowMessage const& message);
+	MessageResult RaiseOnMouseClick(WindowMessage const& message);
 	MessageResult RaiseOnMouseMove(WindowMessage const& message);
 	MessageResult RaiseOnDestroy();
 
@@ -161,6 +166,8 @@ private:
 	bool ReadMessage(MSG& msg);
 	bool ReadMessageAsync(MSG& msg);
 	void TranslateAndDispatchMessage(MSG const& msg);
+	std::vector<TCHAR> GetTextVector(size_t extra_char_to_alloc = 0) const;
+	void AppendText(tstring_view text, bool append_new_line);
 };
 
 }

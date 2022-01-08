@@ -20,7 +20,7 @@ public:
 
 	virtual ~TestControl() = default;
 
-	virtual void OnInitialize(Window* source) override
+	virtual void OnInitialize() override
 	{
 		++_on_initialize_call_count;
 	}

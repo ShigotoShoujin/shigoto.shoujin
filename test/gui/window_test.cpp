@@ -26,7 +26,7 @@ public:
 		shoujin::gui::logging::_activate_wndproc_messagelog_ = false;
 	}
 
-	Window& CreateSampleWindow()
+	Window* CreateSampleWindow()
 	{
 		Window* window = new Window{LayoutParam{.layout_mode{LayoutMode::CenterParent}}};
 		window->OnCreateEvent = OnCreatePostCloseMsg;
@@ -38,7 +38,7 @@ public:
 		window->AddChild(new EditControl(LayoutParam{.position{11, y += r}}));
 		window->AddChild(new EditControl(LayoutParam{.position{11, y += r}}));
 
-		return *window;
+		return window;
 	}
 
 	TEST_METHOD(IsCopyConstructible) {
@@ -95,24 +95,28 @@ public:
 	}
 
 	TEST_METHOD(CopyConstructor_CopiedProperly) {
-		Window& window = CreateSampleWindow();
+		Window* window = CreateSampleWindow();
 
-		Window copied(window);
+		Window copied(*window);
 		copied.OnCreateEvent = OnCreatePostCloseMsg;
 
-		window.ShowModal();
+		window->ShowModal();
 		copied.ShowModal();
+
+		delete window;
 	}
 
 	TEST_METHOD(CopyAssignment_CopiedProperly) {
-		Window& window = CreateSampleWindow();
+		Window* window = CreateSampleWindow();
 
 		Window copied;
-		copied = window;
+		copied = *window;
 		copied.OnCreateEvent = OnCreatePostCloseMsg;
-
-		window.ShowModal();
+		
+		window->ShowModal();
 		copied.ShowModal();
+
+		delete window;
 	}
 };
 

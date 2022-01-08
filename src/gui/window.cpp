@@ -164,24 +164,33 @@ void Window::SetFocus()
 
 tstring Window::GetText() const
 {
-	HWND hwnd = this->hwnd();
-
-	if(!hwnd)
+	if(!hwnd())
 		return text();
 
-	auto result_ok = [](int r) { return !(r == 0 && GetLastError()); };
-	auto text_length = SHOUJIN_ASSERT_WIN32_EXPLICIT(GetWindowTextLength(hwnd), result_ok);
-	if(text_length == 0)
-		return text();
-
-	std::vector<TCHAR> buffer(static_cast<size_t>(text_length) + 1);
-	SHOUJIN_ASSERT_WIN32_EXPLICIT(GetWindowText(hwnd, buffer.data(), text_length + 1), result_ok);
+	auto buffer = GetTextVector();
 
 	return buffer.data();
 }
 
+void Window::AppendText(tstring_view text)
+{
+	if(!hwnd())
+		return;
+
+	AppendText(text, false);
+}
+
+void Window::AppendLine(tstring_view text)
+{
+	if(!hwnd())
+		return;
+
+	AppendText(text, true);
+}
+
 void Window::SetText(tstring_view text)
 {
+	SHOUJIN_ASSERT(hwnd());
 	SHOUJIN_ASSERT_WIN32(SetWindowText(*_handle, text.data()));
 }
 
@@ -284,7 +293,7 @@ bool Window::OnCreate(CREATESTRUCT const& createparam)
 	return NotHandled;
 }
 
-void Window::OnInitialize(Window* source)
+void Window::OnInitialize()
 {
 }
 
@@ -382,6 +391,11 @@ bool Window::OnMouseMove(MouseEvent const& e)
 	return NotHandled;
 }
 
+bool Window::OnMouseClick(MouseEvent const& e)
+{
+	return NotHandled;
+}
+
 void Window::OnDestroy()
 {
 }
@@ -411,7 +425,7 @@ Window::MessageResult Window::RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lpa
 
 void Window::RaiseOnInitialize()
 {
-	OnInitialize(this);
+	OnInitialize();
 	OnInitializeEvent(this);
 
 	for(auto&& child : _child_vec)
@@ -523,8 +537,27 @@ Window::MessageResult Window::RaiseOnMouseUp(WindowMessage const& message)
 	SHOUJIN_ASSERT_WIN32(ReleaseCapture());
 	_previous_mouse_position = {};
 
+	//Need both calls because STATIC control will not found using WindowFromPoint
+	POINT point = e.Position;
+	HWND window_clicked = ChildWindowFromPoint(GetParent(hwnd()), point);
+	if(!window_clicked) {
+		ClientToScreen(hwnd(), &point);
+		window_clicked = WindowFromPoint(point);
+	}
+
+	if(window_clicked == hwnd())
+		RaiseOnMouseClick(message);
+
 	auto result = OnMouseUp(e);
 	return result | (OnMouseUpEvent ? OnMouseUpEvent(this, e) : NotHandled);
+}
+
+Window::MessageResult Window::RaiseOnMouseClick(WindowMessage const& message)
+{
+	MouseEvent e{message};
+
+	auto result = OnMouseClick(e);
+	return result | (OnMouseClickEvent ? OnMouseClickEvent(this, e) : NotHandled);
 }
 
 Window::MessageResult Window::RaiseOnMouseMove(WindowMessage const& message)
@@ -669,6 +702,40 @@ void Window::TranslateAndDispatchMessage(MSG const& msg)
 	TranslateMessage(&msg);
 	if(!RaiseOnDispatchMessage(msg))
 		DispatchMessage(&msg);
+}
+
+std::vector<TCHAR> Window::GetTextVector(size_t extra_char_to_alloc) const
+{
+	auto result_ok = [](int r) { return !(r == 0 && GetLastError()); };
+	size_t text_length = SHOUJIN_ASSERT_WIN32_EXPLICIT(GetWindowTextLength(hwnd()), result_ok);
+	text_length += extra_char_to_alloc;
+
+	if(text_length == 0)
+		return std::vector<TCHAR>{};
+
+	std::vector<TCHAR> buffer(text_length + 1);
+	SHOUJIN_ASSERT_WIN32_EXPLICIT(GetWindowText(hwnd(), buffer.data(), static_cast<int>(text_length) + 1), result_ok);
+
+	return buffer;
+}
+
+void Window::AppendText(tstring_view text, bool append_new_line)
+{
+	auto size = text.size();
+	if(append_new_line)
+		size += 2;
+
+	auto buffer = GetTextVector(size);
+	auto* last = buffer.data() + buffer.size();
+	std::copy(text.cbegin(), text.cend(), last - size - 1);
+
+	if(append_new_line) {
+		last -= 4;
+		*++last = '\r';
+		*++last = '\n';
+	}
+
+	SetText(buffer.data());
 }
 
 static Rect GetOnSizingMinRect(WPARAM wparam, Rect const& onsizing_rect, Size const& min_size)

@@ -42,7 +42,7 @@ public:
 			return {255, 0, 0};
 		}
 
-		if(*_cf_ptr > 0xff || *_cf_ptr < 0) {
+		if(*_cf_ptr > 0xff || *_cf_ptr < 0) [[unlikely]] {
 			*_cf_ptr = *_cf_ptr < 0 ? 0.f : 255.f;
 			*_c_ptr = static_cast<uint8_t>(*_cf_ptr);
 			switch(++_phase) {

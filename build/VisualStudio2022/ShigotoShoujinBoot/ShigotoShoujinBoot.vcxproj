@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e2b3b3a9-db83-43a0-9479-134d829f1e39}</ProjectGuid>
+    <ProjectGuid>{3b053120-b2f9-4319-8d16-70f37941c286}</ProjectGuid>
     <RootNamespace>ShigotoShoujinBoot</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -151,7 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShigotoShoujin\ShigotoShoujin.vcxproj">
-      <Project>{6c28db54-8607-461f-bdf8-090518e3ad4d}</Project>
+      <Project>{bafa1d68-0cd1-4790-8f0a-78baa5559b0d}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

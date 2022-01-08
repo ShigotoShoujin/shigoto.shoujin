@@ -4,10 +4,10 @@
 // Maybe the inner <> to confine TArgs... could solve the goal of keeping TUserData as the last argument.
 // Also strongly reconsider removing the limitation to have only one handler per event,
 // even though this makes events handler always return void.
+// 
+// Some of the above is wrong because the type of userdata is not known at the time of declaring the event, an can be different for each handler.
 
 // Change SHOUJIN_ASSERT* to use C++20 std::source_location and get rid of macros
-
-// TODO Consider moving all API call that needs Assertions into their own namespace to avoid repeating complex assertions
 
 // TODO Enable visual styles
 // https://docs.microsoft.com/en-us/windows/win32/controls/cookbook-overview

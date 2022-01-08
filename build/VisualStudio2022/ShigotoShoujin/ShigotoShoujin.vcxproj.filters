@@ -1,159 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="doc">
+      <UniqueIdentifier>{77042856-ac59-4aa8-848c-6e9e8b1f2a3e}</UniqueIdentifier>
+    </Filter>
     <Filter Include="include">
-      <UniqueIdentifier>{cba969e1-f36a-46a9-bc54-9ea0231a815f}</UniqueIdentifier>
+      <UniqueIdentifier>{66d1b955-1ee1-4d1f-a062-0eedbb096645}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
-      <UniqueIdentifier>{0a316b41-d54a-4fdc-8e64-fda4afa4ed43}</UniqueIdentifier>
+      <UniqueIdentifier>{2f167fcb-d9a4-4c03-8f8f-80717a6e77ed}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\assert">
-      <UniqueIdentifier>{d835a18c-2cca-487e-95ba-2475c87bd7bf}</UniqueIdentifier>
+      <UniqueIdentifier>{97fbd993-71c9-4d57-87e6-387b90e4ab19}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\file">
-      <UniqueIdentifier>{90f51c40-7fb5-4790-a06e-f48d03556cee}</UniqueIdentifier>
+      <UniqueIdentifier>{98e2203a-5867-41ab-8a70-33ca92f2f23a}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\gui">
-      <UniqueIdentifier>{ab52bafa-b56d-45f3-bb76-f8cef644e38c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="doc">
-      <UniqueIdentifier>{8321acf7-d9e0-43f6-89ad-3c8450d326ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\gui\logging">
-      <UniqueIdentifier>{3381b635-786e-4846-87ad-b4ded2945c8e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\gui\comctl32">
-      <UniqueIdentifier>{0eccf6fe-9310-4968-8e11-37bf8a5bfcbd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\gui\layout">
-      <UniqueIdentifier>{c4d79002-d52d-4de9-b0e7-0906cb61fc6f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\gui\userctl">
-      <UniqueIdentifier>{d146e26e-421a-4765-85a9-9e15c47e0813}</UniqueIdentifier>
+      <UniqueIdentifier>{84050d9c-73fc-42e9-a40a-17c51daa67ca}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\gui\bitmap">
-      <UniqueIdentifier>{49665a3e-9d00-42d0-9c02-de17abbe950d}</UniqueIdentifier>
+      <UniqueIdentifier>{0d08d1ba-3d62-4134-9a49-a9b8ad580d6f}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\gui\bitmap\effect">
-      <UniqueIdentifier>{6eb7e2f9-2b90-4eb1-aa82-c8551f92c6e9}</UniqueIdentifier>
+      <UniqueIdentifier>{015419c1-9662-4f09-a1ee-106d58316558}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui\comctl32">
+      <UniqueIdentifier>{682b1773-ec43-4b74-b42a-07f3e234f62a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui\layout">
+      <UniqueIdentifier>{6a19d487-d615-40c1-9679-acd827fb5584}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui\logging">
+      <UniqueIdentifier>{0f0cd962-a42e-4a41-bc89-ca7c8a6bbe4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui\userctl">
+      <UniqueIdentifier>{faa22529-6e8a-402b-a7ac-6b6eeb3d65b2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\tstring.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\assert\assert.hpp">
-      <Filter>src\assert</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\file\file.hpp">
-      <Filter>src\file</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\shoujin\file.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp">
-      <Filter>src\assert</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\shoujin\event.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\shoujin\tstring.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\event.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\shoujin\gui.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\size.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\point.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\types.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\color.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\file\logfile.hpp">
-      <Filter>src\file</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\vector2d.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\layout.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\rect.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window_handle.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp">
-      <Filter>src\gui\logging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp">
-      <Filter>src\gui\logging</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\window_taborder.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp">
-      <Filter>src\gui\comctl32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp">
-      <Filter>src\gui\comctl32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp">
-      <Filter>src\gui\layout</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp">
-      <Filter>src\gui\userctl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\grid.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp">
-      <Filter>src\gui\bitmap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp">
-      <Filter>src\gui\bitmap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp">
-      <Filter>src\gui\bitmap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_map.hpp">
-      <Filter>src\gui\bitmap\effect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_bar.hpp">
-      <Filter>src\gui\bitmap\effect</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\comctl32\comctl32.hpp">
-      <Filter>src\gui\comctl32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\scope_flag.hpp">
-      <Filter>src\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\comctl32\numeric_control.hpp">
-      <Filter>src\gui\comctl32</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\bitmap\gdiobj_cache.hpp">
-      <Filter>src\gui\bitmap</Filter>
-    </ClInclude>
+    <None Include="..\..\..\doc\ColorPicker.xlsx">
+      <Filter>doc</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\assert\assert.cpp">
-      <Filter>src\assert</Filter>
+    <ClCompile Include="..\..\..\doc\todo.cpp">
+      <Filter>doc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\tstring.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\file\logfile.cpp">
+      <Filter>src\file</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\file\file.cpp">
       <Filter>src\file</Filter>
@@ -161,29 +59,38 @@
     <ClCompile Include="..\..\..\src\assert\stream_to_file_redirector.cpp">
       <Filter>src\assert</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\doc\todo.cpp">
-      <Filter>doc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\color.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\file\logfile.cpp">
-      <Filter>src\file</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\layout.cpp">
-      <Filter>src\gui</Filter>
+    <ClCompile Include="..\..\..\src\assert\assert.cpp">
+      <Filter>src\assert</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\window.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\logging\message_string.cpp">
-      <Filter>src\gui\logging</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp">
-      <Filter>src\gui\logging</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\gui\window_taborder.cpp">
       <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\color.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\layout.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_window.cpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\bitmap\gdiobj_cache.cpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap.cpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_bits.cpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\comctl32\numeric_control.cpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\comctl32\comctl32.cpp">
+      <Filter>src\gui\comctl32</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\comctl32\edit_control.cpp">
       <Filter>src\gui\comctl32</Filter>
@@ -194,29 +101,127 @@
     <ClCompile Include="..\..\..\src\gui\layout\layout_stream.cpp">
       <Filter>src\gui\layout</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\logging\message_string.cpp">
+      <Filter>src\gui\logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui\logging\message_logger.cpp">
+      <Filter>src\gui\logging</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp">
       <Filter>src\gui\userctl</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap.cpp">
-      <Filter>src\gui\bitmap</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_bits.cpp">
-      <Filter>src\gui\bitmap</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap\bitmap_window.cpp">
-      <Filter>src\gui\bitmap</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\comctl32\comctl32.cpp">
-      <Filter>src\gui\comctl32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\tstring.cpp">
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\shoujin\event.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\shoujin\file.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\shoujin\gui.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\shoujin\tstring.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\grid.hpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\comctl32\numeric_control.cpp">
-      <Filter>src\gui\comctl32</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui\bitmap\gdiobj_cache.cpp">
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\tstring.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\event.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\file\logfile.hpp">
+      <Filter>src\file</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\file\file.hpp">
+      <Filter>src\file</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp">
+      <Filter>src\assert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\assert\assert.hpp">
+      <Filter>src\assert</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\rect.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\scope_flag.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\size.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\types.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\vector2d.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\window.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\window_handle.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\window_taborder.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\color.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\layout.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\point.hpp">
+      <Filter>src\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp">
       <Filter>src\gui\bitmap</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\gdiobj_cache.hpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp">
+      <Filter>src\gui\bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_map.hpp">
+      <Filter>src\gui\bitmap\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\bitmap\effect\gradient_bar.hpp">
+      <Filter>src\gui\bitmap\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\comctl32\label_control.hpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\comctl32\numeric_control.hpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\comctl32\comctl32.hpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\comctl32\edit_control.hpp">
+      <Filter>src\gui\comctl32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\layout\layout_stream.hpp">
+      <Filter>src\gui\layout</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp">
+      <Filter>src\gui\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\logging\message_logger.hpp">
+      <Filter>src\gui\logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp">
+      <Filter>src\gui\userctl</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

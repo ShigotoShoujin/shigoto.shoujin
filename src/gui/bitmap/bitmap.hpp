@@ -11,15 +11,6 @@
 namespace shoujin::gui::bitmap {
 
 class Bitmap {
-	friend void swap(Bitmap&, Bitmap&) noexcept;
-
-	HDC _hdc;
-	HBITMAP _hbitmap;
-	Size _size;
-	GdiObjCache _gdiobj_cache;
-
-	Bitmap();
-
 public:
 	class RasterMode {
 		struct RasterOperation {
@@ -60,6 +51,7 @@ public:
 		RasterOperation _rop;
 	};
 
+	Bitmap() = default;
 	Bitmap(Size const& size);
 
 	Bitmap(Bitmap const&);
@@ -68,12 +60,14 @@ public:
 	Bitmap& operator=(Bitmap&&) noexcept;
 
 	virtual ~Bitmap();
+	friend void swap(Bitmap&, Bitmap&) noexcept;
 
 	[[nodiscard]] virtual Size const& size() const { return _size; }
 	[[nodiscard]] virtual HDC const& hdc() const { return _hdc; }
+	[[nodiscard]] virtual operator bool() const { return _hdc; }
 
 	virtual void Destroy() noexcept;
-	virtual void Reset(Size const& size);
+	virtual void Resize(Size const& size, bool copy = false);
 	virtual void Fill(RECT const& rect, Color const& color);
 	virtual void Fill(Point const& position, Size const& size, Color const& color);
 	virtual void Fill(Color const& color);
@@ -84,6 +78,16 @@ public:
 	virtual Color GetPixelColor(Point const& position);
 	virtual BitmapBits GetBits() const;
 	virtual void SetBits(BitmapBits const&);
+
+private:
+	HDC _hdc{};
+	HBITMAP _hbitmap{};
+	Size _size{};
+	GdiObjCache _gdiobj_cache{};
+
+	void _Create(Size const& size);
+	void _ResizeClear(Size const& size);
+	void _ResizeCopy(Size const& size);
 };
 
 }

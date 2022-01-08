@@ -26,22 +26,9 @@ Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::DstInvert{DSTINVERT};
 Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::Blackness{BLACKNESS};
 Bitmap::RasterMode::RasterOperation Bitmap::RasterMode::Whiteness{WHITENESS};
 
-void swap(Bitmap& first, Bitmap& second) noexcept
-{
-	SHOUJIN_ASSERT(&first != &second);
-	using std::swap;
-
-	swap(first._hdc, second._hdc);
-	swap(first._hbitmap, second._hbitmap);
-	swap(first._size, second._size);
-}
-
-Bitmap::Bitmap() :
-	_hdc{}, _hbitmap{}, _size{} {}
-
 Bitmap::Bitmap(Size const& size)
 {
-	Reset(size);
+	Resize(size);
 }
 
 Bitmap::Bitmap(Bitmap const& rhs)
@@ -82,6 +69,16 @@ Bitmap::~Bitmap()
 	Destroy();
 }
 
+void swap(Bitmap& first, Bitmap& second) noexcept
+{
+	SHOUJIN_ASSERT(&first != &second);
+	using std::swap;
+
+	swap(first._hdc, second._hdc);
+	swap(first._hbitmap, second._hbitmap);
+	swap(first._size, second._size);
+}
+
 void Bitmap::Destroy() noexcept
 {
 	if(_hdc) {
@@ -93,18 +90,22 @@ void Bitmap::Destroy() noexcept
 	}
 }
 
-void Bitmap::Reset(Size const& size)
+void Bitmap::Resize(Size const& size, bool copy)
 {
-	SHOUJIN_ASSERT(size);
-	Destroy();
-	HDC hdesktopdc = ::GetDC(HWND_DESKTOP);
-	CreateBitmap(hdesktopdc, size, _hdc, _hbitmap);
-	SHOUJIN_ASSERT_WIN32(ReleaseDC(HWND_DESKTOP, hdesktopdc));
-	_size = size;
+	if(this->size() == size)
+		return;
+
+	if(copy)
+		_ResizeCopy(size);
+	else
+		_ResizeClear(size);
 }
 
 void Bitmap::Fill(RECT const& rect, Color const& color)
 {
+	if(!*this)
+		return;
+
 	HBRUSH brush = _gdiobj_cache.GetBrush(color);
 	SHOUJIN_ASSERT(::FillRect(_hdc, &rect, brush));
 }
@@ -121,6 +122,9 @@ void Bitmap::Fill(Color const& color)
 
 void Bitmap::Draw(HDC source, Point const& position, Size const& size, Point const& src_position, RasterMode rop)
 {
+	if(!*this)
+		return;
+
 	SHOUJIN_ASSERT_WIN32(BitBlt(_hdc, position.x, position.y, size.x, size.y, source, src_position.x, src_position.y, rop));
 }
 
@@ -138,6 +142,9 @@ void Bitmap::Draw(Bitmap const& source)
 
 void Bitmap::DrawLine(Point const& start, Point const& end, Color const& color)
 {
+	if(!*this)
+		return;
+
 	HPEN pen = _gdiobj_cache.GetPen(color);
 	auto previous_obj = SelectObject(_hdc, pen);
 
@@ -149,11 +156,17 @@ void Bitmap::DrawLine(Point const& start, Point const& end, Color const& color)
 
 Color Bitmap::GetPixelColor(Point const& position)
 {
+	if(!*this)
+		return {};
+
 	return SHOUJIN_ASSERT_WIN32_EXPLICIT(::GetPixel(_hdc, position.x, position.y), [](auto result) { return result != CLR_INVALID; });
 }
 
 BitmapBits Bitmap::GetBits() const
 {
+	if(!*this)
+		return {};
+
 	SHOUJIN_ASSERT(sizeof(BitmapBits::value_type) == kBitmapInfoBitCount >> 3);
 
 	BITMAPINFO bi{};
@@ -176,6 +189,10 @@ BitmapBits Bitmap::GetBits() const
 void Bitmap::SetBits(BitmapBits const& bitmap_bits)
 {
 	SHOUJIN_ASSERT(sizeof(BitmapBits::value_type) == kBitmapInfoBitCount >> 3);
+	Resize({bitmap_bits.width(), bitmap_bits.height()});
+
+	if(!*this)
+		return;
 
 	BITMAPINFO bi{};
 	BITMAPINFOHEADER& bih = bi.bmiHeader;
@@ -187,6 +204,30 @@ void Bitmap::SetBits(BitmapBits const& bitmap_bits)
 	bih.biCompression = BI_RGB;
 
 	SHOUJIN_ASSERT_WIN32(SetDIBits(_hdc, _hbitmap, 0, -bih.biHeight, bitmap_bits.data(), &bi, DIB_RGB_COLORS));
+}
+
+void Bitmap::_Create(Size const& size)
+{
+	if(size) {
+		HDC hdesktopdc = ::GetDC(HWND_DESKTOP);
+		CreateBitmap(hdesktopdc, size, _hdc, _hbitmap);
+		SHOUJIN_ASSERT_WIN32(ReleaseDC(HWND_DESKTOP, hdesktopdc));
+		_size = size;
+	}
+}
+
+void Bitmap::_ResizeClear(Size const& size)
+{
+	Destroy();
+	_Create(size);
+}
+
+void Bitmap::_ResizeCopy(Size const& size)
+{
+	Bitmap backup = *this;
+	Destroy();
+	_Create(size);
+	Draw(backup);
 }
 
 }

@@ -21,7 +21,7 @@ public:
 	Event<bool, EditControl*> OnChangeEvent;
 
 protected:
-	virtual void OnInitialize(Window* source) override;
+	virtual void OnInitialize() override;
 	virtual bool OnCommand(int notification_code) override;
 	virtual bool OnChange();
 	virtual bool OnKeyPress(KeyEvent const& e) override;
