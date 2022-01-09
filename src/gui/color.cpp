@@ -4,8 +4,6 @@
 
 using namespace shoujin::gui;
 
-static uint8_t ToByte(float channel);
-static float ToFloat(uint8_t channel);
 static ColorFloatHSL ToHSL(ColorFloatRGB const& rgb);
 static ColorFloatHSV ToHSV(ColorFloatRGB const& rgb);
 static ColorFloatRGB ToRGB(ColorFloatHSL const& hsl);
@@ -160,17 +158,6 @@ Color const Color::Purple  (ColorByteRGB {128,   0, 128} );
 Color const Color::Teal    (ColorByteRGB {  0, 128, 128} );
 Color const Color::Navy    (ColorByteRGB {  0,   0, 128} );
 // clang-format on
-}
-
-static uint8_t ToByte(float channel)
-{
-	auto b = 0xff * std::clamp<float>(channel, 0.f, 1.f);
-	return static_cast<uint8_t>(std::roundf(b));
-}
-
-static float ToFloat(uint8_t channel)
-{
-	return std::clamp<float>(channel, 0, 0xff) / 0xff;
 }
 
 static void CHMMRGB(ColorFloatRGB const& rgb, float& H, float& C, float& min, float& max)

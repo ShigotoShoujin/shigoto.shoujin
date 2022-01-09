@@ -1,3 +1,7 @@
+// Use GitHub Issues instead of this file
+
+// In order to avoir the need to convert first convert to RGB when converting HSL->HSV and HSV->HSL, add direct conversions and tests
+
 // Consider making tstring a class with a constructor accepting va_args or something with std::format so we can format text directly
 
 // In class Event, reconsider making void* userdata a template, using Event<TReturn, <TArgs...>, TUserData>

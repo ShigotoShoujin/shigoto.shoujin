@@ -37,6 +37,7 @@ private:
 	void initializeCaret();
 	void updateCaret(Point const& pos);
 	void drawCaret();
+	void renderMap(float hue);
 	ColorFloatHSV colorFromPosition(Point const& pos, float hue) const;
 	Point positionFromColor(ColorFloatHSV const& color) const;
 };
@@ -111,6 +112,10 @@ private:
 	static bool txtRgbChangeHandler(EditControl* source, void* userdata);
 	static bool txtHslChangeHandler(EditControl* source, void* userdata);
 	static bool txtHsvChangeHandler(EditControl* source, void* userdata);
+
+	void syncFromRGB();
+	void syncFromHSL();
+	void syncFromHSV();
 };
 
 }

@@ -49,7 +49,7 @@ public:
 	TEST_METHOD(VoidParam_EventRaised) {
 		//Arrange
 		Event<void, int, int, int&> void_event(OnVoidEvent);
-		int x{3}, y{2}, sum;
+		int x{3}, y{2}, sum{};
 
 		//Act
 		void_event(x, y, sum);
@@ -73,7 +73,7 @@ public:
 	TEST_METHOD(CopyAssignment_EventRaised) {
 		//Arrange
 		Event<void, int, int, int&> three_param;
-		int x{3}, y{2}, sum;
+		int x{3}, y{2}, sum{};
 
 		three_param = OnVoidEvent;
 
@@ -110,5 +110,81 @@ public:
 		//Assert
 		Assert::AreEqual(x + y, userdata.add_result);
 		Assert::AreEqual(x * y, userdata.mul_result);
+	}
+
+	TEST_METHOD(Disabled_NotRaised) {
+		//Arrange
+		Event<void, int, int, int&> void_event(OnVoidEvent);
+		int x{3}, y{2}, sum{};
+
+		//Act
+		void_event.pushDisable();
+		void_event(x, y, sum);
+
+		//Assert
+		Assert::AreEqual(0, sum);
+	}
+
+	TEST_METHOD(DisabledThenEnabled_Raised) {
+		//Arrange
+		Event<void, int, int, int&> void_event(OnVoidEvent);
+		int x{3}, y{2}, sum{};
+
+		//Act
+		void_event.pushDisable();
+		void_event.popDisable();
+		void_event(x, y, sum);
+
+		//Assert
+		Assert::AreEqual(x + y, sum);
+	}
+
+	TEST_METHOD(DisabledMoreThanEnabled_NotRaised) {
+		//Arrange
+		Event<void, int, int, int&> void_event(OnVoidEvent);
+		int x{3}, y{2}, sum{};
+
+		//Act
+		void_event.pushDisable();
+		void_event.pushDisable();
+		void_event.popDisable();
+		void_event(x, y, sum);
+
+		//Assert
+		Assert::AreEqual(0, sum);
+	}
+
+	TEST_METHOD(DisabledSameAsEnabled_Raised) {
+		//Arrange
+		Event<void, int, int, int&> void_event(OnVoidEvent);
+		int x{3}, y{2}, sum{};
+
+		//Act
+		void_event.pushDisable();
+		void_event.pushDisable();
+		void_event.popDisable();
+		void_event.pushDisable();
+		void_event.popDisable();
+		void_event.popDisable();
+		void_event.popDisable();
+		void_event(x, y, sum);
+
+		//Assert
+		Assert::AreEqual(x + y, sum);
+	}
+
+	TEST_METHOD(DisabledLessThenEnabled_Raised) {
+		//Arrange
+		Event<void, int, int, int&> void_event(OnVoidEvent);
+		int x{3}, y{2}, sum{};
+
+		//Act
+		void_event.pushDisable();
+		void_event.popDisable();
+		void_event.popDisable();
+		void_event(x, y, sum);
+
+		//Assert
+		Assert::AreEqual(x + y, sum);
 	}
 };
