@@ -169,6 +169,9 @@ tstring Window::GetText() const
 
 	auto buffer = GetTextVector();
 
+	if(buffer.empty())
+		return {};
+
 	return buffer.data();
 }
 

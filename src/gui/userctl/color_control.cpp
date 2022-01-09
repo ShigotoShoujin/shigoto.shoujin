@@ -9,54 +9,48 @@ using namespace shoujin::gui;
 using namespace shoujin::gui::bitmap;
 using namespace shoujin::gui::layout;
 
-int constexpr kGradientCaretSize = 7;
-int constexpr kHueBarHeight = 23;
-int constexpr kHueBarCaretSize = 5;
+auto constexpr kGradientCaretSize = 7;
+auto constexpr kHueBarHeight = 23;
+auto constexpr kHueBarCaretSize = 5;
+Size const kDefaultClientSize{768, 768};
 
 namespace shoujin::gui::usercontrol {
 
 namespace internal {
 
-auto constexpr kGradientCaretSize = 7;
-
-void GradientMap::SetHue(int hue)
+void GradientMap::setHue(float hue)
 {
-	ColorByteHSL color(hue, 100, 50);
-
 	auto bits = GetBits();
-	bits.RenderGradientMap(Color::White, color, Color::Black, Color::Black);
+	bits.RenderGradientMap(Color::White, ColorFloatHSV(hue, 1.f, 1.f), Color::Black, Color::Black);
 	SetBits(bits);
 
-	DrawCaret();
+	drawCaret();
 	ForceRepaint();
 
-	_color = ColorFromPosition(_selector, hue);
-	OnColorChangedEvent(this, _color);
+	color = colorFromPosition(selector, static_cast<float>(hue));
+	onColorChangedEvent(this, color);
 }
 
-void GradientMap::SetColor(Color const& color)
+void GradientMap::setColor(ColorFloatHSV const& color)
 {
-	ColorFloatHSV cfhsv(color);
-	int hue = static_cast<int>(cfhsv.hue);
-
 	auto bits = GetBits();
-	bits.RenderGradientMap(Color::White, ColorByteHSL(hue, 100, 50), Color::Black, Color::Black);
+	bits.RenderGradientMap(Color::White, ColorFloatHSV(color.hue, 1.f, 1.f), Color::Black, Color::Black);
 	SetBits(bits);
 
-	_selector = PositionFromColor(cfhsv);
-	DrawCaret();
+	selector = positionFromColor(color);
+	drawCaret();
 	ForceRepaint();
 
-	_color = cfhsv;
-	OnColorChangedEvent(this, _color);
+	this->color = color;
+	onColorChangedEvent(this, color);
 }
 
 void GradientMap::OnInitialize()
 {
-	_selector = {client_size().x, 0};
+	selector = {client_size().x, 0};
 	Resize(client_size());
-	InitializeCaret();
-	SetHue(0);
+	initializeCaret();
+	setHue(0);
 }
 
 bool GradientMap::OnMouseDown(MouseEvent const& e)
@@ -64,10 +58,10 @@ bool GradientMap::OnMouseDown(MouseEvent const& e)
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
 		return NotHandled;
 
-	UpdateCaret(e.Position);
+	updateCaret(e.Position);
 
-	_color = ColorFromPosition(e.Position, _color.hue);
-	OnColorChangedEvent(this, _color);
+	color = colorFromPosition(e.Position, color.hue);
+	onColorChangedEvent(this, color);
 
 	return Handled;
 }
@@ -84,53 +78,52 @@ bool GradientMap::OnMouseMove(MouseEvent const& e)
 	return Handled;
 }
 
-void GradientMap::InitializeCaret()
+void GradientMap::initializeCaret()
 {
 	auto constexpr size = kGradientCaretSize;
 	auto constexpr half = kGradientCaretSize / 2;
 
-	_caret.Resize({size, size});
-	_caret.Fill({}, {half, half}, Color::White); //TopLeft
-	_caret.Fill({half + 1, half + 1}, {half, half}, Color::White); //TopRight
-	_caret.Fill({0, half + 1}, {half, half}, Color::White); //BottomLeft
-	_caret.Fill({half + 1, 0}, {half, half}, Color::White); //BottomRight
-	_caret.DrawLine({0, 0}, {size, size}, Color::Black); //TopLeft to BottomRight
-	_caret.DrawLine({size - 1, 0}, {-1, size}, Color::Black); //TopRIght to BottomLeft
+	caret.Resize({size, size});
+	caret.Fill({}, {half, half}, Color::White); //TopLeft
+	caret.Fill({half + 1, half + 1}, {half, half}, Color::White); //TopRight
+	caret.Fill({0, half + 1}, {half, half}, Color::White); //BottomLeft
+	caret.Fill({half + 1, 0}, {half, half}, Color::White); //BottomRight
+	caret.DrawLine({0, 0}, {size, size}, Color::Black); //TopLeft to BottomRight
+	caret.DrawLine({size - 1, 0}, {-1, size}, Color::Black); //TopRIght to BottomLeft
 }
 
-void GradientMap::UpdateCaret(Point const& pos)
+void GradientMap::updateCaret(Point const& pos)
 {
-	DrawCaret();
-	_selector = pos;
-	DrawCaret();
+	drawCaret();
+	selector = pos;
+	drawCaret();
 	ForceRepaint();
 }
 
-void GradientMap::DrawCaret()
+void GradientMap::drawCaret()
 {
-	Draw(_caret, _selector - (kGradientCaretSize / 2), _caret.size(), {}, Bitmap::RasterMode::SrcInvert);
+	Draw(caret, selector - (kGradientCaretSize / 2), caret.size(), {}, Bitmap::RasterMode::SrcInvert);
 }
 
-Color GradientMap::ColorFromPosition(Point const& pos, int hue) const
+ColorFloatHSV GradientMap::colorFromPosition(Point const& pos, float hue) const
 {
 	auto [sx, sy] = client_size();
-	auto H = static_cast<float>(hue);
 	auto S = pos.x / static_cast<float>(sx - 1);
 	auto V = 1 - pos.y / static_cast<float>(sy - 1);
-	return ColorFloatHSV{H, S, V};
+	return {hue, S, V};
 }
 
-Point GradientMap::PositionFromColor(ColorFloatHSV const& color) const
+Point GradientMap::positionFromColor(ColorFloatHSV const& color) const
 {
 	auto [sx, sy] = client_size();
 	auto x = static_cast<int>(sx * color.saturation);
-	auto y = static_cast<int>(sy * color.value);
+	auto y = static_cast<int>(sy * (1 - color.value));
 	return {x, y};
 }
 
-void HueBar::SetHue(int hue)
+void HueBar::setHue(float hue)
 {
-	SetHueBarFromHue(hue);
+	setHueBarFromHue(hue);
 }
 
 void HueBar::OnInitialize()
@@ -141,8 +134,8 @@ void HueBar::OnInitialize()
 	bits.RenderHueBarHorizontal();
 	SetBits(bits);
 
-	InitializeCaret();
-	DrawCaret();
+	initializeCaret();
+	drawCaret();
 }
 
 bool HueBar::OnMouseDown(MouseEvent const& e)
@@ -150,8 +143,8 @@ bool HueBar::OnMouseDown(MouseEvent const& e)
 	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
 		return NotHandled;
 
-	UpdateCaret(e.Position.x);
-	SetHueBarFromPos(e.Position.x);
+	updateCaret(e.Position.x);
+	setHueBarFromPos(e.Position.x);
 
 	return Handled;
 }
@@ -168,81 +161,90 @@ bool HueBar::OnMouseMove(MouseEvent const& e)
 	return Handled;
 }
 
-void HueBar::InitializeCaret()
+void HueBar::initializeCaret()
 {
 	auto height = client_size().y;
-	_caret.Resize({kHueBarCaretSize, height});
-	_caret.DrawLine({kHueBarCaretSize / 2, 0}, {kHueBarCaretSize / 2, height}, Color::White);
-	_caret.Fill({0, 0}, {kHueBarCaretSize, kHueBarCaretSize}, Color::White);
-	_caret.Fill({0, height - kHueBarCaretSize}, {kHueBarCaretSize, kHueBarCaretSize}, Color::White);
+	caret.Resize({kHueBarCaretSize, height});
+	caret.DrawLine({kHueBarCaretSize / 2, 0}, {kHueBarCaretSize / 2, height}, Color::White);
+	caret.Fill({0, 0}, {kHueBarCaretSize, kHueBarCaretSize}, Color::White);
+	caret.Fill({0, height - kHueBarCaretSize}, {kHueBarCaretSize, kHueBarCaretSize}, Color::White);
 }
 
-void HueBar::UpdateCaret(int x_pos)
+void HueBar::updateCaret(int x_pos)
 {
-	DrawCaret();
-	_selector = x_pos;
-	DrawCaret();
+	drawCaret();
+	selector = x_pos;
+	drawCaret();
 	ForceRepaint();
 }
 
-void HueBar::DrawCaret()
+void HueBar::drawCaret()
 {
-	Draw(_caret, {_selector - kHueBarCaretSize / 2, 0}, _caret.size(), {}, Bitmap::RasterMode::SrcInvert);
+	Draw(caret, {selector - kHueBarCaretSize / 2, 0}, caret.size(), {}, Bitmap::RasterMode::SrcInvert);
 }
 
-void HueBar::SetHueBar(int x_pos, int hue)
+void HueBar::setHueBar(int x_pos, float hue)
 {
-	UpdateCaret(x_pos);
+	updateCaret(x_pos);
 	OnHueChangedEvent(this, hue);
 }
 
-void HueBar::SetHueBarFromPos(int x_pos)
+void HueBar::setHueBarFromPos(int x_pos)
 {
-	auto hue = 360 - static_cast<int>(360.f / (client_size().x - 1) * x_pos);
-	SetHueBar(x_pos, hue);
+	auto hue = 360 - (360.f / (client_size().x - 1) * x_pos);
+	setHueBar(x_pos, hue);
 }
 
-void HueBar::SetHueBarFromHue(int hue)
+void HueBar::setHueBarFromHue(float hue)
 {
 	auto x_pos = static_cast<int>(hue / (360.f / client_size().x));
-	SetHueBar(x_pos, hue);
+	setHueBar(x_pos, hue);
 }
 
 }
-
-Size const ColorControl::kDefaultClientSize{768, 768};
 
 ColorControl::ColorControl(LayoutParam const& layout_param) :
-	Window{BuildLayout(layout_param)}
+	Window{buildLayout(layout_param)}
 {
-	_gradient_map = new internal::GradientMap();
-	_gradient_map->OnColorChangedEvent = {GradientMap_OnColorChanged, this};
+	gradientMap = new internal::GradientMap();
+	gradientMap->onColorChangedEvent = {gradientMapColorChangedHandler, this};
 
-	_hue_bar = new HueBar();
-	_hue_bar->OnHueChangedEvent = {HueBar_OnHueChanged, this};
+	hueBar = new HueBar();
+	hueBar->OnHueChangedEvent = {hueBarHueChangedHandler, this};
 
-	for(auto** it : {&_numeric_red, &_numeric_green, &_numeric_blue}) {
+	for(auto** it : {&txtRgbR, &txtRgbG, &txtRgbB}) {
 		*it = new NumericControl();
 		(*it)->autoselect(true);
-		(*it)->OnChangeEvent = {NumericRGB_OnChange, this};
+		(*it)->OnChangeEvent = {txtRgbChangeHandler, this};
 		(*it)->min_value(0);
 		(*it)->max_value(255);
 	}
 
-	_edit_hex = new EditControl();
-	_edit_hex->autoselect(true);
-	_edit_hex->readonly(true);
+	txtHex = new EditControl();
+	txtHex->autoselect(true);
+	txtHex->readonly(true);
 
-	for(auto** it : {&_numeric_hue, &_numeric_saturation, &_numeric_lightness}) {
+	for(auto** it : {&txtHslH, &txtHslS, &txtHslL}) {
 		*it = new NumericControl();
 		(*it)->autoselect(true);
-		(*it)->OnChangeEvent = {NumericHSL_OnChange, this};
+		(*it)->OnChangeEvent = {txtHslChangeHandler, this};
 		(*it)->min_value(0);
 		(*it)->max_value(100);
 	}
 
-	_numeric_hue->min_value(0);
-	_numeric_hue->max_value(360);
+	txtHslH->min_value(0);
+	txtHslH->max_value(360);
+
+	for(auto** it : {&txtHsvH, &txtHsvS, &txtHsvV}) {
+		*it = new NumericControl();
+		(*it)->autoselect(true);
+		(*it)->OnChangeEvent = {txtHsvChangeHandler, this};
+		(*it)->min_value(0);
+		(*it)->max_value(100);
+	}
+
+	txtHsvH->min_value(0);
+	txtHsvH->max_value(360);
 
 	auto label = [](LayoutParam const& lp) -> Window* { return new LabelControl(lp); };
 
@@ -250,16 +252,19 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 
 	stream
 		<< layout::window_size(client_size() / 4) << layout::exstyle(WS_EX_CLIENTEDGE)
-		<< topleft << _gradient_map
-		<< push << layout::window_size({client_size().x / 4, kHueBarHeight}) << below << _hue_bar << pop
+		<< topleft << gradientMap
+		<< push << layout::window_size({client_size().x / 4, kHueBarHeight}) << below << hueBar << pop
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
-		<< TEXT("Red") << create(this, label) << push << after << TEXT("0") << _numeric_red << pop << below
-		<< TEXT("Green") << create(this, label) << push << after << TEXT("0") << _numeric_green << pop << below
-		<< TEXT("Blue") << create(this, label) << push << after << TEXT("0") << _numeric_blue << pop << below
-		<< TEXT("Hex") << create(this, label) << push << after << TEXT("0") << _edit_hex << pop << below
-		<< TEXT("Hue") << create(this, label) << push << after << TEXT("0") << _numeric_hue << pop << below
-		<< TEXT("Saturation") << create(this, label) << push << after << TEXT("0") << _numeric_saturation << pop << below
-		<< TEXT("Lightness") << create(this, label) << push << after << TEXT("0") << _numeric_lightness << pop << below;
+		<< TEXT("Red") << create(this, label) << push << after << txtRgbR << pop << below
+		<< TEXT("Green") << create(this, label) << push << after << txtRgbG << pop << below
+		<< TEXT("Blue") << create(this, label) << push << after << txtRgbB << pop << below
+		<< TEXT("Hex") << create(this, label) << push << after << txtHex << pop << below
+		<< TEXT("Hue") << create(this, label) << push << after << txtHslH << pop << below
+		<< TEXT("Saturation") << create(this, label) << push << after << txtHslS << pop << below
+		<< TEXT("Lightness") << create(this, label) << push << after << txtHslL << pop << below
+		<< TEXT("Hue") << create(this, label) << push << after << txtHsvH << pop << below
+		<< TEXT("Saturation") << create(this, label) << push << after << txtHsvS << pop << below
+		<< TEXT("Value") << create(this, label) << push << after << txtHsvV << pop << below		;
 }
 
 void ColorControl::BeforeCreate(CreateParam& create_param)
@@ -274,7 +279,7 @@ bool ColorControl::OnCreate(CREATESTRUCT const& createparam)
 
 void ColorControl::OnInitialize()
 {
-	SetTextHex({});
+	setTextHex({});
 }
 
 Window* ColorControl::Clone() const
@@ -282,7 +287,7 @@ Window* ColorControl::Clone() const
 	return new ColorControl(*this);
 }
 
-LayoutParam ColorControl::BuildLayout(LayoutParam const& layout_param)
+LayoutParam ColorControl::buildLayout(LayoutParam const& layout_param)
 {
 	Size client_size;
 	if(!layout_param.window_size && !layout_param.client_size)
@@ -295,97 +300,111 @@ LayoutParam ColorControl::BuildLayout(LayoutParam const& layout_param)
 	return layout;
 }
 
-void ColorControl::SetText(Color const& color)
+void ColorControl::setText(ColorFloatHSV const& color)
 {
-	if(!_numeric_events_depth) {
-		EventDepth depth{_numeric_events_depth};
-		SetTextRGB(color);
-		SetTextHex(color);
-		SetTextHSL(color);
+	if(!numericEventsDepth) {
+		EventDepth depth{numericEventsDepth};
+		Color c{color};
+		setTextRGB(c);
+		setTextHex(c);
+		setTextHSL(c);
+		setTextHSV(c);
 	}
 }
 
-void ColorControl::SetTextRGB(ColorByteRGB const& cbrgb)
+void ColorControl::setTextRGB(ColorByteRGB const& cbrgb)
 {
-	_numeric_red->SetValue(cbrgb.red);
-	_numeric_green->SetValue(cbrgb.green);
-	_numeric_blue->SetValue(cbrgb.blue);
+	txtRgbR->SetValue(cbrgb.red);
+	txtRgbG->SetValue(cbrgb.green);
+	txtRgbB->SetValue(cbrgb.blue);
 }
 
-void ColorControl::SetTextHex(ColorByteRGB const& cbrgb)
+void ColorControl::setTextHex(ColorByteRGB const& cbrgb)
 {
-	_edit_hex->SetText(std::format(TEXT("0x{:02x}{:02x}{:02x}"), cbrgb.red, cbrgb.green, cbrgb.blue));
+	txtHex->SetText(std::format(TEXT("0x{:02x}{:02x}{:02x}"), cbrgb.red, cbrgb.green, cbrgb.blue));
 }
 
-void ColorControl::SetTextHSL(ColorByteHSL const& cbhsl)
+void ColorControl::setTextHSL(ColorByteHSL const& cbhsl)
 {
-	_numeric_hue->SetValue(cbhsl.hue);
-	_numeric_saturation->SetValue(cbhsl.saturation);
-	_numeric_lightness->SetValue(cbhsl.lightness);
+	txtHslH->SetValue(cbhsl.hue);
+	txtHslS->SetValue(cbhsl.saturation);
+	txtHslL->SetValue(cbhsl.lightness);
 }
 
-void ColorControl::GradientMap_OnColorChanged(GradientMap* source, Color const& color, void* userdata)
+void ColorControl::setTextHSV(ColorByteHSV const& cbhsv)
+{
+	txtHslH->SetValue(cbhsv.hue);
+	txtHslS->SetValue(cbhsv.saturation);
+	txtHslL->SetValue(cbhsv.value);
+}
+
+void ColorControl::gradientMapColorChangedHandler(GradientMap* source, ColorFloatHSV const& color, void* userdata)
+{
+	auto parent = static_cast<ColorControl*>(userdata);
+	if(!parent->colorEventsDepth)
+		parent->setText(color);
+}
+
+void ColorControl::hueBarHueChangedHandler(HueBar* source, float hue, void* userdata)
+{
+	auto parent = static_cast<ColorControl*>(userdata);
+	parent->gradientMap->setHue(hue);
+}
+
+bool ColorControl::txtRgbChangeHandler(EditControl* source, void* userdata)
 {
 	auto parent = static_cast<ColorControl*>(userdata);
 
-	if(!parent->_color_events_depth)
-		parent->SetText(color);
-}
+	if(!parent->numericEventsDepth) {
+		EventDepth n_depth{parent->numericEventsDepth};
+		EventDepth c_depth{parent->colorEventsDepth};
 
-void ColorControl::HueBar_OnHueChanged(HueBar* source, int hue, void* userdata)
-{
-	auto parent = static_cast<ColorControl*>(userdata);
-	parent->_gradient_map->SetHue(hue);
-}
+		Color color{ColorByteRGB{
+			parent->txtRgbR->GetValue(),
+			parent->txtRgbG->GetValue(),
+			parent->txtRgbB->GetValue()}};
 
-bool ColorControl::NumericRGB_OnChange(EditControl* source, void* userdata)
-{
-	auto parent = static_cast<ColorControl*>(userdata);
+		parent->setTextHex(color);
+		parent->setTextHSL(color);
 
-	if(!parent->_numeric_events_depth) {
-		EventDepth n_depth{parent->_numeric_events_depth};
-		EventDepth c_depth{parent->_color_events_depth};
-
-		ColorByteRGB cbrgb{
-			parent->_numeric_red->GetValue(),
-			parent->_numeric_green->GetValue(),
-			parent->_numeric_blue->GetValue()};
-
-		ColorByteHSL cbhsl = Color(cbrgb);
-		parent->SetTextHex(cbrgb);
-		parent->SetTextHSL(cbhsl);
-		parent->_hue_bar->SetHue(cbhsl.hue);
-		parent->_gradient_map->SetColor(cbrgb);
+		ColorFloatHSV hsv{color};
+		parent->hueBar->setHue(hsv.hue);
+		parent->gradientMap->setColor(hsv);
 	}
 
 	return Handled;
 }
 
-bool ColorControl::NumericHSL_OnChange(EditControl* source, void* userdata)
+bool ColorControl::txtHslChangeHandler(EditControl* source, void* userdata)
 {
 	auto parent = static_cast<ColorControl*>(userdata);
-	auto hue = parent->_numeric_hue->GetValue();
+	auto hue = parent->txtHslH->GetValue();
 
-	if(!parent->_numeric_events_depth) {
-		EventDepth n_depth{parent->_numeric_events_depth};
-		EventDepth c_depth{parent->_color_events_depth};
+	if(!parent->numericEventsDepth) {
+		EventDepth n_depth{parent->numericEventsDepth};
+		EventDepth c_depth{parent->colorEventsDepth};
 
 		ColorByteHSL cbhsl{
 			hue,
-			parent->_numeric_saturation->GetValue(),
-			parent->_numeric_lightness->GetValue()};
+			parent->txtHslS->GetValue(),
+			parent->txtHslL->GetValue()};
 
 		auto color = Color{cbhsl};
-		parent->SetTextRGB(color);
-		parent->SetTextHex(color);
+		parent->setTextRGB(color);
+		parent->setTextHex(color);
 
 		auto sender = static_cast<NumericControl*>(source);
-		if(sender == parent->_numeric_hue)
-			parent->_hue_bar->SetHue(cbhsl.hue);
+		if(sender == parent->txtHslH)
+			parent->hueBar->setHue(cbhsl.hue);
 
-		parent->_gradient_map->SetColor(color);
+		parent->gradientMap->setColor(color);
 	}
 
+	return Handled;
+}
+
+bool ColorControl::txtHsvChangeHandler(EditControl* source, void* userdata)
+{
 	return Handled;
 }
 
