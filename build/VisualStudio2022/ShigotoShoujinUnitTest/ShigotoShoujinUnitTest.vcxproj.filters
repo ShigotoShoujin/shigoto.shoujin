@@ -87,5 +87,6 @@
     <ClCompile Include="..\..\..\test\gui\window_mouse_test.cpp">
       <Filter>gui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\scope_guard_test.cpp" />
   </ItemGroup>
 </Project>

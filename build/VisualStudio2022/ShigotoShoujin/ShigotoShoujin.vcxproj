@@ -171,6 +171,12 @@
     <ClCompile Include="..\..\..\src\gui\userctl\color_control.cpp" />
     <ClCompile Include="..\..\..\src\gui\window.cpp" />
     <ClCompile Include="..\..\..\src\gui\window_taborder.cpp" />
+    <ClCompile Include="..\..\..\src\scope_guard.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCppModule</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsCppModule</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModule</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\tstring.cpp" />
   </ItemGroup>
   <ItemGroup>
