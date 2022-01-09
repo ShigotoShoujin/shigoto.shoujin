@@ -17,6 +17,27 @@ template<> inline std::wstring ToString<Color>(Color const& t)
 	return wss.str();
 }
 
+template<> inline std::wstring ToString<ColorByteRGB>(ColorByteRGB const& t)
+{
+	std::wstringstream wss;
+	wss << L"RGB(" << t.red << L',' << t.green << L',' << t.blue << L')';
+	return wss.str();
+}
+
+template<> inline std::wstring ToString<ColorByteHSL>(ColorByteHSL const& t)
+{
+	std::wstringstream wss;
+	wss << L"HSL(" << t.hue << L',' << t.saturation << L',' << t.lightness << L')';
+	return wss.str();
+}
+
+template<> inline std::wstring ToString<ColorByteHSV>(ColorByteHSV const& t)
+{
+	std::wstringstream wss;
+	wss << L"HSV(" << t.hue << L',' << t.saturation << L',' << t.value << L')';
+	return wss.str();
+}
+
 template<> inline std::wstring ToString<ColorFloatHSL>(ColorFloatHSL const& t)
 {
 	std::wstringstream wss;
@@ -31,22 +52,6 @@ template<> inline std::wstring ToString<ColorFloatHSV>(ColorFloatHSV const& t)
 	return wss.str();
 }
 
-}
-
-bool operator==(ColorFloatHSL const& lhs, ColorFloatHSL const& rhs)
-{
-	return (
-		std::roundf(lhs.hue) == std::roundf(rhs.hue) &&
-		std::roundf(lhs.saturation * 1000) == std::roundf(rhs.saturation * 1000) &&
-		std::roundf(lhs.lightness * 1000) == std::roundf(rhs.lightness * 1000));
-}
-
-bool operator==(ColorFloatHSV const& lhs, ColorFloatHSV const& rhs)
-{
-	return (
-		std::roundf(lhs.hue) == std::roundf(rhs.hue) &&
-		std::roundf(lhs.saturation * 1000) == std::roundf(rhs.saturation * 1000) &&
-		std::roundf(lhs.value * 1000) == std::roundf(rhs.value * 1000));
 }
 
 TEST_CLASS(ColorTest) {
@@ -270,11 +275,11 @@ public:
 	TEST_METHOD(ConstructColor_CtorDefault_AllZero) {
 		Color color;
 
-		COLORREF actual = color;
+		ColorFloatRGB actual = color;
 
-		Assert::AreEqual<int>(0, GetRValue(actual));
-		Assert::AreEqual<int>(0, GetGValue(actual));
-		Assert::AreEqual<int>(0, GetBValue(actual));
+		Assert::AreEqual<float>(0, actual.red);
+		Assert::AreEqual<float>(0, actual.green);
+		Assert::AreEqual<float>(0, actual.blue);
 	}
 
 	TEST_METHOD(ConstructColor_CtorCOLORREF_ColorAssigned) {
@@ -282,11 +287,11 @@ public:
 		const auto green = 39;
 		const auto blue = 167;
 
-		COLORREF actual = Color(RGB(245, 39, 167));
+		ColorFloatRGB actual = Color(RGB(245, 39, 167));
 
-		Assert::AreEqual<int>(red, GetRValue(actual));
-		Assert::AreEqual<int>(green, GetGValue(actual));
-		Assert::AreEqual<int>(blue, GetBValue(actual));
+		Assert::AreEqual<float>(red / 255.f, actual.red);
+		Assert::AreEqual<float>(green / 255.f, actual.green);
+		Assert::AreEqual<float>(blue / 255.f, actual.blue);
 	}
 
 	TEST_METHOD(ConstructColor_CtorColorByteRGB_ColorAssigned) {
@@ -294,11 +299,11 @@ public:
 		const auto green = 39;
 		const auto blue = 167;
 
-		COLORREF actual = Color(ColorByteRGB{red, green, blue});
+		ColorFloatRGB actual = Color(ColorByteRGB{red, green, blue});
 
-		Assert::AreEqual<int>(red, GetRValue(actual));
-		Assert::AreEqual<int>(green, GetGValue(actual));
-		Assert::AreEqual<int>(blue, GetBValue(actual));
+		Assert::AreEqual<float>(red / 255.f, actual.red);
+		Assert::AreEqual<float>(green / 255.f, actual.green);
+		Assert::AreEqual<float>(blue / 255.f, actual.blue);
 	}
 
 	TEST_METHOD(ConstructColor_CtorColorFloatRGB_ColorAssigned) {
@@ -306,11 +311,11 @@ public:
 		const auto green = 39 / 255.f;
 		const auto blue = 167 / 255.f;
 
-		COLORREF actual = Color(ColorFloatRGB{red, green, blue});
+		ColorFloatRGB actual = Color(ColorFloatRGB{red, green, blue});
 
-		Assert::AreEqual<int>(245, GetRValue(actual));
-		Assert::AreEqual<int>(39, GetGValue(actual));
-		Assert::AreEqual<int>(167, GetBValue(actual));
+		Assert::AreEqual(red, actual.red);
+		Assert::AreEqual(green, actual.green);
+		Assert::AreEqual(blue, actual.blue);
 	}
 
 	TEST_METHOD(ConstructColor_CtorColorByteHSL_ColorAssigned) {
@@ -318,11 +323,11 @@ public:
 		const auto saturation = 0;
 		const auto lightness = 50;
 
-		COLORREF actual = Color(ColorByteHSL{hue, saturation, lightness});
+		ColorFloatRGB actual = Color(ColorByteHSL{hue, saturation, lightness});
 
-		Assert::AreEqual<int>(128, GetRValue(actual));
-		Assert::AreEqual<int>(128, GetGValue(actual));
-		Assert::AreEqual<int>(128, GetBValue(actual));
+		Assert::AreEqual(.5f, actual.red);
+		Assert::AreEqual(.5f, actual.green);
+		Assert::AreEqual(.5f, actual.blue);
 	}
 
 	TEST_METHOD(ConstructColor_CtorColorFloatHSL_ColorAssigned) {
@@ -330,11 +335,11 @@ public:
 		const auto saturation = .0f;
 		const auto lightness = .5f;
 
-		COLORREF actual = Color(ColorFloatHSL{hue, saturation, lightness});
+		ColorFloatRGB actual = Color(ColorFloatHSL{hue, saturation, lightness});
 
-		Assert::AreEqual<int>(128, GetRValue(actual));
-		Assert::AreEqual<int>(128, GetGValue(actual));
-		Assert::AreEqual<int>(128, GetBValue(actual));
+		Assert::AreEqual(.5f, actual.red);
+		Assert::AreEqual(.5f, actual.green);
+		Assert::AreEqual(.5f, actual.blue);
 	}
 
 	TEST_METHOD(ConstructColor_CtorColorByteHSV_ColorAssigned) {
@@ -342,11 +347,11 @@ public:
 		const auto saturation = 0;
 		const auto lightness = 50;
 
-		COLORREF actual = Color(ColorByteHSV{hue, saturation, lightness});
+		ColorFloatRGB actual = Color(ColorByteHSV{hue, saturation, lightness});
 
-		Assert::AreEqual<int>(128, GetRValue(actual));
-		Assert::AreEqual<int>(128, GetGValue(actual));
-		Assert::AreEqual<int>(128, GetBValue(actual));
+		Assert::AreEqual(.5f, actual.red);
+		Assert::AreEqual(.5f, actual.green);
+		Assert::AreEqual(.5f, actual.blue);
 	}
 
 	TEST_METHOD(ConstructColor_CtorColorFloatHSV_ColorAssigned) {
@@ -354,11 +359,11 @@ public:
 		const auto saturation = .0f;
 		const auto lightness = .5f;
 
-		COLORREF actual = Color(ColorFloatHSV{hue, saturation, lightness});
+		ColorFloatRGB actual = Color(ColorFloatHSV{hue, saturation, lightness});
 
-		Assert::AreEqual<int>(128, GetRValue(actual));
-		Assert::AreEqual<int>(128, GetGValue(actual));
-		Assert::AreEqual<int>(128, GetBValue(actual));
+		Assert::AreEqual(.5f, actual.red);
+		Assert::AreEqual(.5f, actual.green);
+		Assert::AreEqual(.5f, actual.blue);
 	}
 
 	TEST_METHOD(OperatorConvertToCOLORREF_ColorMatch) {
@@ -366,7 +371,7 @@ public:
 		const auto green = 39;
 		const auto blue = 167;
 
-		COLORREF actual = Color(RGB(red, green, blue));
+		COLORREF actual = Color(ColorByteRGB(red, green, blue));
 
 		Assert::AreEqual<int>(red, GetRValue(actual));
 		Assert::AreEqual<int>(green, GetGValue(actual));
@@ -378,7 +383,7 @@ public:
 		const auto green = 39;
 		const auto blue = 167;
 
-		ColorByteRGB actual = Color(RGB(red, green, blue));
+		ColorByteRGB actual = Color(ColorByteRGB(red, green, blue));
 
 		Assert::AreEqual<int>(red, actual.red);
 		Assert::AreEqual<int>(green, actual.green);
@@ -390,7 +395,7 @@ public:
 		const auto green = 39;
 		const auto blue = 167;
 
-		ColorFloatRGB actual = Color(RGB(red, green, blue));
+		ColorFloatRGB actual = Color(ColorByteRGB(red, green, blue));
 
 		Assert::AreEqual(red / 255.f, actual.red);
 		Assert::AreEqual(green / 255.f, actual.green);
@@ -402,7 +407,7 @@ public:
 		const auto green = 128;
 		const auto blue = 128;
 
-		ColorByteHSL actual = Color(RGB(red, green, blue));
+		ColorByteHSL actual = Color(ColorByteRGB(red, green, blue));
 
 		Assert::AreEqual<int>(0, actual.hue);
 		Assert::AreEqual<int>(0, actual.saturation);
@@ -414,7 +419,7 @@ public:
 		const auto green = 128;
 		const auto blue = 128;
 
-		ColorFloatHSL actual = Color(RGB(red, green, blue));
+		ColorFloatHSL actual = Color(ColorByteRGB(red, green, blue));
 
 		Assert::AreEqual(.0f, actual.hue);
 		Assert::AreEqual(.0f, actual.saturation, .01f);
@@ -426,7 +431,7 @@ public:
 		const auto green = 128;
 		const auto blue = 128;
 
-		ColorByteHSV actual = Color(RGB(red, green, blue));
+		ColorByteHSV actual = Color(ColorByteRGB(red, green, blue));
 
 		Assert::AreEqual<int>(0, actual.hue);
 		Assert::AreEqual<int>(0, actual.saturation);
@@ -438,7 +443,7 @@ public:
 		const auto green = 128;
 		const auto blue = 128;
 
-		ColorFloatHSV actual = Color(RGB(red, green, blue));
+		ColorFloatHSV actual = Color(ColorByteRGB(red, green, blue));
 
 		Assert::AreEqual(.0f, actual.hue);
 		Assert::AreEqual(.0f, actual.saturation, .01f);
@@ -447,74 +452,74 @@ public:
 
 	TEST_METHOD(ConvertRgbToHsl_WhenBlack_HSLZero) {
 		Color color;
-		ColorFloatHSL expected{0.f, 0.f, 0.f};
+		ColorByteHSL expected;
 
-		ColorFloatHSL cfhsl = color;
+		ColorByteHSL cbhsl = color;
 
-		Assert::AreEqual(expected, cfhsl);
+		Assert::AreEqual(expected, cbhsl);
 	}
 
 	TEST_METHOD(ConvertRgbToHsl_WhenRed_H0S100L50) {
 		Color color = ColorByteRGB(255, 0, 0);
-		ColorFloatHSL expected{0.f, 1.f, .5f};
+		ColorByteHSL expected{0, 100, 50};
 
-		ColorFloatHSL cfhsl = color;
+		ColorByteHSL cbhsl = color;
 
-		Assert::AreEqual(expected, cfhsl);
+		Assert::AreEqual(expected, cbhsl);
 	}
 
 	TEST_METHOD(ConvertRgbToHsl_WhenGreen_H120S100L50) {
 		Color color = ColorByteRGB(0, 255, 0);
-		ColorFloatHSL expected{120.f, 1.f, .5f};
+		ColorByteHSL expected{120, 100, 50};
 
-		ColorFloatHSL cfhsl = color;
+		ColorByteHSL cbhsl = color;
 
-		Assert::AreEqual(expected, cfhsl);
+		Assert::AreEqual(expected, cbhsl);
 	}
 
 	TEST_METHOD(ConvertRgbToHsl_WhenBlue_H240S100L50) {
 		Color color = ColorByteRGB(0, 0, 255);
-		ColorFloatHSL expected{240.f, 1.f, .5f};
+		ColorByteHSL expected{240, 100, 50};
 
-		ColorFloatHSL cfhsl = color;
+		ColorByteHSL cbhsl = color;
 
-		Assert::AreEqual(expected, cfhsl);
+		Assert::AreEqual(expected, cbhsl);
 	}
 
 	TEST_METHOD(ConvertRgbToHsl_WhenWhite_H0S0L100) {
 		Color color = ColorByteRGB(255, 255, 255);
-		ColorFloatHSL expected{.0f, .0f, 1.f};
+		ColorByteHSL expected{0, 0, 100};
 
-		ColorFloatHSL cfhsl = color;
+		ColorByteHSL cbhsl = color;
 
-		Assert::AreEqual(expected, cfhsl);
+		Assert::AreEqual(expected, cbhsl);
 	}
 
 	TEST_METHOD(ConvertRgbToHsl_WhenGray_H0S0L50) {
 		Color color = ColorByteRGB(128, 128, 128);
-		ColorFloatHSL expected{0.f, 0.f, .502f};
+		ColorByteHSL expected{0, 0, 50};
 
-		ColorFloatHSL cfhsl = color;
+		ColorByteHSL cbhsl = color;
 
-		Assert::AreEqual(expected, cfhsl);
+		Assert::AreEqual(expected, cbhsl);
 	}
 
 	TEST_METHOD(ConvertRgbToHsl_WhenR91G48B156_H264S53L40) {
 		Color color = ColorByteRGB(91, 48, 156);
-		ColorFloatHSL expected{263.8f, .529f, .40f};
+		ColorByteHSL expected{264, 53, 40};
 
-		ColorFloatHSL cfhsl = color;
+		ColorByteHSL cbhsl = color;
 
-		Assert::AreEqual(expected, cfhsl);
+		Assert::AreEqual(expected, cbhsl);
 	}
 
 	TEST_METHOD(ConvertRgbToHsl_WhenR255G254B255_H300S100L100) {
 		Color color = ColorByteRGB(255, 254, 255);
-		ColorFloatHSL expected{300.f, 1.f, .998f};
+		ColorByteHSL expected{300, 100, 100};
 
-		ColorFloatHSL cfhsl = color;
+		ColorByteHSL cbhsl = color;
 
-		Assert::AreEqual(expected, cfhsl);
+		Assert::AreEqual(expected, cbhsl);
 	}
 
 	TEST_METHOD(ConvertHslToRgb_WhenHSLZero_Black) {
@@ -528,189 +533,189 @@ public:
 
 	TEST_METHOD(ConvertHslToRgb_WhenH0S100L50_Red) {
 		ColorFloatHSL cfhsl{0.f, 1.f, .5f};
-		Color expected{ColorByteRGB{255, 0, 0}};
+		ColorByteRGB expected{255, 0, 0};
 
-		Color color = cfhsl;
+		ColorByteRGB color = Color(cfhsl);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHslToRgb_WhenH120S100L50_Green) {
 		ColorFloatHSL cfhsl{120.f, 1.f, .5f};
-		Color expected{ColorByteRGB{0, 255, 0}};
+		ColorByteRGB expected{0, 255, 0};
 
-		Color color = cfhsl;
+		ColorByteRGB color = Color(cfhsl);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHslToRgb_WhenH240S100L50_Blue) {
 		ColorFloatHSL cfhsl{240.f, 1.f, .5f};
-		Color expected{ColorByteRGB{0, 0, 255}};
+		ColorByteRGB expected{0, 0, 255};
 
-		Color color = cfhsl;
+		ColorByteRGB color = Color(cfhsl);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHslToRgb_WhenH264S53L40_R91G48B156) {
 		ColorFloatHSL cfhsl{264.f, .53f, .4f};
-		Color expected{ColorByteRGB{91, 48, 156}};
+		ColorByteRGB expected{91, 48, 156};
 
-		Color color = cfhsl;
+		ColorByteRGB color = Color{cfhsl};
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHslToRgb_WhenH360S100L50_R255G0B0) {
 		ColorFloatHSL cfhsl{360.f, 1.f, .5f};
-		Color expected{ColorByteRGB{255, 0, 0}};
+		ColorByteRGB expected{255, 0, 0};
 
-		Color color = cfhsl;
+		ColorByteRGB color = Color(cfhsl);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHslToRgb_WhenH0S0L50_R128G128B128) {
 		ColorFloatHSL cfhsl{0.f, 0.f, .5f};
-		Color expected{ColorByteRGB{128, 128, 128}};
+		ColorByteRGB expected{128, 128, 128};
 
-		Color color = cfhsl;
+		ColorByteRGB color = Color(cfhsl);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertRgbToHsv_WhenBlack_HSVZero) {
 		Color color;
-		ColorFloatHSV expected{0.f, 0.f, 0.f};
+		ColorByteHSV expected;
 
-		ColorFloatHSV cfhsv = color;
+		ColorByteHSV cbhsv = color;
 
-		Assert::AreEqual(expected, cfhsv);
+		Assert::AreEqual(expected, cbhsv);
 	}
 
 	TEST_METHOD(ConvertRgbToHsv_WhenRed_H0S100L50) {
 		Color color = ColorByteRGB(255, 0, 0);
-		ColorFloatHSV expected{0.f, 1.f, 1.f};
+		ColorByteHSV expected{0, 100, 100};
 
-		ColorFloatHSV cfhsv = color;
+		ColorByteHSV cbhsv = color;
 
-		Assert::AreEqual(expected, cfhsv);
+		Assert::AreEqual(expected, cbhsv);
 	}
 
 	TEST_METHOD(ConvertRgbToHsv_WhenGreen_H120S100L50) {
 		Color color = ColorByteRGB(0, 255, 0);
-		ColorFloatHSV expected{120.f, 1.f, 1.f};
+		ColorByteHSV expected{120, 100, 100};
 
-		ColorFloatHSV cfhsv = color;
+		ColorByteHSV cbhsv = color;
 
-		Assert::AreEqual(expected, cfhsv);
+		Assert::AreEqual(expected, cbhsv);
 	}
 
 	TEST_METHOD(ConvertRgbToHsv_WhenBlue_H240S100L50) {
 		Color color = ColorByteRGB(0, 0, 255);
-		ColorFloatHSV expected{240.f, 1.f, 1.0f};
+		ColorByteHSV expected{240, 100, 100};
 
-		ColorFloatHSV cfhsv = color;
+		ColorByteHSV cbhsv = color;
 
-		Assert::AreEqual(expected, cfhsv);
+		Assert::AreEqual(expected, cbhsv);
 	}
 
 	TEST_METHOD(ConvertRgbToHsv_WhenWhite_H0S0L100) {
 		Color color = ColorByteRGB(255, 255, 255);
-		ColorFloatHSV expected{.0f, .0f, 1.f};
+		ColorByteHSV expected{0, 0, 100};
 
-		ColorFloatHSV cfhsv = color;
+		ColorByteHSV cbhsv = color;
 
-		Assert::AreEqual(expected, cfhsv);
+		Assert::AreEqual(expected, cbhsv);
 	}
 
 	TEST_METHOD(ConvertRgbToHsv_WhenGray_H0S0L50) {
 		Color color = ColorByteRGB(128, 128, 128);
-		ColorFloatHSV expected{0.f, 0.f, .502f};
+		ColorByteHSV expected{0, 0, 50};
 
-		ColorFloatHSV cfhsv = color;
+		ColorByteHSV cbhsv = color;
 
-		Assert::AreEqual(expected, cfhsv);
+		Assert::AreEqual(expected, cbhsv);
 	}
 
 	TEST_METHOD(ConvertRgbToHsv_WhenR91G48B156_H264S53L40) {
 		Color color = ColorByteRGB(91, 48, 156);
-		ColorFloatHSV expected{264.f, .692f, .612f};
+		ColorByteHSV expected{264, 69, 61};
 
-		ColorFloatHSV cfhsv = color;
+		ColorByteHSV cbhsv = color;
 
-		Assert::AreEqual(expected, cfhsv);
+		Assert::AreEqual(expected, cbhsv);
 	}
 
 	TEST_METHOD(ConvertRgbToHsv_WhenR255G254B255_H300S100L100) {
 		Color color = ColorByteRGB(255, 254, 255);
-		ColorFloatHSV expected{300.f, 0.004f, 1.f};
+		ColorByteHSV expected{300, 0, 100};
 
-		ColorFloatHSV cfhsv = color;
+		ColorByteHSV cbhsv = color;
 
-		Assert::AreEqual(expected, cfhsv);
+		Assert::AreEqual(expected, cbhsv);
 	}
 
 	TEST_METHOD(ConvertHsvToRgb_WhenHSVZero_Black) {
 		ColorFloatHSV cfhsv;
-		Color expected;
+		ColorByteRGB expected;
 
-		Color color = cfhsv;
+		ColorByteRGB color = Color(cfhsv);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHsvToRgb_WhenH0S100L50_Red) {
 		ColorFloatHSV cfhsv{0.f, 1.f, 1.f};
-		Color expected{ColorByteRGB{255, 0, 0}};
+		ColorByteRGB expected{255, 0, 0};
 
-		Color color = cfhsv;
+		ColorByteRGB color = Color(cfhsv);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHsvToRgb_WhenH120S100L50_Green) {
 		ColorFloatHSV cfhsv{120.f, 1.f, 1.0f};
-		Color expected{ColorByteRGB{0, 255, 0}};
+		ColorByteRGB expected{0, 255, 0};
 
-		Color color = cfhsv;
+		ColorByteRGB color = Color(cfhsv);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHsvToRgb_WhenH240S100L50_Blue) {
 		ColorFloatHSV cfhsv{240.f, 1.f, 1.f};
-		Color expected{ColorByteRGB{0, 0, 255}};
+		ColorByteRGB expected{0, 0, 255};
 
-		Color color = cfhsv;
+		ColorByteRGB color = Color(cfhsv);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHsvToRgb_WhenH264S53L40_R91G48B156) {
 		ColorFloatHSV cfhsv{264.f, .692f, .612f};
-		Color expected{ColorByteRGB{91, 48, 156}};
+		ColorByteRGB expected{91, 48, 156};
 
-		Color color = cfhsv;
+		ColorByteRGB color = Color(cfhsv);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHsvToRgb_WhenH360S100L50_R255G0B0) {
 		ColorFloatHSV cfhsv{360.f, 1.f, 1.f};
-		Color expected{ColorByteRGB{255, 0, 0}};
+		ColorByteRGB expected{255, 0, 0};
 
-		Color color = cfhsv;
+		ColorByteRGB color = Color(cfhsv);
 
 		Assert::AreEqual(expected, color);
 	}
 
 	TEST_METHOD(ConvertHsvToRgb_WhenH0S0L50_R128G128B128) {
 		ColorFloatHSV cfhsv{0.f, 0.f, .502f};
-		Color expected{ColorByteRGB{128, 128, 128}};
+		ColorByteRGB expected{128, 128, 128};
 
-		Color color = cfhsv;
+		ColorByteRGB color = Color(cfhsv);
 
 		Assert::AreEqual(expected, color);
 	}

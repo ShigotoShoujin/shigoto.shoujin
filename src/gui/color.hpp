@@ -19,6 +19,11 @@ struct ColorByteRGB {
 	uint8_t green{};
 	uint8_t blue{};
 
+	friend inline bool operator==(ColorByteRGB const& lhs, ColorByteRGB const& rhs)
+	{
+		return lhs.red == rhs.red && lhs.green == rhs.green && lhs.blue == rhs.blue;
+	}
+
 	ColorByteRGB() = default;
 	ColorByteRGB(int red, int green, int blue);
 	ColorByteRGB(ColorFloatRGB const& cfrgb);
@@ -28,6 +33,11 @@ struct ColorFloatRGB {
 	float red{};
 	float green{};
 	float blue{};
+
+	friend inline bool operator==(ColorFloatRGB const& lhs, ColorFloatRGB const& rhs)
+	{
+		return lhs.red == rhs.red && lhs.green == rhs.green && lhs.blue == rhs.blue;
+	}
 
 	ColorFloatRGB() = default;
 	ColorFloatRGB(float red, float green, float blue);
@@ -39,6 +49,11 @@ struct ColorByteHSL {
 	uint8_t saturation{};
 	uint8_t lightness{};
 
+	friend inline bool operator==(ColorByteHSL const& lhs, ColorByteHSL const& rhs)
+	{
+		return lhs.hue == rhs.hue && lhs.saturation == rhs.saturation && lhs.lightness == rhs.lightness;
+	}
+
 	ColorByteHSL() = default;
 	ColorByteHSL(int hue, int saturation, int lightness);
 	ColorByteHSL(ColorFloatHSL const& cfhsl);
@@ -48,6 +63,11 @@ struct ColorFloatHSL {
 	float hue{};
 	float saturation{};
 	float lightness{};
+
+	friend inline bool operator==(ColorFloatHSL const& lhs, ColorFloatHSL const& rhs)
+	{
+		return lhs.hue == rhs.hue && lhs.saturation == rhs.saturation && lhs.lightness == rhs.lightness;
+	}
 
 	ColorFloatHSL() = default;
 	ColorFloatHSL(float hue, float saturation, float lightness);
@@ -59,6 +79,11 @@ struct ColorByteHSV {
 	uint8_t saturation{};
 	uint8_t value{};
 
+	friend inline bool operator==(ColorByteHSV const& lhs, ColorByteHSV const& rhs)
+	{
+		return lhs.hue == rhs.hue && lhs.saturation == rhs.saturation && lhs.value == rhs.value;
+	}
+
 	ColorByteHSV() = default;
 	ColorByteHSV(int hue, int saturation, int value);
 	ColorByteHSV(ColorFloatHSV const& cfhsv);
@@ -69,16 +94,21 @@ struct ColorFloatHSV {
 	float saturation{};
 	float value{};
 
+	friend inline bool operator==(ColorFloatHSV const& lhs, ColorFloatHSV const& rhs)
+	{
+		return lhs.hue == rhs.hue && lhs.saturation == rhs.saturation && lhs.value == rhs.value;
+	}
+
 	ColorFloatHSV() = default;
 	ColorFloatHSV(float hue, float saturation, float value);
 	ColorFloatHSV(ColorByteHSV const& cbhsv);
 };
 
 class Color {
-	COLORREF _color;
+	ColorFloatRGB _color{};
 
 public:
-	Color();
+	Color() = default;
 	Color(COLORREF color);
 	Color(ColorByteRGB color);
 	Color(ColorFloatRGB color);

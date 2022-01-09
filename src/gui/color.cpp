@@ -20,9 +20,9 @@ ColorByteRGB::ColorByteRGB(int red, int green, int blue) :
 {}
 
 ColorByteRGB::ColorByteRGB(ColorFloatRGB const& cfrgb) :
-	red{static_cast<uint8_t>(cfrgb.red * 255)},
-	green{static_cast<uint8_t>(cfrgb.green * 255)},
-	blue{static_cast<uint8_t>(cfrgb.blue * 255)}
+	red{static_cast<uint8_t>(std::roundf(cfrgb.red * 255))},
+	green{static_cast<uint8_t>(std::roundf(cfrgb.green * 255))},
+	blue{static_cast<uint8_t>(std::roundf(cfrgb.blue * 255))}
 {}
 
 ColorFloatRGB::ColorFloatRGB(float red, float green, float blue) :
@@ -44,9 +44,9 @@ ColorByteHSL::ColorByteHSL(int hue, int saturation, int lightness) :
 {}
 
 ColorByteHSL::ColorByteHSL(ColorFloatHSL const& cfhsl) :
-	hue{static_cast<uint16_t>(cfhsl.hue)},
-	saturation{static_cast<uint8_t>(cfhsl.saturation * 100)},
-	lightness{static_cast<uint8_t>(cfhsl.lightness * 100)}
+	hue{static_cast<uint16_t>(std::roundf(cfhsl.hue))},
+	saturation{static_cast<uint8_t>(std::roundf(cfhsl.saturation * 100))},
+	lightness{static_cast<uint8_t>(std::roundf(cfhsl.lightness * 100))}
 {}
 
 ColorFloatHSL::ColorFloatHSL(float hue, float saturation, float lightness) :
@@ -68,9 +68,9 @@ ColorByteHSV::ColorByteHSV(int hue, int saturation, int value) :
 {}
 
 ColorByteHSV::ColorByteHSV(ColorFloatHSV const& cfhsv) :
-	hue{static_cast<uint16_t>(cfhsv.hue)},
-	saturation{static_cast<uint8_t>(cfhsv.saturation * 100)},
-	value{static_cast<uint8_t>(cfhsv.value * 100)}
+	hue{static_cast<uint16_t>(std::roundf(cfhsv.hue))},
+	saturation{static_cast<uint8_t>(std::roundf(cfhsv.saturation * 100))},
+	value{static_cast<uint8_t>(std::roundf(cfhsv.value * 100))}
 {}
 
 ColorFloatHSV::ColorFloatHSV(float hue, float saturation, float value) :
@@ -85,70 +85,61 @@ ColorFloatHSV::ColorFloatHSV(ColorByteHSV const& cbhsv) :
 	value{cbhsv.value / 100.f}
 {}
 
-Color::Color() :
-	_color{}
-{}
-
 Color::Color(COLORREF color) :
-	_color{color} {}
+	_color{ColorByteRGB{static_cast<int>(GetRValue(color)), static_cast<int>(GetGValue(color)), static_cast<int>(GetBValue(color))}} {}
 
 Color::Color(ColorByteRGB color) :
-	_color{RGB(color.red, color.green, color.blue)} {}
+	_color{color} {}
 
 Color::Color(ColorFloatRGB color) :
-	_color{RGB(ToByte(color.red), ToByte(color.green), ToByte(color.blue))} {}
+	_color{color} {}
 
 Color::Color(ColorByteHSL color) :
-	_color{Color{ToRGB(color)}} {}
+	_color{ToRGB(color)} {}
 
 Color::Color(ColorFloatHSL color) :
-	_color{Color{ToRGB(color)}} {}
+	_color{ToRGB(color)} {}
 
 Color::Color(ColorByteHSV color) :
-	_color{Color{ToRGB(color)}} {}
+	_color{ToRGB(color)} {}
 
 Color::Color(ColorFloatHSV color) :
-	_color{Color{ToRGB(color)}} {}
+	_color{ToRGB(color)} {}
 
 Color::operator COLORREF() const
 {
-	return _color;
+	ColorByteRGB rgb{_color};
+	return RGB(rgb.red, rgb.green, rgb.blue);
 }
 
 Color::operator ColorByteRGB() const
 {
-	return {
-		GetRValue(_color),
-		GetGValue(_color),
-		GetBValue(_color)};
+	return _color;
 }
 
 Color::operator ColorFloatRGB() const
 {
-	return {
-		ToFloat(GetRValue(_color)),
-		ToFloat(GetGValue(_color)),
-		ToFloat(GetBValue(_color))};
+	return _color;
 }
 
 Color::operator ColorByteHSL() const
 {
-	return ToHSL(*this);
+	return ToHSL(_color);
 }
 
 Color::operator ColorFloatHSL() const
 {
-	return ToHSL(*this);
+	return ToHSL(_color);
 }
 
 Color::operator ColorByteHSV() const
 {
-	return ToHSV(*this);
+	return ToHSV(_color);
 }
 
 Color::operator ColorFloatHSV() const
 {
-	return ToHSV(*this);
+	return ToHSV(_color);
 }
 
 // clang-format off
@@ -169,7 +160,6 @@ Color const Color::Purple  (ColorByteRGB {128,   0, 128} );
 Color const Color::Teal    (ColorByteRGB {  0, 128, 128} );
 Color const Color::Navy    (ColorByteRGB {  0,   0, 128} );
 // clang-format on
-
 }
 
 static uint8_t ToByte(float channel)
