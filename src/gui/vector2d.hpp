@@ -10,32 +10,32 @@ struct Vector2d {
 	int x;
 	int y;
 
-	Vector2d() :
+	constexpr Vector2d() :
 		x{}, y{} {}
 
-	Vector2d(int x, int y) :
+	constexpr Vector2d(int x, int y) :
 		x{x}, y{y} {}
 
-	Vector2d(POINT const& rhs) :
+	constexpr Vector2d(POINT const& rhs) :
 		x{rhs.x}, y{rhs.y} {}
 
-	Vector2d(SIZE const& rhs) :
+	constexpr Vector2d(SIZE const& rhs) :
 		x{rhs.cx}, y{rhs.cy} {}
 
-	operator bool() const { return x || y; }
-	operator POINT() const { return {x, y}; }
-	operator SIZE() const { return {x, y}; }
+	constexpr operator bool() const { return x || y; }
+	constexpr operator POINT() const { return {x, y}; }
+	constexpr operator SIZE() const { return {x, y}; }
 
-	friend bool operator==(Vector2d const& lhs, Vector2d const& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
-	friend bool operator!=(Vector2d const& lhs, Vector2d const& rhs) { return !(lhs == rhs); }
+	constexpr friend bool operator==(Vector2d const& lhs, Vector2d const& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
+	constexpr friend bool operator!=(Vector2d const& lhs, Vector2d const& rhs) { return !(lhs == rhs); }
 
-	friend Vector2d operator+(Vector2d const& lhs, Vector2d const& rhs) { return {lhs.x + rhs.x, lhs.y + rhs.y}; }
-	friend Vector2d operator-(Vector2d const& lhs, Vector2d const& rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y}; }
+	constexpr friend Vector2d operator+(Vector2d const& lhs, Vector2d const& rhs) { return {lhs.x + rhs.x, lhs.y + rhs.y}; }
+	constexpr friend Vector2d operator-(Vector2d const& lhs, Vector2d const& rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y}; }
 
-	friend Vector2d operator+(Vector2d const& lhs, int rhs) { return {lhs.x + rhs, lhs.y + rhs}; }
-	friend Vector2d operator-(Vector2d const& lhs, int rhs) { return {lhs.x - rhs, lhs.y - rhs}; }
-	friend Vector2d operator*(Vector2d const& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
-	friend Vector2d operator/(Vector2d const& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
+	constexpr friend Vector2d operator+(Vector2d const& lhs, int rhs) { return {lhs.x + rhs, lhs.y + rhs}; }
+	constexpr friend Vector2d operator-(Vector2d const& lhs, int rhs) { return {lhs.x - rhs, lhs.y - rhs}; }
+	constexpr friend Vector2d operator*(Vector2d const& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
+	constexpr friend Vector2d operator/(Vector2d const& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
 };
 
 }

@@ -8,22 +8,22 @@
 namespace shoujin::gui {
 
 struct Point : public Vector2d {
-	Point() :
+	constexpr Point() :
 		Vector2d{} {}
 
-	Point(int x, int y) :
+	constexpr Point(int x, int y) :
 		Vector2d{x, y} {}
 
-	Point(Vector2d const& rhs) :
+	constexpr Point(Vector2d const& rhs) :
 		Vector2d{rhs} {}
 
-	Point(POINT const& rhs) :
+	constexpr Point(POINT const& rhs) :
 		Vector2d{rhs} {}
 
-	Point(SIZE const& rhs) :
+	constexpr Point(SIZE const& rhs) :
 		Vector2d{rhs} {}
 
-	Point& ClampPoint(Vector2d const& size)
+	constexpr Point& ClampPoint(Vector2d const& size)
 	{
 		if(x < 0)
 			x = 0;

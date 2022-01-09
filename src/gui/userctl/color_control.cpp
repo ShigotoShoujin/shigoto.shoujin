@@ -12,7 +12,7 @@ using namespace shoujin::gui::layout;
 auto constexpr kGradientCaretSize = 7;
 auto constexpr kHueBarHeight = 23;
 auto constexpr kHueBarCaretSize = 5;
-Size const kDefaultClientSize{768, 768};
+Size constexpr kDefaultClientSize{768, 768};
 
 namespace shoujin::gui::usercontrol {
 

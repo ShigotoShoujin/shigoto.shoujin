@@ -8,19 +8,19 @@
 namespace shoujin::gui {
 
 struct Size : public Vector2d {
-	Size() :
+	constexpr Size() :
 		Vector2d{} {}
 
-	Size(int x, int y) :
+	constexpr Size(int x, int y) :
 		Vector2d{x, y} {}
 
-	Size(Vector2d const& rhs) :
+	constexpr Size(Vector2d const& rhs) :
 		Vector2d{rhs} {}
 
-	Size(POINT const& rhs) :
+	constexpr Size(POINT const& rhs) :
 		Vector2d{rhs} {}
 
-	Size(SIZE const& rhs) :
+	constexpr Size(SIZE const& rhs) :
 		Vector2d{rhs} {}
 };
 
