@@ -22,8 +22,8 @@ int NumericControl::SetValue(int value) const
 
 bool NumericControl::OnChange()
 {
-	if(_onchange_enabled) {
-		ScopeFlag enabled{_onchange_enabled, false};
+	if(!_onchange_depth) {
+		EventDepth depth{_onchange_depth};
 		auto text = GetText();
 		SetValue(ToInt(text), text);
 	}

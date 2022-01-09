@@ -202,7 +202,7 @@
     <ClInclude Include="..\..\..\src\gui\logging\message_string.hpp" />
     <ClInclude Include="..\..\..\src\gui\point.hpp" />
     <ClInclude Include="..\..\..\src\gui\rect.hpp" />
-    <ClInclude Include="..\..\..\src\gui\scope_flag.hpp" />
+    <ClInclude Include="..\..\..\src\gui\event_depth.hpp" />
     <ClInclude Include="..\..\..\src\gui\size.hpp" />
     <ClInclude Include="..\..\..\src\gui\types.hpp" />
     <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp" />

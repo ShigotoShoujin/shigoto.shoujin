@@ -30,7 +30,7 @@ private:
 	int SetValue(int value, tstring const& previous_text) const;
 
 	decltype(EditControl::OnLayoutResetEvent) _parent_onlayoutreset_event;
-	bool _onchange_enabled{true};
+	int _onchange_depth{};
 	std::optional<int> _min_value{};
 	std::optional<int> _max_value{};
 };

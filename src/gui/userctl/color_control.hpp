@@ -20,22 +20,48 @@ namespace internal {
 
 class GradientMap : public BitmapWindow {
 public:
-	GradientMap();
+	GradientMap() = default;
 	Event<void, GradientMap*, Color const&> OnColorChangedEvent;
 	void SetHue(int hue);
+	void SetColor(Color const& color);
 
 private:
 	Bitmap _caret;
 	Point _selector;
-	Color _color;
+	ColorByteHSV _color;
 
 	void OnInitialize() override;
 	bool OnMouseDown(MouseEvent const& e) override;
 	bool OnMouseMove(MouseEvent const& e) override;
 
 	void InitializeCaret();
+	void UpdateCaret(Point const& pos);
 	void DrawCaret();
-	Color ColorFromPosition(Point const& pos) const;
+	Color ColorFromPosition(Point const& pos, int hue) const;
+	Point PositionFromColor(ColorFloatHSV const& color) const;
+};
+
+class HueBar : public BitmapWindow {
+public:
+	HueBar() = default;
+	Event<void, HueBar*, int> OnHueChangedEvent;
+	void SetHue(int hue);
+
+private:
+	Bitmap _caret;
+	int _selector{};
+	int _hue{};
+
+	void OnInitialize() override;
+	bool OnMouseDown(MouseEvent const& e) override;
+	bool OnMouseMove(MouseEvent const& e) override;
+
+	void InitializeCaret();
+	void UpdateCaret(int x_pos);
+	void DrawCaret();
+	void SetHueBar(int x_pos, int hue);
+	void SetHueBarFromPos(int x_pos);
+	void SetHueBarFromHue(int hue);
 };
 
 }
@@ -57,11 +83,8 @@ private:
 	virtual Window* Clone() const override;
 	static LayoutParam BuildLayout(LayoutParam const& layout_param);
 
-	GradientMap* _gradient_map_ctrl{};
-
-	BitmapWindow* _hue_bar;
-	Bitmap _hue_bar_caret;
-	int _hue_bar_selector_position{};
+	GradientMap* _gradient_map{};
+	HueBar* _hue_bar;
 
 	NumericControl* _numeric_red;
 	NumericControl* _numeric_green;
@@ -71,23 +94,17 @@ private:
 	NumericControl* _numeric_saturation;
 	NumericControl* _numeric_lightness;
 
-	bool _numeric_events_enabled{true};
+	int _numeric_events_depth{};
+	int _color_events_depth{};
 
 	void SetText(Color const& color);
 	void SetTextRGB(ColorByteRGB const& cbrgb);
 	void SetTextHex(ColorByteRGB const& cbrgb);
 	void SetTextHSL(ColorByteHSL const& cbhsl);
 
-	void SetHueBarFromPos(int x);
-	void SetHueBarFromHue(int hue);
-	void SetHueBar(int x, int hue);
-	void DrawHueBarCaret();
-	void UpdateHueBarCaret(int hue);
-
 	static void GradientMap_OnColorChanged(GradientMap* source, Color const& color, void* userdata);
-	static void HueBar_OnInitialize(Window* source, void* userdata);
-	static bool HueBar_OnMouseDown(Window* source, MouseEvent const& e, void* userdata);
-	static bool HueBar_OnMouseMove(Window* source, MouseEvent const& e, void* userdata);
+	static void HueBar_OnHueChanged(HueBar* source, int hue, void* userdata);
+
 	static bool NumericRGB_OnChange(EditControl* source, void* userdata);
 	static bool NumericHSL_OnChange(EditControl* source, void* userdata);
 };

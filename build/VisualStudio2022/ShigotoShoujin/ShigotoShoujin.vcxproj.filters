@@ -151,7 +151,7 @@
     <ClInclude Include="..\..\..\src\gui\rect.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\gui\scope_flag.hpp">
+    <ClInclude Include="..\..\..\src\gui\event_depth.hpp">
       <Filter>src\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\gui\size.hpp">
