@@ -46,7 +46,7 @@ bool BitmapWindow::OnSizingFinished()
 	return Handled;
 }
 
-void BitmapWindow::ForceRepaint()
+void BitmapWindow::Repaint()
 {
 	if(hwnd()) {
 		Invalidate();

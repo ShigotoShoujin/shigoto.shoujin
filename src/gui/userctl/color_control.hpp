@@ -85,6 +85,7 @@ private:
 
 	GradientMap* gradientMap{};
 	HueBar* hueBar{};
+	BitmapWindow* preview{};
 
 	NumericControl* txtRgbR;
 	NumericControl* txtRgbG;
@@ -113,6 +114,7 @@ private:
 	static bool txtHslChangeHandler(EditControl* source, void* userdata);
 	static bool txtHsvChangeHandler(EditControl* source, void* userdata);
 
+	void sync(ColorFloatHSV const& hsv);
 	void syncFromRGB();
 	void syncFromHSL();
 	void syncFromHSV();

@@ -1,3 +1,5 @@
+import ScopeGuard;
+
 #include "../../assert/assert.hpp"
 #include "../bitmap/bitmap_window.hpp"
 #include "../layout/layout_stream.hpp"
@@ -34,8 +36,8 @@ void GradientMap::setColor(ColorFloatHSV const& color)
 
 void GradientMap::OnInitialize()
 {
-	selector = {client_size().x, 0};
-	Resize(client_size());
+	BitmapWindow::OnInitialize();
+	selector = {client_size().x - 1, 0};
 	initializeCaret();
 	setHue(0);
 }
@@ -84,7 +86,7 @@ void GradientMap::updateCaret(Point const& pos)
 	drawCaret();
 	selector = pos;
 	drawCaret();
-	ForceRepaint();
+	Invalidate();
 }
 
 void GradientMap::drawCaret()
@@ -99,7 +101,7 @@ void GradientMap::renderMap(float hue)
 	SetBits(bits);
 
 	drawCaret();
-	ForceRepaint();
+	Invalidate();
 }
 
 ColorFloatHSV GradientMap::colorFromPosition(Point const& pos, float hue) const
@@ -125,7 +127,7 @@ void HueBar::setHue(float hue)
 
 void HueBar::OnInitialize()
 {
-	Resize(client_size());
+	BitmapWindow::OnInitialize();
 
 	auto bits = GetBits();
 	bits.RenderHueBarHorizontal();
@@ -173,7 +175,7 @@ void HueBar::updateCaret(int x_pos)
 	drawCaret();
 	selector = x_pos;
 	drawCaret();
-	ForceRepaint();
+	Invalidate();
 }
 
 void HueBar::drawCaret()
@@ -210,9 +212,10 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	hueBar = new HueBar();
 	hueBar->OnHueChangedEvent = {hueBarHueChangedHandler, this};
 
+	preview = new BitmapWindow();
+
 	for(auto** it : {&txtRgbR, &txtRgbG, &txtRgbB}) {
 		*it = new NumericControl();
-		(*it)->autoselect(true);
 		(*it)->OnChangeEvent = {txtRgbChangeHandler, this};
 		(*it)->min_value(0);
 		(*it)->max_value(255);
@@ -224,7 +227,6 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 
 	for(auto** it : {&txtHslH, &txtHslS, &txtHslL}) {
 		*it = new NumericControl();
-		(*it)->autoselect(true);
 		(*it)->OnChangeEvent = {txtHslChangeHandler, this};
 		(*it)->min_value(0);
 		(*it)->max_value(100);
@@ -235,7 +237,6 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 
 	for(auto** it : {&txtHsvH, &txtHsvS, &txtHsvV}) {
 		*it = new NumericControl();
-		(*it)->autoselect(true);
 		(*it)->OnChangeEvent = {txtHsvChangeHandler, this};
 		(*it)->min_value(0);
 		(*it)->max_value(100);
@@ -251,7 +252,8 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	stream
 		<< layout::window_size(client_size() / 4) << layout::exstyle(WS_EX_CLIENTEDGE)
 		<< topleft << gradientMap
-		<< push << layout::window_size({client_size().x / 4, kHueBarHeight}) << below << hueBar << pop
+		<< push << layout::window_size({client_size().x / 4, kHueBarHeight}) << below << hueBar
+		<< below << layout::window_size({client_size().x / 4, 100}) << preview << pop
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 		<< TEXT("Red") << create(this, label) << push << after << txtRgbR << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << txtRgbG << pop << below
@@ -277,7 +279,7 @@ bool ColorControl::OnCreate(CREATESTRUCT const& createparam)
 
 void ColorControl::OnInitialize()
 {
-	setTextHex({});
+	Window::OnInitialize();
 }
 
 Window* ColorControl::Clone() const
@@ -302,11 +304,19 @@ void ColorControl::setText(ColorFloatHSV const& color)
 {
 	if(!numericEventsDepth) {
 		EventDepth depth{numericEventsDepth};
-		Color c{color};
-		setTextRGB(c);
-		setTextHex(c);
-		setTextHSL(c);
-		setTextHSV(c);
+		Color rgb{color};
+		setTextRGB(rgb);
+		setTextHex(rgb);
+
+		//Need direct conversion from HSL to HSV
+		ColorFloatHSL hsl{rgb};
+		hsl.hue = color.hue;
+		setTextHSL(hsl);
+
+		setTextHSV(color);
+
+		preview->Fill(rgb);
+		preview->Invalidate();
 	}
 }
 
@@ -331,9 +341,9 @@ void ColorControl::setTextHSL(ColorByteHSL const& cbhsl)
 
 void ColorControl::setTextHSV(ColorByteHSV const& cbhsv)
 {
-	txtHslH->SetValue(cbhsv.hue);
-	txtHslS->SetValue(cbhsv.saturation);
-	txtHslL->SetValue(cbhsv.value);
+	txtHsvH->SetValue(cbhsv.hue);
+	txtHsvS->SetValue(cbhsv.saturation);
+	txtHsvV->SetValue(cbhsv.value);
 }
 
 void ColorControl::gradientMapColorChangedHandler(GradientMap* source, ColorFloatHSV const& color, void* userdata)
@@ -351,52 +361,22 @@ void ColorControl::hueBarHueChangedHandler(HueBar* source, float hue, void* user
 
 bool ColorControl::txtRgbChangeHandler(EditControl* source, void* userdata)
 {
-	//auto parent = static_cast<ColorControl*>(userdata);
+	auto parent = static_cast<ColorControl*>(userdata);
 
-	//if(!parent->numericEventsDepth) {
-	//	EventDepth n_depth{parent->numericEventsDepth};
-	//	EventDepth c_depth{parent->colorEventsDepth};
+	if(!parent->numericEventsDepth)
+		parent->syncFromRGB();
 
-	//	Color color{ColorByteRGB{
-	//		parent->txtRgbR->GetValue(),
-	//		parent->txtRgbG->GetValue(),
-	//		parent->txtRgbB->GetValue()}};
-
-	//	parent->setTextHex(color);
-	//	parent->setTextHSL(color);
-
-	//	ColorFloatHSV hsv{color};
-	//	parent->hueBar->setHue(hsv.hue);
-	//	parent->gradientMap->setColor(hsv);
-	//}
+	return Handled;
 
 	return Handled;
 }
 
 bool ColorControl::txtHslChangeHandler(EditControl* source, void* userdata)
 {
-	//auto parent = static_cast<ColorControl*>(userdata);
-	//auto hue = parent->txtHslH->GetValue();
+	auto parent = static_cast<ColorControl*>(userdata);
 
-	//if(!parent->numericEventsDepth) {
-	//	EventDepth n_depth{parent->numericEventsDepth};
-	//	EventDepth c_depth{parent->colorEventsDepth};
-
-	//	ColorByteHSL cbhsl{
-	//		hue,
-	//		parent->txtHslS->GetValue(),
-	//		parent->txtHslL->GetValue()};
-
-	//	auto color = Color{cbhsl};
-	//	parent->setTextRGB(color);
-	//	parent->setTextHex(color);
-
-	//	auto sender = static_cast<NumericControl*>(source);
-	//	if(sender == parent->txtHslH)
-	//		parent->hueBar->setHue(cbhsl.hue);
-
-	//	parent->gradientMap->setColor(color);
-	//}
+	if(!parent->numericEventsDepth)
+		parent->syncFromHSL();
 
 	return Handled;
 }
@@ -411,12 +391,37 @@ bool ColorControl::txtHsvChangeHandler(EditControl* source, void* userdata)
 	return Handled;
 }
 
+void ColorControl::sync(ColorFloatHSV const& hsv)
+{
+	setText(hsv);
+
+	hueBar->OnHueChangedEvent.pushDisable();
+	auto guard = ScopeGuard<decltype(hueBar->OnHueChangedEvent)>{[](decltype(hueBar->OnHueChangedEvent)* src) { src->popDisable(); }, &hueBar->OnHueChangedEvent};
+	hueBar->setHue(hsv.hue);
+	gradientMap->setColor(hsv);
+}
+
 void ColorControl::syncFromRGB()
 {
+	auto R = txtRgbR->GetValue();
+	auto G = txtRgbG->GetValue();
+	auto B = txtRgbB->GetValue();
+
+	//Really need HSV <=> HSL direct convertions
+	auto hsv = ColorFloatHSV{Color{ColorByteRGB{R, G, B}}};
+	sync(hsv);
 }
 
 void ColorControl::syncFromHSL()
 {
+	auto H = txtHslH->GetValue();
+	auto S = txtHslS->GetValue();
+	auto L = txtHslL->GetValue();
+
+	//Really need HSV <=> HSL direct convertions
+	auto hsv = ColorFloatHSV{Color{ColorByteHSL{H, S, L}}};
+	hsv.hue = static_cast<float>(H);
+	sync(hsv);
 }
 
 void ColorControl::syncFromHSV()
@@ -425,15 +430,10 @@ void ColorControl::syncFromHSV()
 	auto S = txtHsvS->GetValue();
 	auto V = txtHsvV->GetValue();
 
-	auto hsv = ColorByteHSV{H, S, V};
-	auto rgb = Color{hsv};
-	auto hsl = ColorByteHSL{rgb};
-
-	setTextRGB(rgb);
-	setTextHex(rgb);
-	setTextHSL(hsl);
-
-	//this->gradientMap->set
+	//Really need HSV <=> HSL direct convertions
+	auto hsv = ColorFloatHSV{ColorByteHSV{H, S, V}};
+	hsv.hue = static_cast<float>(H);
+	sync(hsv);
 }
 
 }

@@ -7,19 +7,18 @@ namespace shoujin {
 export template<typename UserDataT>
 class ScopeGuard {
 public:
-	using CleanupFunc = void (*)(UserDataT*);
-	explicit ScopeGuard(CleanupFunc func, UserDataT* userdata = nullptr);
+	explicit ScopeGuard(void (*)(UserDataT*), UserDataT* = nullptr);
 	~ScopeGuard();
 	void release();
 
 private:
 	bool engaged;
-	CleanupFunc func;
+	void (*func)(UserDataT*);
 	UserDataT* userdata;
 };
 
 template<typename UserDataT>
-ScopeGuard<UserDataT>::ScopeGuard(CleanupFunc func, UserDataT* userdata) :
+ScopeGuard<UserDataT>::ScopeGuard(void (*func)(UserDataT*), UserDataT* userdata) :
 	engaged{true},
 	func{func},
 	userdata{userdata}

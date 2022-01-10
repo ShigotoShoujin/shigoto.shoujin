@@ -17,7 +17,7 @@ public:
 	virtual bool OnPaint() override;
 	virtual bool OnSizingFinished() override;
 
-	virtual void ForceRepaint();
+	virtual void Repaint();
 
 private:
 	virtual Window* Clone() const override;
