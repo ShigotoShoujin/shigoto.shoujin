@@ -1,15 +1,13 @@
 #ifndef SHOUJIN_SOURCE_GUI_WINDOW
 #define SHOUJIN_SOURCE_GUI_WINDOW
 
+#include "../enum_operators.hpp"
 #include "../event.hpp"
 #include "layout.hpp"
 #include "window_handle.hpp"
 #include "window_taborder.hpp"
 #include <memory>
 #include <vector>
-
-#pragma warning(push)
-#pragma warning(disable : 26812)
 
 namespace shoujin::gui {
 
@@ -39,14 +37,16 @@ public:
 		operator bool() const;
 	};
 
-	enum MouseButton : int {
-		MouseButtonNone = 0,
-		MouseButtonLeft = 1,
-		MouseButtonRight = 2,
-		MouseButtonMiddle = 4,
-		MouseButtonX1 = 8,
-		MouseButtonX2 = 16
+	enum class MouseButton : int {
+		None = 0,
+		Left = 1,
+		Right = 2,
+		Middle = 4,
+		X1 = 8,
+		X2 = 16
 	};
+
+	SHOUJIN_DEFINE_ENUM_FLAG_OPERATORS_FRIEND(MouseButton)
 
 	struct KeyEvent {
 		uint8_t virtual_keycode;
@@ -171,7 +171,5 @@ private:
 };
 
 }
-
-#pragma warning(pop)
 
 #endif

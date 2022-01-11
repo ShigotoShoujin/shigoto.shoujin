@@ -36,22 +36,22 @@ Window::KeyEvent::KeyEvent(WindowMessage const& message) :
 Window::MouseEvent::MouseEvent(WindowMessage const& message) :
 	Position{GET_X_LPARAM(message.lparam), GET_Y_LPARAM(message.lparam)}
 {
-	int flags{};
+	MouseButton flags{};
 
 	if(message.wparam & MK_LBUTTON)
-		flags |= MouseButtonLeft;
+		flags |= MouseButton::Left;
 
 	if(message.wparam & MK_RBUTTON)
-		flags |= MouseButtonRight;
+		flags |= MouseButton::Right;
 
 	if(message.wparam & MK_MBUTTON)
-		flags |= MouseButtonMiddle;
+		flags |= MouseButton::Middle;
 
 	if(message.wparam & MK_XBUTTON1)
-		flags |= MouseButtonX1;
+		flags |= MouseButton::X1;
 
 	if(message.wparam & MK_XBUTTON2)
-		flags |= MouseButtonX2;
+		flags |= MouseButton::X2;
 
 	ButtonFlag = static_cast<MouseButton>(flags);
 }
@@ -336,24 +336,24 @@ void Window::OnParentSized(Window const& parent)
 	Rect rect = window_rect();
 	Rect new_rect = rect;
 
-	int la = anchor();
+	auto anchor = this->anchor();
 
-	if(la & AnchorLeft) {
+	if(Anchor::None != (anchor & Anchor::Left)) {
 		new_rect.x1 = margin;
 		new_rect.x2 = new_rect.x1 + rect.width();
 	}
 
-	if(la & AnchorTop) {
+	if(Anchor::None != (anchor & Anchor::Top)) {
 		new_rect.y1 = margin;
 		new_rect.y2 = new_rect.y1 + rect.height();
 	}
 
-	if(la & AnchorRight) {
+	if(Anchor::None != (anchor & Anchor::Right)) {
 		new_rect.x1 = ps.x - rect.width() - margin;
 		new_rect.x2 = new_rect.x1 + rect.width();
 	}
 
-	if(la & AnchorBottom) {
+	if(Anchor::None != (anchor & Anchor::Bottom)) {
 		new_rect.y1 = ps.y - rect.height() - margin;
 		new_rect.y2 = new_rect.y1 + rect.height();
 	}

@@ -1,10 +1,11 @@
 #ifndef SHOUJIN_SOURCE_GUI_LAYOUT
 #define SHOUJIN_SOURCE_GUI_LAYOUT
 
+#define WIN32_LEAN_AND_MEAN
+#include "../enum_operators.hpp"
 #include "../event.hpp"
 #include "../tstring.hpp"
 #include "types.hpp"
-#define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 namespace shoujin::gui {
@@ -15,16 +16,18 @@ enum class LayoutMode {
 	FillParent
 };
 
-enum Anchor : int {
-	AnchorNone = 0,
-	AnchorLeft = 1,
-	AnchorTop = 2,
-	AnchorRight = 4,
-	AnchorBottom = 8
+enum class Anchor : int {
+	None = 0,
+	Left = 1,
+	Top = 2,
+	Right = 4,
+	Bottom = 8
 };
 
+SHOUJIN_DEFINE_ENUM_FLAG_OPERATORS(Anchor)
+
 struct LayoutParam {
-	int anchor{};
+	Anchor anchor{};
 	LayoutMode layout_mode{};
 	Point position{};
 	Size window_size{};
@@ -41,7 +44,7 @@ class Layout {
 	Size _client_size;
 	DWORD _style;
 	DWORD _exstyle;
-	int _anchor;
+	Anchor _anchor;
 	bool _tabstop;
 	tstring _text;
 
@@ -55,7 +58,7 @@ public:
 	[[nodiscard]] Size const& client_size() const { return _client_size; }
 	[[nodiscard]] DWORD const& style() const { return _style; }
 	[[nodiscard]] DWORD const& exstyle() const { return _exstyle; }
-	[[nodiscard]] int anchor() const { return _anchor; }
+	[[nodiscard]] Anchor anchor() const { return _anchor; }
 	[[nodiscard]] bool const& tabstop() const { return _tabstop; }
 	[[nodiscard]] tstring const& text() const { return _text; }
 	[[nodiscard]] Rect window_rect() const { return Rect{_position, _window_size}; }
@@ -69,7 +72,6 @@ public:
 	void SetLayoutFromHandle(HWND hwnd);
 	void SetLayout(Layout layout);
 };
-
 }
 
 #endif

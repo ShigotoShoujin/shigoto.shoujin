@@ -18,7 +18,7 @@ public:
 		Window* window = new Window{LayoutParam{.layout_mode{LayoutMode::CenterParent}, .client_size{320, 640}, .text = TEXT("Mouse Click")}};
 
 		EditControl* edit = new EditControl(LayoutParam{
-			.anchor{Anchor::AnchorTop | Anchor::AnchorLeft},
+			.anchor{Anchor::Top | Anchor::Left},
 			.client_size{180, 500},
 			.style = ES_MULTILINE});
 

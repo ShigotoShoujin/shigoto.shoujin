@@ -187,6 +187,7 @@
     <ClInclude Include="..\..\..\include\shoujin\tstring.hpp" />
     <ClInclude Include="..\..\..\src\assert\assert.hpp" />
     <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp" />
+    <ClInclude Include="..\..\..\src\enum_operators.hpp" />
     <ClInclude Include="..\..\..\src\event.hpp" />
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\file\logfile.hpp" />

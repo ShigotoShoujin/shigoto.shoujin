@@ -44,7 +44,7 @@ void GradientMap::OnInitialize()
 
 bool GradientMap::OnMouseDown(MouseEvent const& e)
 {
-	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
+	if(MouseButton::None != (e.ButtonFlag ^ MouseButton::Left))
 		return NotHandled;
 
 	updateCaret(e.Position);
@@ -57,7 +57,7 @@ bool GradientMap::OnMouseDown(MouseEvent const& e)
 
 bool GradientMap::OnMouseMove(MouseEvent const& e)
 {
-	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
+	if(MouseButton::None != (e.ButtonFlag ^ MouseButton::Left))
 		return NotHandled;
 
 	MouseEvent me = e;
@@ -86,7 +86,7 @@ void GradientMap::updateCaret(Point const& pos)
 	drawCaret();
 	selector = pos;
 	drawCaret();
-	Invalidate();
+	Repaint();
 }
 
 void GradientMap::drawCaret()
@@ -101,7 +101,7 @@ void GradientMap::renderMap(float hue)
 	SetBits(bits);
 
 	drawCaret();
-	Invalidate();
+	Repaint();
 }
 
 ColorFloatHSV GradientMap::colorFromPosition(Point const& pos, float hue) const
@@ -139,7 +139,7 @@ void HueBar::OnInitialize()
 
 bool HueBar::OnMouseDown(MouseEvent const& e)
 {
-	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
+	if(MouseButton::None != (e.ButtonFlag ^ MouseButton::Left))
 		return NotHandled;
 
 	updateCaret(e.Position.x);
@@ -150,7 +150,7 @@ bool HueBar::OnMouseDown(MouseEvent const& e)
 
 bool HueBar::OnMouseMove(MouseEvent const& e)
 {
-	if(e.ButtonFlag ^ MouseButton::MouseButtonLeft)
+	if(MouseButton::None != (e.ButtonFlag ^ MouseButton::Left))
 		return NotHandled;
 
 	MouseEvent me = e;
@@ -175,7 +175,7 @@ void HueBar::updateCaret(int x_pos)
 	drawCaret();
 	selector = x_pos;
 	drawCaret();
-	Invalidate();
+	Repaint();
 }
 
 void HueBar::drawCaret()
@@ -316,7 +316,7 @@ void ColorControl::setText(ColorFloatHSV const& color)
 		setTextHSV(color);
 
 		preview->Fill(rgb);
-		preview->Invalidate();
+		preview->Repaint();
 	}
 }
 

@@ -43,7 +43,7 @@ public:
 	explicit TestWindow(LayoutParam const& layout_param = {}) :
 		Window(BuildLayout(layout_param))
 	{
-		_control = new TestControl(LayoutParam{.anchor = Anchor::AnchorTop | Anchor::AnchorLeft, .window_size{200, 23}, .exstyle{WS_EX_CLIENTEDGE}});
+		_control = new TestControl(LayoutParam{.anchor = Anchor::Top | Anchor::Left, .window_size{200, 23}, .exstyle{WS_EX_CLIENTEDGE}});
 		AddChild(_control);
 	}
 

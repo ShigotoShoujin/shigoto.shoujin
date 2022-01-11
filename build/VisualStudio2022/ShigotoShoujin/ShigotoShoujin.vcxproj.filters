@@ -226,5 +226,8 @@
     <ClInclude Include="..\..\..\src\gui\userctl\color_control.hpp">
       <Filter>src\gui\userctl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\src\enum_operators.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
