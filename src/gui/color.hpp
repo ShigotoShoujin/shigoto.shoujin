@@ -26,7 +26,9 @@ struct ColorByteRGB {
 
 	ColorByteRGB() = default;
 	ColorByteRGB(int red, int green, int blue);
-	ColorByteRGB(ColorFloatRGB const& cfrgb);
+	ColorByteRGB(ColorFloatRGB const&);
+	ColorByteRGB(ColorFloatHSL const&);
+	ColorByteRGB(ColorFloatHSV const&);
 };
 
 struct ColorFloatRGB {
@@ -41,7 +43,9 @@ struct ColorFloatRGB {
 
 	ColorFloatRGB() = default;
 	ColorFloatRGB(float red, float green, float blue);
-	ColorFloatRGB(ColorByteRGB const& cbhsl);
+	ColorFloatRGB(ColorByteRGB const&);
+	ColorFloatRGB(ColorFloatHSL const&);
+	ColorFloatRGB(ColorFloatHSV const&);
 };
 
 struct ColorByteHSL {
@@ -56,7 +60,9 @@ struct ColorByteHSL {
 
 	ColorByteHSL() = default;
 	ColorByteHSL(int hue, int saturation, int lightness);
-	ColorByteHSL(ColorFloatHSL const& cfhsl);
+	ColorByteHSL(ColorFloatHSL const&);
+	ColorByteHSL(ColorFloatRGB const&);
+	ColorByteHSL(ColorFloatHSV const&);
 };
 
 struct ColorFloatHSL {
@@ -71,7 +77,9 @@ struct ColorFloatHSL {
 
 	ColorFloatHSL() = default;
 	ColorFloatHSL(float hue, float saturation, float lightness);
-	ColorFloatHSL(ColorByteHSL const& cbhsl);
+	ColorFloatHSL(ColorByteHSL const&);
+	ColorFloatHSL(ColorFloatRGB const&);
+	ColorFloatHSL(ColorFloatHSV const&);
 };
 
 struct ColorByteHSV {
@@ -86,7 +94,9 @@ struct ColorByteHSV {
 
 	ColorByteHSV() = default;
 	ColorByteHSV(int hue, int saturation, int value);
-	ColorByteHSV(ColorFloatHSV const& cfhsv);
+	ColorByteHSV(ColorFloatHSV const&);
+	ColorByteHSV(ColorFloatRGB const&);
+	ColorByteHSV(ColorFloatHSL const&);
 };
 
 struct ColorFloatHSV {
@@ -101,7 +111,9 @@ struct ColorFloatHSV {
 
 	ColorFloatHSV() = default;
 	ColorFloatHSV(float hue, float saturation, float value);
-	ColorFloatHSV(ColorByteHSV const& cbhsv);
+	ColorFloatHSV(ColorByteHSV const&);
+	ColorFloatHSV(ColorFloatRGB const&);
+	ColorFloatHSV(ColorFloatHSL const&);
 };
 
 class Color {

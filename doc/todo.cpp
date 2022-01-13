@@ -1,3 +1,5 @@
+// Make Color constexpr
+
 // Use GitHub Issues instead of this file
 
 // In order to avoir the need to convert first convert to RGB when converting HSL->HSV and HSV->HSL, add direct conversions and tests
