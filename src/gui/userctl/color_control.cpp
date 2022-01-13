@@ -39,6 +39,11 @@ void GradientMap::OnInitialize()
 	BitmapWindow::OnInitialize();
 	selector = {client_size().x - 1, 0};
 	initializeCaret();
+}
+
+void GradientMap::OnReady()
+{
+	BitmapWindow::OnReady();
 	setHue(0);
 }
 

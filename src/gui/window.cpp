@@ -202,6 +202,7 @@ void Window::Show()
 	if(!_handle) {
 		CreateHandle();
 		RaiseOnInitialize();
+		RaiseOnReady();
 	}
 
 	ShowWindow(*_handle, SW_SHOW);
@@ -297,6 +298,10 @@ bool Window::OnCreate(CREATESTRUCT const& createparam)
 }
 
 void Window::OnInitialize()
+{
+}
+
+void Window::OnReady()
 {
 }
 
@@ -433,6 +438,15 @@ void Window::RaiseOnInitialize()
 
 	for(auto&& child : _child_vec)
 		child->RaiseOnInitialize();
+}
+
+void Window::RaiseOnReady()
+{
+	OnReady();
+	OnReadyEvent(this);
+
+	for(auto&& child : _child_vec)
+		child->RaiseOnReady();
 }
 
 Window::MessageResult Window::RaiseOnClose()

@@ -31,6 +31,7 @@ private:
 	ColorFloatHSV color;
 
 	void OnInitialize() override;
+	void OnReady() override;
 	bool OnMouseDown(MouseEvent const& e) override;
 	bool OnMouseMove(MouseEvent const& e) override;
 

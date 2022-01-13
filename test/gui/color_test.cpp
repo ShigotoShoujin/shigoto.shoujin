@@ -457,7 +457,7 @@ public:
 
 	TEST_METHOD(ConvertHslToHsv_WhenH264S53L40_H264S69V61) {
 		ColorFloatHSL cfhsl{264.f, .53f, .4f};
-		ColorFloatHSV expected{264.f, .69, .61f};
+		ColorFloatHSV expected{264.f, .69f, .61f};
 
 		ColorFloatHSV cfhsv = Color{cfhsl};
 
@@ -521,7 +521,7 @@ public:
 	}
 
 	TEST_METHOD(ConvertHsvToHsl_WhenH264S69V61_H264S53L40) {
-		ColorFloatHSV cfhsv{264.f, .69, .61f};
+		ColorFloatHSV cfhsv{264.f, .69f, .61f};
 		ColorFloatHSL expected{264.f, .53f, .4f};
 
 		ColorFloatHSL cfhsl = Color{expected};

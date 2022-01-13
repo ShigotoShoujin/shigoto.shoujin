@@ -96,6 +96,7 @@ public:
 	Event<bool, WindowMessage const&> OnWndProcEvent;
 	Event<bool, Window const&, CREATESTRUCT const&> OnCreateEvent;
 	Event<void, Window*> OnInitializeEvent;
+	Event<void, Window*> OnReadyEvent;
 	Event<bool> OnCloseEvent;
 	Event<bool, int> OnCommandEvent;
 	Event<bool> OnPaintEvent;
@@ -123,6 +124,7 @@ protected:
 	virtual bool OnWndProc(WindowMessage const& message);
 	virtual bool OnCreate(CREATESTRUCT const& createparam);
 	virtual void OnInitialize();
+	virtual void OnReady();
 	virtual bool OnClose();
 	virtual bool OnCommand(int notification_code);
 	virtual bool OnPaint();
@@ -143,6 +145,7 @@ private:
 	MessageResult RaiseOnWndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 	MessageResult RaiseOnCreate(WindowMessage const& message);
 	void RaiseOnInitialize();
+	void RaiseOnReady();
 	MessageResult RaiseOnClose();
 	MessageResult RaiseOnCommand(WindowMessage const& message);
 	MessageResult RaiseOnPaint();
