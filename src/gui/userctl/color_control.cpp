@@ -308,11 +308,9 @@ void ColorControl::setText(ColorFloatHSV const& color)
 		setTextRGB(rgb);
 		setTextHex(rgb);
 
-		//Need direct conversion from HSL to HSV
-		ColorFloatHSL hsl{rgb};
+		ColorFloatHSL hsl{color};
 		hsl.hue = color.hue;
 		setTextHSL(hsl);
-
 		setTextHSV(color);
 
 		preview->Fill(rgb);
@@ -407,8 +405,7 @@ void ColorControl::syncFromRGB()
 	auto G = txtRgbG->GetValue();
 	auto B = txtRgbB->GetValue();
 
-	//Really need HSV <=> HSL direct convertions
-	auto hsv = ColorFloatHSV{Color{ColorByteRGB{R, G, B}}};
+	auto hsv = ColorFloatHSV{ColorByteRGB{R, G, B}};
 	sync(hsv);
 }
 
@@ -418,8 +415,7 @@ void ColorControl::syncFromHSL()
 	auto S = txtHslS->GetValue();
 	auto L = txtHslL->GetValue();
 
-	//Really need HSV <=> HSL direct convertions
-	auto hsv = ColorFloatHSV{Color{ColorByteHSL{H, S, L}}};
+	auto hsv = ColorFloatHSV{ColorByteHSL{H, S, L}};
 	hsv.hue = static_cast<float>(H);
 	sync(hsv);
 }
@@ -430,7 +426,6 @@ void ColorControl::syncFromHSV()
 	auto S = txtHsvS->GetValue();
 	auto V = txtHsvV->GetValue();
 
-	//Really need HSV <=> HSL direct convertions
 	auto hsv = ColorFloatHSV{ColorByteHSV{H, S, V}};
 	hsv.hue = static_cast<float>(H);
 	sync(hsv);
