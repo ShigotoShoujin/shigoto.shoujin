@@ -1,17 +1,7 @@
-// Make Color constexpr
-
 // Use GitHub Issues instead of this file
 
-// In order to avoir the need to convert first convert to RGB when converting HSL->HSV and HSV->HSL, add direct conversions and tests
-
-// Consider making tstring a class with a constructor accepting va_args or something with std::format so we can format text directly
-
-// In class Event, reconsider making void* userdata a template, using Event<TReturn, <TArgs...>, TUserData>
-// Maybe the inner <> to confine TArgs... could solve the goal of keeping TUserData as the last argument.
-// Also strongly reconsider removing the limitation to have only one handler per event,
+// Reconsider removing the limitation to have only one handler per event,
 // even though this makes events handler always return void.
-// 
-// Some of the above is wrong because the type of userdata is not known at the time of declaring the event, an can be different for each handler.
 
 // Change SHOUJIN_ASSERT* to use C++20 std::source_location and get rid of macros
 
@@ -25,10 +15,8 @@
 
 // TODO Rewrite Layout / LayoutParam / Window concept so that getters / setters
 // exists for all properties and that they work before and after handle creation.
-
-// TODO Replace SetLayout with GetDefaultLayout/GetDefaultCreateProperties
-
-// TODO Layout, Min/Max WindowSize and Min/Max ClientSize
+// - Replace SetLayout with GetDefaultLayout/GetDefaultCreateProperties
+// - Layout, Min/Max WindowSize and Min/Max ClientSize
 
 // TODO Try to make WindowHandle Parent a WindowHandle* instead of HWND, or remove WindowHandle class to replate with direct HWND
 
