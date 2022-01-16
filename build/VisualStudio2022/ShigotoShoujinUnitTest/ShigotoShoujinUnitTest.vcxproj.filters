@@ -29,6 +29,12 @@
     <Filter Include="gui\userctl">
       <UniqueIdentifier>{15faeff1-7080-4358-8a82-57833d422843}</UniqueIdentifier>
     </Filter>
+    <Filter Include="gui2">
+      <UniqueIdentifier>{49b197aa-2a4a-40db-83a6-ee37b4b394af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gui2\window">
+      <UniqueIdentifier>{f25bf394-1308-4f45-a8cb-7be2fcafe717}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\test\grid_test.cpp" />
@@ -88,5 +94,16 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\scope_guard_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui2\window\window_module_test.cpp">
+      <Filter>gui2\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\gui2\window\test_tools.cpp">
+      <Filter>gui2\window</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\gui2\window\test_tools.hpp">
+      <Filter>gui2\window</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -24,6 +24,8 @@
     <ClCompile Include="..\..\..\test\event_test.cpp" />
     <ClCompile Include="..\..\..\test\file\file_test.cpp" />
     <ClCompile Include="..\..\..\test\grid_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui2\window\test_tools.cpp" />
+    <ClCompile Include="..\..\..\test\gui2\window\window_module_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_window_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\effect\gradient_bar_test.cpp" />
@@ -45,6 +47,9 @@
     <ProjectReference Include="..\ShigotoShoujin\ShigotoShoujin.vcxproj">
       <Project>{bafa1d68-0cd1-4790-8f0a-78baa5559b0d}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\gui2\window\test_tools.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
