@@ -148,8 +148,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\..\..\doc\ColorPicker.xlsx" />
+    <ClCompile Include="..\..\..\src\event.cppm">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\types\types.ixx">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\win32\win32api.kernel32.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\win32\win32api.user32.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>

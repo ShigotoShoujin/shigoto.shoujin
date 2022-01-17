@@ -22,15 +22,16 @@ The naming of classes, functions and variables should be enough to self-document
 Prioritize for ease of reading.
 
 ### Class declaration ordering
-1. public / protected / private
-2. constructors and assignment operators
-3. destructor
-4. events variables
-5. virtual overrides
-6. getters
-7. setters
-8. virtual functions
-9. functions
+01. public / protected / private
+02. internal types
+03. constructors and assignment operators
+04. destructor
+05. events variables
+06. virtual overrides
+07. getters
+08. setters
+09. virtual functions
+10. functions
 
 ### Class Accessors
 No "get" prefix, `const` and prefer `[[nodiscard]]`  

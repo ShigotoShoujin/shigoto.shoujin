@@ -6,8 +6,5 @@ void boot()
 {
 	Window w;
 	
-	auto z = w.handle();
-	using HWND = decltype(z);
-	
-	HWND hwnd = w.handle();
+	w.showModal();
 }

@@ -20,10 +20,10 @@ public:
 	{
 	}
 
-	TEST_METHOD(GivenWindowCreatedWithDefaultConstructor_WhenShowModalIsCalled_ShowCenteredWithNiceDefault) {
+	TEST_METHOD(GivenDefaultConstructor_WhenShown_IsCentered) {
 		Window w;
 		
-		//w.ShowModal();
+		w.showModal();
 
 		//Assert::AreEqual(L"Shoujin", w.text());
 	}

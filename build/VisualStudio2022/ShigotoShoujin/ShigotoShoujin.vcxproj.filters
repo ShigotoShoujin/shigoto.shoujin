@@ -152,6 +152,12 @@
     <ClCompile Include="..\..\..\src\gui2\types\types.size.cpp">
       <Filter>src\gui2\types</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\win32\win32api.kernel32.cpp">
+      <Filter>src\gui2\win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\event.cppm">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\event.hpp">
