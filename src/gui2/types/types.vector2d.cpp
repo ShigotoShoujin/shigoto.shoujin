@@ -22,12 +22,11 @@ struct Vector2d {
 	constexpr Vector2d(SIZE const& rhs) :
 		x{rhs.cx}, y{rhs.cy} {}
 
-	constexpr operator bool() const { return x || y; }
-	constexpr operator POINT() const { return {x, y}; }
-	constexpr operator SIZE() const { return {x, y}; }
+	constexpr operator bool() const noexcept { return x || y; }
+	constexpr operator POINT() const noexcept { return {x, y}; }
+	constexpr operator SIZE() const noexcept { return {x, y}; }
 
 	constexpr friend bool operator==(Vector2d const& lhs, Vector2d const& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
-	constexpr friend bool operator!=(Vector2d const& lhs, Vector2d const& rhs) { return !(lhs == rhs); }
 
 	constexpr friend Vector2d operator+(Vector2d const& lhs, Vector2d const& rhs) { return {lhs.x + rhs.x, lhs.y + rhs.y}; }
 	constexpr friend Vector2d operator-(Vector2d const& lhs, Vector2d const& rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y}; }

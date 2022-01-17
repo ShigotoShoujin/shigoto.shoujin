@@ -6,6 +6,7 @@ module;
 export module Shoujin.Gui.Window : Core;
 
 import Shoujin.Event;
+import Shoujin.Gui.Layout;
 import Shoujin.Gui.Types;
 import Shoujin.Gui.Win32Api;
 
@@ -50,11 +51,11 @@ public:
 	Window() = default;
 	virtual ~Window() = default;
 
-	[[nodiscard]] bool created() const noexcept { return _handle; }
-	[[nodiscard]] HWND handle() const noexcept { return _handle; }
-	[[nodiscard]] Point position() const noexcept { return _position; };
-	[[nodiscard]] Size clientSize() const noexcept { return _clientSize; };
-	[[nodiscard]] Size windowSize() const noexcept { return _windowSize; };
+	[[nodiscard]] bool created() const { return _handle; }
+	[[nodiscard]] HWND handle() const { return _handle; }
+	[[nodiscard]] Point position() const { return _position; };
+	[[nodiscard]] Size clientSize() const { return _clientSize; };
+	[[nodiscard]] Size windowSize() const { return _windowSize; };
 
 	Event<bool, WindowMessage const&> onWndProcEvent;
 
@@ -205,9 +206,7 @@ void Window::createWin32Window()
 
 	DWORD style = WS_OVERLAPPEDWINDOW;
 
-	Size screen{
-		win32api::getSystemMetrics(SM_CXSCREEN),
-		win32api::getSystemMetrics(SM_CYSCREEN)};
+	Size screen = layout::getScreenSize();
 
 	_clientSize = {
 		screen.x / 3,
@@ -216,7 +215,6 @@ void Window::createWin32Window()
 	RECT rect{0, 0, _clientSize.x, _clientSize.y};
 	win32api::adjustWindowRectEx(&rect, style, NULL, 0);
 	_windowSize = {rect.right - rect.left, rect.bottom - rect.top};
-
 	_position = (screen - _windowSize) / 2;
 
 	HWND hWnd =

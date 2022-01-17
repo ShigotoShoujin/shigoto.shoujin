@@ -49,6 +49,9 @@
     <Filter Include="src\gui2\win32api">
       <UniqueIdentifier>{7a52e5af-4bee-4455-912e-4881f64cb4a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\gui2\layout">
+      <UniqueIdentifier>{1a4082ac-16bc-457c-95db-d94e2e6c3e28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\doc\ColorPicker.xlsx">
@@ -137,12 +140,6 @@
     <ClCompile Include="..\..\..\src\gui2\window\window.layout.cpp">
       <Filter>src\gui2\window</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32\win32api.user32.cpp">
-      <Filter>src\gui2\win32api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32\win32api.cppm">
-      <Filter>src\gui2\win32api</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\types\types.vector2d.cpp">
       <Filter>src\gui2\types</Filter>
     </ClCompile>
@@ -152,11 +149,20 @@
     <ClCompile Include="..\..\..\src\gui2\types\types.size.cpp">
       <Filter>src\gui2\types</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32\win32api.kernel32.cpp">
-      <Filter>src\gui2\win32api</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\event.cppm">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.kernel32.cpp">
+      <Filter>src\gui2\win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.user32.cpp">
+      <Filter>src\gui2\win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.cppm">
+      <Filter>src\gui2\win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\layout\layout.cppm">
+      <Filter>src\gui2\layout</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -151,13 +151,19 @@
     <ClCompile Include="..\..\..\src\event.cppm">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\layout\layout.cppm">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\types\types.ixx">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32\win32api.kernel32.cpp">
+    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.cppm">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.kernel32.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32\win32api.user32.cpp">
+    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.user32.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\window\window.cppm" />
@@ -219,10 +225,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\types\types.vector2d.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32\win32api.cppm">
-      <FileType>Document</FileType>
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
     </ClCompile>
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp" />
