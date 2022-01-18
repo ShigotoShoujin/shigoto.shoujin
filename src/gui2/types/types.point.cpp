@@ -3,27 +3,29 @@ module;
 #include <Windows.h>
 
 export module Shoujin.Gui.Types : Point;
-import : Vector2d;
+import Shoujin.Geometry;
+
+using shoujin::geometry::Vector2dI;
 
 export namespace shoujin::gui2 {
 
-struct Point : public Vector2d {
+struct Point : public Vector2dI {
 	constexpr Point() :
-		Vector2d{} {}
+		Vector2dI{} {}
 
 	constexpr Point(int x, int y) :
-		Vector2d{x, y} {}
+		Vector2dI{x, y} {}
 
-	constexpr Point(Vector2d const& rhs) :
-		Vector2d{rhs} {}
+	constexpr Point(Vector2dI const& rhs) :
+		Vector2dI{rhs} {}
 
 	constexpr Point(POINT const& rhs) :
-		Vector2d{rhs} {}
+		Vector2dI{rhs.x, rhs.y} {}
 
 	constexpr Point(SIZE const& rhs) :
-		Vector2d{rhs} {}
+		Vector2dI{rhs.cx, rhs.cy} {}
 
-	constexpr Point& ClampPoint(Vector2d const& size)
+	constexpr Point& ClampPoint(Vector2dI const& size)
 	{
 		if(x < 0)
 			x = 0;

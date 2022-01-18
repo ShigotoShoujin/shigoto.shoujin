@@ -1,30 +1,23 @@
 module;
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <type_traits>
 
-export module Shoujin.Gui.Types : Vector2d;
+export module Shoujin.Geometry : Vector2d;
 
-export namespace shoujin::gui2 {
+export namespace shoujin::geometry {
 
+template<typename T>
+requires requires { std::is_arithmetic_v<T>; }
 struct Vector2d {
-	int x;
-	int y;
+	T x;
+	T y;
 
 	constexpr Vector2d() :
 		x{}, y{} {}
 
-	constexpr Vector2d(int x, int y) :
+	constexpr Vector2d(T const& x, T const& y) :
 		x{x}, y{y} {}
 
-	constexpr Vector2d(POINT const& rhs) :
-		x{rhs.x}, y{rhs.y} {}
-
-	constexpr Vector2d(SIZE const& rhs) :
-		x{rhs.cx}, y{rhs.cy} {}
-
 	constexpr operator bool() const noexcept { return x || y; }
-	constexpr operator POINT() const noexcept { return {x, y}; }
-	constexpr operator SIZE() const noexcept { return {x, y}; }
 
 	constexpr friend bool operator==(Vector2d const& lhs, Vector2d const& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
 
@@ -36,5 +29,9 @@ struct Vector2d {
 	constexpr friend Vector2d operator*(Vector2d const& lhs, int rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
 	constexpr friend Vector2d operator/(Vector2d const& lhs, int rhs) { return {lhs.x / rhs, lhs.y / rhs}; }
 };
+
+using Vector2dI = Vector2d<int>;
+using Vector2dF = Vector2d<float>;
+using Vector2dD = Vector2d<double>;
 
 }
