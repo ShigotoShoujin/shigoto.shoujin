@@ -71,4 +71,5 @@ SpacesInSquareBrackets: false
 TabWidth: 4
 UseTab: Always
 
+Standard: c++20
 ForEachMacros: [TEST_CLASS, TEST_METHOD]

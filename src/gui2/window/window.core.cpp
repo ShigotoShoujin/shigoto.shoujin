@@ -4,9 +4,8 @@ module;
 #include <Windows.h>
 
 export module Shoujin.Gui.Window : Core;
-
+import : Layout;
 import Shoujin.Event;
-import Shoujin.Gui.Layout;
 import Shoujin.Gui.Types;
 import Shoujin.Gui.Win32Api;
 
@@ -57,7 +56,12 @@ public:
 	[[nodiscard]] Size clientSize() const { return _clientSize; };
 	[[nodiscard]] Size windowSize() const { return _windowSize; };
 
+	Event<bool> onCloseEvent;
 	Event<bool, WindowMessage const&> onWndProcEvent;
+	Event<> onDestroyEvent;
+
+	virtual bool onClose();
+	virtual void onDestroy();
 
 	bool processMessageQueue();
 	void show();
@@ -74,6 +78,8 @@ private:
 
 	void createWindow();
 	void createWin32Window();
+	MessageResult raiseOnClose();
+	MessageResult raiseOnDestroy();
 	MessageResult raiseOnWndProc(UINT msg, WPARAM wParam, LPARAM lParam);
 	bool readMessage(MSG& msg);
 	bool readMessageAsync(MSG& msg);
@@ -92,6 +98,15 @@ Window::MessageResult::MessageResult(bool handled, LRESULT ret_code) :
 	handled{handled}, ret_code{ret_code} {}
 
 Window::MessageResult::operator bool() const { return handled; }
+
+bool Window::onClose()
+{
+	return eventUnhandled;
+}
+
+void Window::onDestroy()
+{
+}
 
 bool Window::processMessageQueue()
 {
@@ -139,38 +154,38 @@ void Window::showModal()
 
 bool Window::onWndProc(WindowMessage const& message)
 {
-	//switch(message.msgCode) {
-	//	case WM_CREATE:
-	//		return RaiseOnCreate(message);
-	//	case WM_CLOSE:
-	//		return RaiseOnClose();
-	//	case WM_COMMAND:
-	//		return RaiseOnCommand(message);
-	//	case WM_PAINT:
-	//		return RaiseOnPaint();
-	//	case WM_SIZING:
-	//		return RaiseOnSizing(message);
-	//	case WM_EXITSIZEMOVE:
-	//		return RaiseOnSizingFinished();
-	//	case WM_KEYDOWN:
-	//		return RaiseOnKeyDown(message);
-	//	case WM_KEYUP:
-	//		return RaiseOnKeyUp(message);
-	//	case WM_CHAR:
-	//		return RaiseOnKeyPress(message);
-	//	case WM_LBUTTONDOWN:
-	//	case WM_RBUTTONDOWN:
-	//	case WM_MBUTTONDOWN:
-	//		return RaiseOnMouseDown(message);
-	//	case WM_LBUTTONUP:
-	//	case WM_RBUTTONUP:
-	//	case WM_MBUTTONUP:
-	//		return RaiseOnMouseUp(message);
-	//	case WM_MOUSEMOVE:
-	//		return RaiseOnMouseMove(message);
-	//	case WM_DESTROY:
-	//		return RaiseOnDestroy();
-	//}
+	switch(message.msgCode) {
+			//	case WM_CREATE:
+			//		return RaiseOnCreate(message);
+				case WM_CLOSE:
+					return raiseOnClose();
+			//	case WM_COMMAND:
+			//		return RaiseOnCommand(message);
+			//	case WM_PAINT:
+			//		return RaiseOnPaint();
+			//	case WM_SIZING:
+			//		return RaiseOnSizing(message);
+			//	case WM_EXITSIZEMOVE:
+			//		return RaiseOnSizingFinished();
+			//	case WM_KEYDOWN:
+			//		return RaiseOnKeyDown(message);
+			//	case WM_KEYUP:
+			//		return RaiseOnKeyUp(message);
+			//	case WM_CHAR:
+			//		return RaiseOnKeyPress(message);
+			//	case WM_LBUTTONDOWN:
+			//	case WM_RBUTTONDOWN:
+			//	case WM_MBUTTONDOWN:
+			//		return RaiseOnMouseDown(message);
+			//	case WM_LBUTTONUP:
+			//	case WM_RBUTTONUP:
+			//	case WM_MBUTTONUP:
+			//		return RaiseOnMouseUp(message);
+			//	case WM_MOUSEMOVE:
+			//		return RaiseOnMouseMove(message);
+		case WM_DESTROY:
+			return raiseOnDestroy();
+	}
 
 	return eventUnhandled;
 }
@@ -234,6 +249,23 @@ void Window::createWin32Window()
 
 	SHOUJIN_ASSERT(hWnd);
 	SHOUJIN_ASSERT((L"_handle not created. If creating a Comctl32 control, set subclass_window to true.", created()));
+}
+
+Window::MessageResult Window::raiseOnClose()
+{
+	auto result = onClose();
+	return result | (onCloseEvent ? onCloseEvent() : eventUnhandled);
+}
+
+Window::MessageResult Window::raiseOnDestroy()
+{
+	onDestroy();
+	onDestroyEvent();
+
+	_handle = NULL;
+	//_window_taborder.release();
+
+	return eventHandled;
 }
 
 Window::MessageResult Window::raiseOnWndProc(UINT msg, WPARAM wParam, LPARAM lParam)

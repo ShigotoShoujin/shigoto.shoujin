@@ -1,4 +1,3 @@
-import Shoujin.Gui.Layout;
 import Shoujin.Gui.Window;
 
 #include "CppUnitTest.h"
