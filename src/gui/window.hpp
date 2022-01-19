@@ -46,7 +46,7 @@ public:
 		X2 = 16
 	};
 
-	SHOUJIN_DEFINE_ENUM_FLAG_OPERATORS_FRIEND(MouseButton)
+	SHOUJIN_DEFINE_ENUM_FLAG_OPERATORS_CLASSMEMBER(MouseButton)
 
 	struct KeyEvent {
 		uint8_t virtual_keycode;

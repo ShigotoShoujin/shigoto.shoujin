@@ -11,15 +11,15 @@ namespace shoujin::test::gui2 {
 
 TEST_CLASS(WindowTest) {
 public:
-	TEST_METHOD_INITIALIZE(TestInitialize)
+	TEST_METHOD_INITIALIZE(testInitialize)
 	{
 	}
 
-	TEST_METHOD_CLEANUP(TestCleanup)
+	TEST_METHOD_CLEANUP(testCleanup)
 	{
 	}
 
-	TEST_METHOD(GivenDefaultConstructor_WhenShown_IsCentered) {
+	TEST_METHOD(givenDefaultConstructor_WhenShown_IsCentered) {
 		Window w;
 		
 		w.showModal();

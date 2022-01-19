@@ -43,9 +43,6 @@
     <Filter Include="src\gui2\window">
       <UniqueIdentifier>{070a9a6f-91ac-4bc9-863b-5a0d8f2a4094}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\gui2\types">
-      <UniqueIdentifier>{d7f7199a-a04c-4200-bb5a-9c4511bbb047}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\gui2\win32api">
       <UniqueIdentifier>{7a52e5af-4bee-4455-912e-4881f64cb4a6}</UniqueIdentifier>
     </Filter>
@@ -128,9 +125,6 @@
     <ClCompile Include="..\..\..\src\scope_guard.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\types\types.ixx">
-      <Filter>src\gui2\types</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\window\window.core.cpp">
       <Filter>src\gui2\window</Filter>
     </ClCompile>
@@ -139,12 +133,6 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\window\window.layout.cpp">
       <Filter>src\gui2\window</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\types\types.point.cpp">
-      <Filter>src\gui2\types</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\types\types.size.cpp">
-      <Filter>src\gui2\types</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\event.cppm">
       <Filter>src</Filter>
@@ -173,8 +161,17 @@
     <ClCompile Include="..\..\..\src\geometry\geometry.rectangle.cpp">
       <Filter>src\geometry</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\types\types.rectangle.cpp">
-      <Filter>src\gui2\types</Filter>
+    <ClCompile Include="..\..\..\src\gui2\window\window.style.cpp">
+      <Filter>src\gui2\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\window\window.rectangle.cpp">
+      <Filter>src\gui2\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\window\window.size.cpp">
+      <Filter>src\gui2\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\window\window.point.cpp">
+      <Filter>src\gui2\window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -166,12 +166,6 @@
     <ClCompile Include="..\..\..\src\geometry\geometry.vector2d.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\types\types.ixx">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\types\types.rectangle.cpp">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\gui2\win32api\win32api.cppm">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
     </ClCompile>
@@ -193,6 +187,18 @@
     <ClCompile Include="..\..\..\src\file\file.cpp" />
     <ClCompile Include="..\..\..\src\file\logfile.cpp" />
     <ClCompile Include="..\..\..\src\gui2\window\window.layout.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\window\window.point.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\window\window.rectangle.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\window\window.size.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\window\window.style.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
     </ClCompile>
     <ClCompile Include="..\..\..\src\gui\bitmap\bitmap.cpp" />
@@ -232,12 +238,6 @@
     <ClInclude Include="..\..\..\src\file\file.hpp" />
     <ClInclude Include="..\..\..\src\file\logfile.hpp" />
     <ClInclude Include="..\..\..\src\grid.hpp" />
-    <ClCompile Include="..\..\..\src\gui2\types\types.point.cpp">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\types\types.size.cpp">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
-    </ClCompile>
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_bits.hpp" />
     <ClInclude Include="..\..\..\src\gui\bitmap\bitmap_window.hpp" />

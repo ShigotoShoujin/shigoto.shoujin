@@ -12,7 +12,7 @@ export namespace shoujin::geometry {
 
 template<typename T>
 requires requires { std::is_arithmetic_v<T>; }
-constexpr Point<T> ClampPointToRect(Point<T> const& point, Rectangle<T> const& rect)
+constexpr Point<T> clampPointToRect(Point<T> const& point, Rectangle<T> const& rect)
 {
 	auto pt = point;
 

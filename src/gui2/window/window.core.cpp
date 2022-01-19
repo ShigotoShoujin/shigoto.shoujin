@@ -5,8 +5,9 @@ module;
 
 export module Shoujin.Gui.Window : Core;
 import : Layout;
+import : Point;
+import : Size;
 import Shoujin.Event;
-import Shoujin.Gui.Types;
 import Shoujin.Gui.Win32Api;
 
 template<typename T> static T GetWindowPtr(HWND hWnd, int index)
@@ -23,10 +24,6 @@ static auto SetWindowPtr(HWND hWnd, int index, auto new_value) -> decltype(new_v
 }
 
 export namespace shoujin::gui2 {
-
-enum class WindowStyle : int {
-	Border
-};
 
 class Window {
 public:

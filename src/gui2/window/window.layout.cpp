@@ -3,8 +3,10 @@ module;
 #include <Windows.h>
 
 export module Shoujin.Gui.Window : Layout;
-import Shoujin.Gui.Types;
+import : Size;
 import Shoujin.Gui.Win32Api;
+
+using namespace shoujin::gui2;
 
 export namespace shoujin::gui2::layout {
 

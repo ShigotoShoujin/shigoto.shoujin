@@ -2,7 +2,7 @@ module;
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-export module Shoujin.Gui.Types : Rectangle;
+export module Shoujin.Gui.Window : Rectangle;
 import : Point;
 import : Size;
 import Shoujin.Geometry;
