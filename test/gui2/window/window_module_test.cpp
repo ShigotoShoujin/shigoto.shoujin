@@ -1,12 +1,12 @@
+import Shoujin.Gui.Layout;
 import Shoujin.Gui.Window;
 
 #include "CppUnitTest.h"
-#include "test_tools.hpp"
 //#include <shoujin/tstring.hpp>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace shoujin::gui2;
-using namespace shoujin::test::gui2::test_tools;
+using namespace shoujin::gui2::layout;
 
 namespace shoujin::test::gui2 {
 
@@ -25,6 +25,7 @@ public:
 		
 		w.showModal();
 
+		//w.client
 		//Assert::AreEqual(L"Shoujin", w.text());
 	}
 };

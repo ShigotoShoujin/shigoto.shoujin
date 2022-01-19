@@ -31,8 +31,8 @@ enum class WindowStyle : int {
 
 class Window {
 public:
-	static const bool handled;
-	static const bool unhandled;
+	static const bool eventHandled;
+	static const bool eventUnhandled;
 
 	struct WindowMessage {
 		UINT msgCode;
@@ -82,8 +82,8 @@ private:
 	static LRESULT CALLBACK wndProcStatic(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 };
 
-const bool Window::handled = true;
-const bool Window::unhandled = false;
+const bool Window::eventHandled = true;
+const bool Window::eventUnhandled = false;
 
 Window::MessageResult::MessageResult() :
 	handled{}, ret_code{} {}
@@ -172,7 +172,7 @@ bool Window::onWndProc(WindowMessage const& message)
 	//		return RaiseOnDestroy();
 	//}
 
-	return unhandled;
+	return eventUnhandled;
 }
 
 void Window::createWindow()
@@ -240,7 +240,7 @@ Window::MessageResult Window::raiseOnWndProc(UINT msg, WPARAM wParam, LPARAM lPa
 {
 	WindowMessage wmsg{msg, wParam, lParam};
 	auto result = onWndProc(wmsg);
-	return result | (onWndProcEvent ? onWndProcEvent(wmsg) : unhandled);
+	return result | (onWndProcEvent ? onWndProcEvent(wmsg) : eventUnhandled);
 }
 
 bool Window::readMessage(MSG& msg)

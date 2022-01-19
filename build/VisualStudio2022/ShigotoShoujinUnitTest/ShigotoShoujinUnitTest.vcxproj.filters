@@ -35,6 +35,9 @@
     <Filter Include="gui2\window">
       <UniqueIdentifier>{f25bf394-1308-4f45-a8cb-7be2fcafe717}</UniqueIdentifier>
     </Filter>
+    <Filter Include="geometry">
+      <UniqueIdentifier>{cf39282d-a1e4-4385-b626-856be8c6be04}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\test\grid_test.cpp" />
@@ -97,13 +100,17 @@
     <ClCompile Include="..\..\..\test\gui2\window\window_module_test.cpp">
       <Filter>gui2\window</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\gui2\window\test_tools.cpp">
-      <Filter>gui2\window</Filter>
+    <ClCompile Include="..\..\..\test\geometry\rectangle_test.cpp">
+      <Filter>geometry</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\..\test\gui2\window\test_tools.hpp">
-      <Filter>gui2\window</Filter>
-    </ClInclude>
+    <ClCompile Include="..\..\..\test\geometry\size_test.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\geometry\point_test.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\geometry\vector2d_test.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -176,6 +176,12 @@
     <ClCompile Include="..\..\..\src\geometry\geometry.point.cpp">
       <Filter>src\geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\geometry\geometry.rectangle.cpp">
+      <Filter>src\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\types\types.rectangle.cpp">
+      <Filter>src\gui2\types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\event.hpp">

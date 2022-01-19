@@ -8,11 +8,10 @@ export namespace shoujin::geometry {
 template<typename T>
 requires requires { std::is_arithmetic_v<T>; }
 struct Vector2d {
-	T x;
-	T y;
+	T x{};
+	T y{};
 
-	constexpr Vector2d() :
-		x{}, y{} {}
+	constexpr Vector2d() = default;
 
 	constexpr Vector2d(T const& x, T const& y) :
 		x{x}, y{y} {}

@@ -6,6 +6,7 @@ module;
 export module Shoujin.Gui.Win32Api : User32;
 
 export namespace shoujin::gui2::win32api {
+
 BOOL adjustWindowRectEx(LPRECT lpRect, DWORD dwStyle, BOOL bMenu, DWORD dwExStyle)
 {
 	return SHOUJIN_ASSERT_WIN32(::AdjustWindowRectEx(lpRect, dwStyle, bMenu, dwExStyle));
