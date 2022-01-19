@@ -17,15 +17,17 @@ struct Point : public Vector2d<T> {
 
 	constexpr Point<T>& ClampPoint(Vector2d<T> const& size)
 	{
-		if(Vector2d<T>::x < 0)
-			Vector2d<T>::x = 0;
-		else if(Vector2d<T>::x >= size.x)
-			Vector2d<T>::x = size.x - 1;
+		using V = Vector2d<T>;
 
-		if(Vector2d<T>::y < 0)
-			Vector2d<T>::y = 0;
-		else if(Vector2d<T>::y >= size.y)
-			Vector2d<T>::y = size.y - 1;
+		if(V::x < 0)
+			V::x = 0;
+		else if(V::x >= size.x)
+			V::x = size.x - 1;
+
+		if(V::y < 0)
+			V::y = 0;
+		else if(V::y >= size.y)
+			V::y = size.y - 1;
 
 		return *this;
 	}

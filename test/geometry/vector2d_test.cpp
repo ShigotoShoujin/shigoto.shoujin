@@ -17,7 +17,7 @@ public:
 		Assert::AreEqual(0, vec.y);
 	}
 
-	TEST_METHOD(ConstructorWithTwoTParam_VectorIsInitializedFromThoseParams) {
+	TEST_METHOD(ConstructorWithTwoTParam_VectorInitialized) {
 		Vector2d vec{4, 5};
 		Assert::AreEqual(4, vec.x);
 		Assert::AreEqual(5, vec.y);
