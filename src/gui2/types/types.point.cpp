@@ -24,21 +24,6 @@ struct Point : public Vector2dI {
 
 	constexpr Point(SIZE const& rhs) :
 		Vector2dI{rhs.cx, rhs.cy} {}
-
-	constexpr Point& ClampPoint(Vector2dI const& size)
-	{
-		if(x < 0)
-			x = 0;
-		else if(x >= size.x)
-			x = size.x - 1;
-
-		if(y < 0)
-			y = 0;
-		else if(y >= size.y)
-			y = size.y - 1;
-
-		return *this;
-	}
 };
 
 }

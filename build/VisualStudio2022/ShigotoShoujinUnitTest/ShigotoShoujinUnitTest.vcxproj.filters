@@ -112,5 +112,8 @@
     <ClCompile Include="..\..\..\test\geometry\vector2d_test.cpp">
       <Filter>geometry</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\geometry\geometry_test.cpp">
+      <Filter>geometry</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
