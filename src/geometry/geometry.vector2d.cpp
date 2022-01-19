@@ -17,7 +17,6 @@ struct Vector2d {
 		x{x}, y{y} {}
 
 	constexpr operator bool() const noexcept { return x || y; }
-
 	constexpr friend bool operator==(Vector2d const& lhs, Vector2d const& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
 
 	constexpr friend Vector2d& operator+=(Vector2d& lhs, Vector2d const& rhs) { return lhs.x += rhs.x, lhs.y += rhs.y, lhs; }

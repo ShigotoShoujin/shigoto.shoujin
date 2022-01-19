@@ -27,11 +27,8 @@ struct Rectangle {
 	[[nodiscard]] constexpr int height() const { return y2 - y1; }
 
 	constexpr operator bool() const { return x1 || y1 || x2 || y2; }
-
+	constexpr operator Size<T>() const { return RectangleToSize(*this); }
 	constexpr friend bool operator==(Rectangle const& lhs, Rectangle const& rhs) { return lhs.x1 == rhs.x1 && lhs.y1 == rhs.y1 && lhs.x2 == rhs.x2 && lhs.y2 == rhs.y2; }
-	constexpr friend bool operator!=(Rectangle const& lhs, Rectangle const& rhs) { return !(lhs == rhs); }
-	constexpr friend Rectangle operator*(Rectangle const& lhs, int rhs) { return {lhs.x1, lhs.y1, lhs.x1 + lhs.width() * rhs, lhs.y1 + lhs.height() * rhs}; }
-	constexpr friend Rectangle operator/(Rectangle const& lhs, int rhs) { return {lhs.x1, lhs.y1, lhs.x1 + lhs.width() / rhs, lhs.y1 + lhs.height() / rhs}; }
 };
 
 template<typename T>
