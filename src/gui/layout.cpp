@@ -8,7 +8,7 @@ using namespace shoujin::gui;
 static Size GetWindowSize(HWND hwnd);
 static Size GetDefaultWindowSize(HWND hwnd);
 static Size GetClientSizeFromWindowSize(Size const& window_size, DWORD style, DWORD exstyle);
-static Size GetWindowSizeFromClientSize(Size const& window_size, DWORD style, DWORD exstyle);
+static Size GetWindowSizeFromClientSize(Size const& client_size, DWORD style, DWORD exstyle);
 static Point GetCenteredPosition(Size const& window_size, HWND hparentwnd);
 static void AdjustSizes(Size& window_size, Size& client_size, DWORD style, DWORD exstyle);
 

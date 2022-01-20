@@ -27,6 +27,11 @@ BOOL getClassInfoEx(HINSTANCE hInstance, LPCTSTR lpszClass, LPWNDCLASSEX lpwcx)
 	return GetClassInfoEx(hInstance, lpszClass, lpwcx);
 }
 
+HWND getDesktopWindow()
+{
+	return GetDesktopWindow();
+}
+
 BOOL getMessage(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax)
 {
 	auto okFunc = [](auto result) { auto const getMessageError = -1; return result != getMessageError; };
@@ -38,9 +43,19 @@ BOOL getMessage(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax)
 	return SHOUJIN_ASSERT(::GetSystemMetrics(nIndex));
 }
 
+BOOL getWindowRect(HWND hWnd, LPRECT lpRect)
+{
+	return SHOUJIN_ASSERT_WIN32(GetWindowRect(hWnd, lpRect));
+}
+
 BOOL peekMessage(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax, UINT wRemoveMsg)
 {
 	return PeekMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
+}
+
+void postMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	SHOUJIN_ASSERT_WIN32(PostMessage(hWnd, msg, wParam, lParam));
 }
 
 ATOM registerClassEx(CONST WNDCLASSEX* wcx)
@@ -51,6 +66,12 @@ ATOM registerClassEx(CONST WNDCLASSEX* wcx)
 BOOL translateMessage(CONST MSG* lpMsg)
 {
 	return ::TranslateMessage(lpMsg);
+}
+
+void sendMessage(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	SetLastError(0);
+	SHOUJIN_ASSERT_WIN32_EXPLICIT(SendMessage(hWnd, msg, wParam, lParam), [](auto r) { return GetLastError() == 0; });
 }
 
 BOOL showWindow(HWND hWnd, int nCmdShow)

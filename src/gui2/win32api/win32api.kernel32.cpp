@@ -12,4 +12,9 @@ HMODULE getModuleHandle(LPCTSTR lpModuleName)
 	return SHOUJIN_ASSERT_WIN32(GetModuleHandle(lpModuleName));
 }
 
+void sleep(DWORD dwMilliseconds)
+{
+	Sleep(dwMilliseconds);
+}
+
 }

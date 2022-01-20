@@ -8,7 +8,7 @@ using namespace shoujin::string;
 
 namespace shoujin::test::string {
 
-TEST_CLASS(StringConversionTest) {
+TEST_CLASS(StringTest) {
 	char const* charValue = "hello";
 	wchar_t const* wcharValue = L"hello";
 	std::string strValue = "hello";
@@ -16,6 +16,33 @@ TEST_CLASS(StringConversionTest) {
 
 public:
 #ifdef UNICODE
+	TEST_METHOD(string_ConstructionFromStringViewWide_IsWideString) {
+		String str = StringView{wcharValue};
+		Assert::AreEqual(wcharValue, str.c_str());
+	}
+
+	TEST_METHOD(string_ConstructionAssignmentShortString_IsWideString) {
+		String str = charValue;
+		Assert::AreEqual(wcharValue, str.c_str());
+	}
+
+	TEST_METHOD(string_ConstructionAssignmentWideString_IsWideString) {
+		String str = wcharValue;
+		Assert::AreEqual(wcharValue, str.c_str());
+	}
+
+	TEST_METHOD(string_AssignmentOperatorShortString_IsWideString) {
+		String str;
+		str = charValue;
+		Assert::AreEqual(wcharValue, str.c_str());
+	}
+
+	TEST_METHOD(string_AssignmentOperatorWideString_IsWideString) {
+		String str;
+		str = wcharValue;
+		Assert::AreEqual(wcharValue, str.c_str());
+	}
+
 	TEST_METHOD(string_FromShortString_IsWideString) {
 		String str{charValue};
 
@@ -48,6 +75,33 @@ public:
 		Assert::AreEqual(wstrValue, actual);
 	}
 #else
+	TEST_METHOD(string_ConstructionFromStringViewShort_IsShortString) {
+		String str = StringView{charValue};
+		Assert::AreEqual(charValue, str.c_str());
+	}
+
+	TEST_METHOD(string_ConstructionAssignmentShortString_IsShortString) {
+		String str = charValue;
+		Assert::AreEqual(charValue, str.c_str());
+	}
+
+	TEST_METHOD(string_ConstructionAssignmentWideString_IsShortString) {
+		String str = wcharValue;
+		Assert::AreEqual(charValue, str.c_str());
+	}
+
+	TEST_METHOD(string_AssignmentOperatorShortString_IsShortString) {
+		String str;
+		str = charValue;
+		Assert::AreEqual(charValue, str.c_str());
+	}
+
+	TEST_METHOD(string_AssignmentOperatorWideString_IsShortString) {
+		String str;
+		str = wcharValue;
+		Assert::AreEqual(charValue, str.c_str());
+	}
+
 	TEST_METHOD(string_FromShortString_IsShortString) {
 		String str{charValue};
 

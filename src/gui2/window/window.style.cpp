@@ -36,7 +36,7 @@ constexpr std::pair<DWORD, DWORD> styleToNative(WindowStyle windowStyle)
 	};
 
 	DWORD style = 0;
-	DWORD exStyle = 0;
+	DWORD exstyle = 0;
 
 	conv(style, WindowStyle::Border, WS_BORDER);
 	conv(style, WindowStyle::Caption, WS_DLGFRAME);
@@ -45,15 +45,15 @@ constexpr std::pair<DWORD, DWORD> styleToNative(WindowStyle windowStyle)
 	conv(style, WindowStyle::MinimizeBox, WS_MINIMIZEBOX);
 	conv(style, WindowStyle::Sizable, WS_SIZEBOX);
 	conv(style, WindowStyle::SystemMenu, WS_SYSMENU);
-	conv(exStyle, WindowStyle::BorderClientEdge, WS_EX_CLIENTEDGE);
-	conv(exStyle, WindowStyle::BorderStaticEdge, WS_EX_STATICEDGE);
-	conv(exStyle, WindowStyle::BorderWindowEdge, WS_EX_WINDOWEDGE);
-	conv(exStyle, WindowStyle::TopMost, WS_EX_TOPMOST);
+	conv(exstyle, WindowStyle::BorderClientEdge, WS_EX_CLIENTEDGE);
+	conv(exstyle, WindowStyle::BorderStaticEdge, WS_EX_STATICEDGE);
+	conv(exstyle, WindowStyle::BorderWindowEdge, WS_EX_WINDOWEDGE);
+	conv(exstyle, WindowStyle::TopMost, WS_EX_TOPMOST);
 
-	return {style, exStyle};
+	return {style, exstyle};
 }
 
-constexpr WindowStyle styleFromNative(DWORD style, DWORD exStyle)
+constexpr WindowStyle styleFromNative(DWORD style, DWORD exstyle)
 {
 	WindowStyle ws = WindowStyle::None;
 
@@ -69,10 +69,10 @@ constexpr WindowStyle styleFromNative(DWORD style, DWORD exStyle)
 	conv(style, WS_MINIMIZEBOX, WindowStyle::MinimizeBox);
 	conv(style, WS_SIZEBOX, WindowStyle::Sizable);
 	conv(style, WS_SYSMENU, WindowStyle::SystemMenu);
-	conv(exStyle, WS_EX_CLIENTEDGE, WindowStyle::BorderClientEdge);
-	conv(exStyle, WS_EX_STATICEDGE, WindowStyle::BorderStaticEdge);
-	conv(exStyle, WS_EX_WINDOWEDGE, WindowStyle::BorderWindowEdge);
-	conv(exStyle, WS_EX_TOPMOST, WindowStyle::TopMost);
+	conv(exstyle, WS_EX_CLIENTEDGE, WindowStyle::BorderClientEdge);
+	conv(exstyle, WS_EX_STATICEDGE, WindowStyle::BorderStaticEdge);
+	conv(exstyle, WS_EX_WINDOWEDGE, WindowStyle::BorderWindowEdge);
+	conv(exstyle, WS_EX_TOPMOST, WindowStyle::TopMost);
 
 	return ws;
 }

@@ -14,6 +14,8 @@ using tstring = std::basic_string<TCHAR>;
 using tstring_view = std::basic_string_view<TCHAR>;
 using tstringstream = std::basic_stringstream<TCHAR>;
 
+using StringView = tstring_view;
+
 namespace string {
 
 std::string ToMbString(CHAR const* string)
@@ -91,7 +93,8 @@ using namespace string;
 
 class String : public tstring {
 public:
-	String() = default;
+	String() :
+		tstring() {}
 
 	String(const std::string& tstr) :
 		tstring(ToTString(tstr)) {}
@@ -105,21 +108,14 @@ public:
 	String(const tstring& tstr, size_t pos, size_t len = npos) :
 		tstring(tstr, pos, len) {}
 
-	String(LPCTSTR s) :
-		tstring(s) {}
+	String(LPCSTR s) :
+		tstring(ToTString(s)) {}
 
-	String(LPCTSTR s, size_t n) :
-		tstring(s, n) {}
+	String(LPCWSTR s) :
+		tstring(ToTString(s)) {}
 
-	String(size_t n, TCHAR c) :
-		tstring(n, c) {}
-
-	template<class InputIterator>
-	String(InputIterator first, InputIterator last) :
-		tstring(first, last) {}
-
-	String(std::initializer_list<TCHAR> il) :
-		tstring(il) {}
+	String(StringView const& sv) :
+		tstring(sv.data(), sv.size()) {}
 };
 
 }

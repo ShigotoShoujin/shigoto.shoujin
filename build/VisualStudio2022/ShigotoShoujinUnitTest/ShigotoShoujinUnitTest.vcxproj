@@ -54,6 +54,9 @@
       <Project>{bafa1d68-0cd1-4790-8f0a-78baa5559b0d}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\gui2\cppunittest_util.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{E665D6A4-78B1-4571-8095-4585AE144667}</ProjectGuid>

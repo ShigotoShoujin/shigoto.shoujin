@@ -120,4 +120,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\test\string_test.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\test\gui2\cppunittest_util.hpp">
+      <Filter>gui2</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

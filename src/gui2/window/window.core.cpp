@@ -7,8 +7,10 @@ export module Shoujin.Gui.Window : Core;
 import : Layout;
 import : Point;
 import : Size;
+import : Style;
 import Shoujin.Event;
 import Shoujin.Gui.Win32Api;
+import Shoujin.String;
 
 template<typename T> static T GetWindowPtr(HWND hWnd, int index)
 {
@@ -24,6 +26,21 @@ static auto SetWindowPtr(HWND hWnd, int index, auto new_value) -> decltype(new_v
 }
 
 export namespace shoujin::gui2 {
+
+enum class WindowCreateMode {
+	Default,
+	CenterParent,
+	FillParent
+};
+
+struct WindowCreateInfo {
+	Size clientSize;
+	WindowCreateMode createMode{};
+	Point position;
+	WindowStyle style{};
+	String text;
+	Size windowSize;
+};
 
 class Window {
 public:
@@ -44,7 +61,11 @@ public:
 		operator bool() const;
 	};
 
-	Window() = default;
+	Window(WindowCreateInfo const& = {});
+	Window(Window const&);
+	Window& operator=(Window const&);
+	Window(Window&&) = default;
+	Window& operator=(Window&&) = default;
 	virtual ~Window() = default;
 
 	[[nodiscard]] bool created() const { return _handle; }
@@ -52,6 +73,8 @@ public:
 	[[nodiscard]] Point position() const { return _position; };
 	[[nodiscard]] Size clientSize() const { return _clientSize; };
 	[[nodiscard]] Size windowSize() const { return _windowSize; };
+	[[nodiscard]] WindowStyle style() const { return _style; };
+	[[nodiscard]] StringView text() const { return _text; };
 
 	Event<bool> onCloseEvent;
 	Event<bool, WindowMessage const&> onWndProcEvent;
@@ -61,6 +84,8 @@ public:
 	virtual void onDestroy();
 
 	bool processMessageQueue();
+	void close();
+	void destroy();
 	void show();
 	void showModal();
 
@@ -72,6 +97,8 @@ private:
 	Point _position;
 	Size _clientSize;
 	Size _windowSize;
+	WindowStyle _style;
+	String _text;
 
 	void createWindow();
 	void createWin32Window();
@@ -96,6 +123,51 @@ Window::MessageResult::MessageResult(bool handled, LRESULT ret_code) :
 
 Window::MessageResult::operator bool() const { return handled; }
 
+Window::Window(WindowCreateInfo const& createInfo)
+{
+	_text = createInfo.text;
+	_style = layout::getDefaultStyle();
+	auto [style, exstyle] = styleToNative(_style);
+
+	if(createInfo.windowSize) {
+		_clientSize = layout::getClientSizeFromWindowSize(createInfo.windowSize, style, exstyle);
+		_windowSize = createInfo.windowSize;
+	}
+	else {
+		_clientSize = createInfo.clientSize ? createInfo.clientSize : layout::getDefaultClientSize();
+		_windowSize = layout::getWindowSizeFromClientSize(createInfo.clientSize, style, exstyle);
+	}
+
+	_position = layout::getCenteredPosition(_windowSize);
+}
+
+Window::Window(Window const& oth) :
+	_handle{},
+	_position{oth._position},
+	_clientSize{oth._clientSize},
+	_windowSize{oth._windowSize},
+	_style{oth._style},
+	_text{oth._text}
+{
+}
+
+Window& Window::operator=(Window const& rhs)
+{
+	if(this == &rhs)
+		return *this;
+
+	destroy();
+
+	_handle = {};
+	_position = rhs._position;
+	_clientSize = rhs._clientSize;
+	_windowSize = rhs._windowSize;
+	_style = rhs._style;
+	_text = rhs._text;
+
+	return *this;
+}
+
 bool Window::onClose()
 {
 	return eventUnhandled;
@@ -111,10 +183,22 @@ bool Window::processMessageQueue()
 		return false;
 
 	MSG msg;
-	while(_handle && readMessageAsync(msg))
+	while(created() && readMessageAsync(msg))
 		translateAndDispatchMessage(msg);
 
 	return created();
+}
+
+void Window::close()
+{
+	if(created())
+		SendMessage(_handle, WM_CLOSE, 0, 0);
+}
+
+void Window::destroy()
+{
+	if(created())
+		PostMessage(_handle, WM_DESTROY, 0, 0);
 }
 
 void Window::show()
@@ -127,8 +211,7 @@ void Window::show()
 
 	win32api::showWindow(_handle, SW_SHOW);
 	win32api::updateWindow(_handle);
-
-	//ProcessMessageQueue();
+	processMessageQueue();
 }
 
 void Window::showModal()
@@ -140,22 +223,13 @@ void Window::showModal()
 		translateAndDispatchMessage(msg);
 }
 
-//void Window::showModal()
-//{
-//	Show();
-//
-//	MSG msg;
-//	while(_handle && ReadMessage(msg))
-//		TranslateAndDispatchMessage(msg);
-//}
-
 bool Window::onWndProc(WindowMessage const& message)
 {
 	switch(message.msgCode) {
-			//	case WM_CREATE:
-			//		return RaiseOnCreate(message);
-				case WM_CLOSE:
-					return raiseOnClose();
+		//case WM_CREATE:
+		//	return RaiseOnCreate(message);
+		case WM_CLOSE:
+			return raiseOnClose();
 			//	case WM_COMMAND:
 			//		return RaiseOnCommand(message);
 			//	case WM_PAINT:
@@ -216,24 +290,13 @@ void Window::createWin32Window()
 		win32api::registerClassEx(&wc);
 	}
 
-	DWORD style = WS_OVERLAPPEDWINDOW;
-
-	Size screen = layout::getScreenSize();
-
-	_clientSize = {
-		screen.x / 3,
-		screen.y / 3};
-
-	RECT rect{0, 0, _clientSize.x, _clientSize.y};
-	win32api::adjustWindowRectEx(&rect, style, NULL, 0);
-	_windowSize = {rect.right - rect.left, rect.bottom - rect.top};
-	_position = (screen - _windowSize) / 2;
+	auto [style, exstyle] = styleToNative(_style);
 
 	HWND hWnd =
 		win32api::createWindowEx(
 			0,
 			className,
-			className,
+			_text.c_str(),
 			style,
 			_position.x,
 			_position.y,
