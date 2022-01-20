@@ -29,10 +29,6 @@ std::wstring ToWideString(std::wstring const& string);
 
 int ToInt(tstring_view text);
 
-#ifdef UNICODE
-#else
-#endif
-
 }
 
 #endif

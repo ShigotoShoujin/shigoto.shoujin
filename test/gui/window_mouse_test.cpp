@@ -29,12 +29,12 @@ public:
 			tstring_view text;
 		};
 
-		UserData wnd_mousedown{edit, L"Window Down"};
-		UserData wnd_mouseup{edit, L"Window Up"};
-		UserData wnd_mouseclick{edit, L"Window Click"};
-		UserData edt_mousedown{edit, L"Edit Down"};
-		UserData edt_mouseup{edit, L"Edit Up"};
-		UserData edt_mouseclick{edit, L"Edit Click"};
+		UserData wnd_mousedown{edit, TEXT("Window Down")};
+		UserData wnd_mouseup{edit, TEXT("Window Up")};
+		UserData wnd_mouseclick{edit, TEXT("Window Click")};
+		UserData edt_mousedown{edit, TEXT("Edit Down")};
+		UserData edt_mouseup{edit, TEXT("Edit Up")};
+		UserData edt_mouseclick{edit, TEXT("Edit Click")};
 
 		auto mouseHandler = [](Window*, Window::MouseEvent const&, void* userdata) -> bool {
 			auto ud = static_cast<UserData*>(userdata);

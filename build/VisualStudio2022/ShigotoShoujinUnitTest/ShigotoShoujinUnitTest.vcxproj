@@ -47,6 +47,7 @@
     <ClCompile Include="..\..\..\test\gui\window_taborder_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\window_test.cpp" />
     <ClCompile Include="..\..\..\test\scope_guard_test.cpp" />
+    <ClCompile Include="..\..\..\test\string_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShigotoShoujin\ShigotoShoujin.vcxproj">

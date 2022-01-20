@@ -43,7 +43,7 @@ BOOL peekMessage(LPMSG lpMsg, HWND hWnd, UINT wMsgFilterMin, UINT wMsgFilterMax,
 	return PeekMessage(lpMsg, hWnd, wMsgFilterMin, wMsgFilterMax, wRemoveMsg);
 }
 
-ATOM registerClassEx(CONST WNDCLASSEXW* wcx)
+ATOM registerClassEx(CONST WNDCLASSEX* wcx)
 {
 	return SHOUJIN_ASSERT_WIN32(RegisterClassEx(wcx));
 }

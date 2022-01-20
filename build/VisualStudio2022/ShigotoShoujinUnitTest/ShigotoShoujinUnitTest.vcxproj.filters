@@ -118,5 +118,6 @@
     <ClCompile Include="..\..\..\test\gui2\window\window_style_test.cpp">
       <Filter>gui2\window</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\string_test.cpp" />
   </ItemGroup>
 </Project>
