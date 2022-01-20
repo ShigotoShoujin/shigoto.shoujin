@@ -1,7 +1,8 @@
 #ifndef SHOUJIN_SOURCE_FILE_LOGFILE
 #define SHOUJIN_SOURCE_FILE_LOGFILE
 
-#include "../tstring.hpp"
+import Shoujin.String;
+#include <string>
 
 namespace shoujin::file {
 
@@ -25,8 +26,8 @@ public:
 	static void AppendLineDebug(tstring text);
 #endif
 
-	static void Append(std::string_view file, tstring text);
-	static void AppendLine(std::string_view file, tstring text);
+	static void Append(tstring_view file, tstring text);
+	static void AppendLine(tstring_view file, tstring text);
 };
 
 }

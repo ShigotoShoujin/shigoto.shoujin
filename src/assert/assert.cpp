@@ -1,6 +1,5 @@
 #include "../event.hpp"
 #include "../file/file.hpp"
-#include "../tstring.hpp"
 #include "assert.hpp"
 #include <filesystem>
 #include <iostream>

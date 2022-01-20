@@ -1,10 +1,10 @@
 #ifndef SHOUJIN_SOURCE_GUI_LOGGING_MESSAGE_STRING
 #define SHOUJIN_SOURCE_GUI_LOGGING_MESSAGE_STRING
 
+import Shoujin.String;
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include "../../tstring.hpp"
-
+#include <string>
 namespace shoujin::gui::logging {
 
 LPCTSTR LookupWindowMessageText(UINT msg);

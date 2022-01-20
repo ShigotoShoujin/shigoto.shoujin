@@ -1,7 +1,8 @@
 #ifndef SHOUJIN_SOURCE_FILE_FILE
 #define SHOUJIN_SOURCE_FILE_FILE
 
-#include "../tstring.hpp"
+import Shoujin.String;
+#include <string>
 
 namespace shoujin::file {
 

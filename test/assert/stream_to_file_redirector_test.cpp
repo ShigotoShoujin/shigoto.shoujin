@@ -60,6 +60,6 @@ public:
 
 		//Assert
 		Assert::AreEqual(1, exit_process_call_count);
- 		Assert::IsTrue(FileExists(ToTString(err_file_path)));
+ 		Assert::IsTrue(FileExists(string::ToTString(err_file_path)));
 	}
 };

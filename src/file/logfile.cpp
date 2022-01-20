@@ -1,7 +1,8 @@
-#include "../tstring.hpp"
 #include "logfile.hpp"
 #include <filesystem>
 #include <fstream>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 static void AppendToFile(std::filesystem::path file, shoujin::tstring text, bool newline = false)
 {
@@ -28,7 +29,7 @@ tstring LogFile::GetDebugFile()
 		file = path.replace_filename(SHOUJIN_DEBUG_LOGFILE);
 	}
 
-	return ToTString(file);
+	return string::ToTString(file);
 }
 
 void LogFile::AppendDebug(tstring text)
@@ -43,12 +44,12 @@ void LogFile::AppendLineDebug(tstring text)
 
 #endif
 
-void LogFile::Append(std::string_view file, tstring text)
+void LogFile::Append(tstring_view file, tstring text)
 {
 	AppendToFile(file, text);
 }
 
-void LogFile::AppendLine(std::string_view file, tstring text)
+void LogFile::AppendLine(tstring_view file, tstring text)
 {
 	AppendToFile(file, text, true);
 }

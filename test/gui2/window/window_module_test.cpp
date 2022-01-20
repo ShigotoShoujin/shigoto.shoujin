@@ -1,7 +1,6 @@
 import Shoujin.Gui.Window;
 
 #include "CppUnitTest.h"
-//#include <shoujin/tstring.hpp>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace shoujin::gui2;

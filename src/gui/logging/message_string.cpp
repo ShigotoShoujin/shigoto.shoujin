@@ -1,4 +1,5 @@
 #include "message_string.hpp"
+#include <iostream>
 #include <map>
 
 static const std::map<int, LPCTSTR> _messages = {

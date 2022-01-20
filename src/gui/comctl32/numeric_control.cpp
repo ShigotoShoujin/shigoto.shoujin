@@ -1,3 +1,5 @@
+import Shoujin.String;
+
 #include "numeric_control.hpp"
 #include <format>
 
@@ -12,7 +14,7 @@ NumericControl::NumericControl(LayoutParam const& layout_param) :
 
 [[nodiscard]] int NumericControl::GetValue() const
 {
-	return ToInt(GetText());
+	return string::ToNumeric(GetText());
 }
 
 int NumericControl::SetValue(int value) const
@@ -25,7 +27,7 @@ bool NumericControl::OnChange()
 	if(!_onchange_depth) {
 		EventDepth depth{_onchange_depth};
 		auto text = GetText();
-		SetValue(ToInt(text), text);
+		SetValue(string::ToNumeric(text), text);
 	}
 
 	return Handled;

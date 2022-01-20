@@ -147,6 +147,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\string.cppm">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
+    </ClCompile>
     <None Include="..\..\..\doc\ColorPicker.xlsx" />
     <ClCompile Include="..\..\..\src\event.cppm">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
@@ -223,14 +226,12 @@
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModule</CompileAs>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\tstring.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp" />
     <ClInclude Include="..\..\..\include\shoujin\event.hpp" />
     <ClInclude Include="..\..\..\include\shoujin\file.hpp" />
     <ClInclude Include="..\..\..\include\shoujin\gui.hpp" />
-    <ClInclude Include="..\..\..\include\shoujin\tstring.hpp" />
     <ClInclude Include="..\..\..\src\assert\assert.hpp" />
     <ClInclude Include="..\..\..\src\assert\stream_to_file_redirector.hpp" />
     <ClInclude Include="..\..\..\src\enum_operators.hpp" />
@@ -263,7 +264,6 @@
     <ClInclude Include="..\..\..\src\gui\window.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_handle.hpp" />
     <ClInclude Include="..\..\..\src\gui\window_taborder.hpp" />
-    <ClInclude Include="..\..\..\src\tstring.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

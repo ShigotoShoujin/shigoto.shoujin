@@ -59,9 +59,6 @@
     <ClCompile Include="..\..\..\doc\todo.cpp">
       <Filter>doc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\tstring.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\file\logfile.cpp">
       <Filter>src\file</Filter>
     </ClCompile>
@@ -173,6 +170,9 @@
     <ClCompile Include="..\..\..\src\gui2\window\window.point.cpp">
       <Filter>src\gui2\window</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\string.cppm">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\shoujin\event.hpp">
@@ -184,16 +184,10 @@
     <ClInclude Include="..\..\..\include\shoujin\gui.hpp">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\shoujin\tstring.hpp">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\shoujin\assert.hpp">
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\grid.hpp">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\tstring.hpp">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\event.hpp">

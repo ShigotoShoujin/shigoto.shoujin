@@ -1,8 +1,9 @@
 #ifndef SHOUJIN_SOURCE_ASSERT_ASSERT
 #define SHOUJIN_SOURCE_ASSERT_ASSERT
 
+import Shoujin.String;
+
 #include "../event.hpp"
-#include "../tstring.hpp"
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <any>

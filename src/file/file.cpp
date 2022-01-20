@@ -1,7 +1,8 @@
+import Shoujin.String;
+
 #include "../assert/assert.hpp"
-#include "../tstring.hpp"
+#include "file.hpp"
 #include <filesystem>
-#include <string>
 
 namespace shoujin::file {
 

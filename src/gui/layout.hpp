@@ -1,10 +1,12 @@
 #ifndef SHOUJIN_SOURCE_GUI_LAYOUT
 #define SHOUJIN_SOURCE_GUI_LAYOUT
 
+import Shoujin.String;
+#include <string>
+
 #define WIN32_LEAN_AND_MEAN
 #include "../enum_operators.hpp"
 #include "../event.hpp"
-#include "../tstring.hpp"
 #include "types.hpp"
 #include <Windows.h>
 

@@ -95,5 +95,5 @@ static bool OnCreatePostCloseMsg(Window const& window, CREATESTRUCT const& creat
 static bool OnErrorOutput(tstring message, void* userdata)
 {
 	Logger::WriteMessage(message.c_str());
-	Assert::Fail(ToWideString(message).c_str());
+	Assert::Fail(string::ToWideString(message).c_str());
 }

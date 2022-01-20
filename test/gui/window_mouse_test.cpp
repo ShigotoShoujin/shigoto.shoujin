@@ -1,9 +1,10 @@
+import Shoujin.String;
+
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 #include <shoujin/gui.hpp>
-#include <shoujin/tstring.hpp>
 #include <format>
 
 using namespace shoujin;

@@ -1,44 +1,10 @@
+import Shoujin.String;
+
 #include "CppUnitTest.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-
-#include <shoujin/tstring.hpp>
-#include <utility>
-
 using namespace shoujin;
-
-class String : public tstring {
-public:
-	String() = default;
-
-	String(const std::string& tstr) :
-		tstring(ToTString(tstr)) {}
-
-	String(const std::wstring& tstr) :
-		tstring(ToTString(tstr)) {}
-
-	String(tstring&& str) noexcept :
-		tstring(std::move(str)) {}
-
-	String(const tstring& tstr, size_t pos, size_t len = npos) :
-		tstring(tstr, pos, len) {}
-
-	String(LPCTSTR s) :
-		tstring(s) {}
-
-	String(LPCTSTR s, size_t n) :
-		tstring(s, n) {}
-
-	String(size_t n, TCHAR c) :
-		tstring(n, c) {}
-
-	template<class InputIterator>
-	String(InputIterator first, InputIterator last) :
-		tstring(first, last) {}
-
-	String(std::initializer_list<TCHAR> il) :
-		tstring(il) {}
-};
+using namespace shoujin::string;
 
 namespace shoujin::test::string {
 
