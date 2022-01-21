@@ -17,6 +17,11 @@ HWND createWindowEx(DWORD dwExStyle, LPCTSTR lpClassName, LPCTSTR lpWindowName, 
 	return SHOUJIN_ASSERT_WIN32(CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, X, Y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam));
 }
 
+BOOL destroyWindow(HWND hWnd)
+{
+	return SHOUJIN_ASSERT_WIN32(DestroyWindow(hWnd));
+}
+
 LRESULT dispatchMessage(const MSG* lpMsg)
 {
 	return DispatchMessage(lpMsg);

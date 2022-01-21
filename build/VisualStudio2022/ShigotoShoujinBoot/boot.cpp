@@ -1,10 +1,12 @@
 import Shoujin.Gui.Win32Api;
 import Shoujin.Gui.Window;
+
 #include <array>
+#include <Windows.h>
 
 using namespace shoujin::gui2;
 
-void boot()
+void twoWindows()
 {
 	Window w;
 
@@ -21,4 +23,10 @@ void boot()
 		for(auto&& it : list)
 			more |= it->processMessageQueue();
 	} while(more);
+}
+
+
+void boot()
+{
+	twoWindows();
 }

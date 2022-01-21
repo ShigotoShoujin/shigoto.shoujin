@@ -66,7 +66,7 @@ public:
 	Window& operator=(Window const&);
 	Window(Window&&) = default;
 	Window& operator=(Window&&) = default;
-	virtual ~Window() = default;
+	virtual ~Window();
 
 	[[nodiscard]] bool created() const { return _handle; }
 	[[nodiscard]] HWND handle() const { return _handle; }
@@ -135,7 +135,7 @@ Window::Window(WindowCreateInfo const& createInfo)
 	}
 	else {
 		_clientSize = createInfo.clientSize ? createInfo.clientSize : layout::getDefaultClientSize();
-		_windowSize = layout::getWindowSizeFromClientSize(createInfo.clientSize, style, exstyle);
+		_windowSize = layout::getWindowSizeFromClientSize(_clientSize, style, exstyle);
 	}
 
 	_position = layout::getCenteredPosition(_windowSize);
@@ -168,6 +168,11 @@ Window& Window::operator=(Window const& rhs)
 	return *this;
 }
 
+Window::~Window()
+{
+	destroy();
+}
+
 bool Window::onClose()
 {
 	return eventUnhandled;
@@ -198,7 +203,7 @@ void Window::close()
 void Window::destroy()
 {
 	if(created())
-		PostMessage(_handle, WM_DESTROY, 0, 0);
+		win32api::destroyWindow(_handle);
 }
 
 void Window::show()
@@ -322,7 +327,7 @@ Window::MessageResult Window::raiseOnDestroy()
 	onDestroy();
 	onDestroyEvent();
 
-	_handle = NULL;
+	_handle = {};
 	//_window_taborder.release();
 
 	return eventHandled;

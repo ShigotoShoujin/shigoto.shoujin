@@ -1,5 +1,7 @@
 import Shoujin.Gui.Window;
 
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 #include "../cppunittest_util.hpp"
 #include "CppUnitTest.h"
 
@@ -74,6 +76,13 @@ public:
 		Assert::AreEqual<Size>(expected, wnd.clientSize());
 	}
 
+	TEST_METHOD(defaultConstructor_WindowSizeIsAdjusted) {
+		Window wnd;
+		auto [style, exstyle] = styleToNative(wnd.style());
+		auto expected = layout::getWindowSizeFromClientSize(wnd.clientSize(), style, exstyle);
+		Assert::AreEqual<Size>(expected, wnd.windowSize());
+	}
+
 	TEST_METHOD(defaultConstructor_IsCentered) {
 		Window wnd;
 		auto expected = layout::getCenteredPosition(wnd.windowSize());
@@ -92,6 +101,18 @@ public:
 			WindowStyle::SystemMenu;
 
 		Assert::AreEqual(expected, wnd.style());
+	}
+
+	TEST_METHOD(windowGoesOutOfScope_Destroyed) {
+		HWND hwnd;
+
+		{
+			Window wnd;
+			wnd.show();
+			hwnd = wnd.handle();
+		}
+
+		Assert::IsFalse(IsWindow(hwnd));
 	}
 };
 
