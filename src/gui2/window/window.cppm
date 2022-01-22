@@ -5,3 +5,4 @@ export import : Point;
 export import : Rectangle;
 export import : Size;
 export import : Style;
+export import : WindowHandle;

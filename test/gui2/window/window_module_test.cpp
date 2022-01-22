@@ -20,6 +20,12 @@ public:
 	{
 	}
 
+	TEST_METHOD(constructor_StyleSpecified_WindowHasStyle) {
+		WindowStyle expected = WindowStyle::Caption | WindowStyle::MinimizeBox | WindowStyle::SystemMenu;
+		Window wnd{WindowCreateInfo{.style = expected}};
+		Assert::AreEqual(expected, wnd.style());
+	}
+
 	TEST_METHOD(constructor_ClientSizeAndWindowSizeSpecified_WindowSizeHasPriority) {
 		Window wnd{WindowCreateInfo{.clientSize{640, 480}, .windowSize{800, 600}}};
 

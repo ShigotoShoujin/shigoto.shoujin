@@ -1,4 +1,3 @@
-import Shoujin.Gui.Win32Api;
 import Shoujin.Gui.Window;
 
 #include <array>

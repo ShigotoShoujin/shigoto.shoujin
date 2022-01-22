@@ -7,7 +7,7 @@ import : Point;
 import : Rectangle;
 import : Size;
 import : Style;
-import Shoujin.Gui.Win32Api;
+import Shoujin.Win32Api;
 
 using namespace shoujin::gui2;
 

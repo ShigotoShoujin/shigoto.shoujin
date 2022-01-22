@@ -119,6 +119,9 @@
       <Filter>gui2\window</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\test\string_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui2\window\window_handle_gui2_test.cpp">
+      <Filter>gui2\window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\test\gui2\cppunittest_util.hpp">

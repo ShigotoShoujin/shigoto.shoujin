@@ -9,8 +9,8 @@ import : Point;
 import : Size;
 import : Style;
 import Shoujin.Event;
-import Shoujin.Gui.Win32Api;
 import Shoujin.String;
+import Shoujin.Win32Api;
 
 template<typename T> static T GetWindowPtr(HWND hWnd, int index)
 {
@@ -61,6 +61,10 @@ public:
 		operator bool() const;
 	};
 
+	struct StyleEventArgs {
+
+	};
+
 	Window(WindowCreateInfo const& = {});
 	Window(Window const&);
 	Window& operator=(Window const&);
@@ -76,11 +80,13 @@ public:
 	[[nodiscard]] WindowStyle style() const { return _style; };
 	[[nodiscard]] StringView text() const { return _text; };
 
-	Event<bool> onCloseEvent;
-	Event<bool, WindowMessage const&> onWndProcEvent;
-	Event<> onDestroyEvent;
+	Event<bool, Window*, WindowMessage const&> onWndProcEvent;
+	Event<bool, Window*, WindowStyle const&> onStyleChangeEvent;
+	Event<bool, Window*> onCloseEvent;
+	Event<void, Window*> onDestroyEvent;
 
 	virtual bool onClose();
+	virtual bool onStyleChange();
 	virtual void onDestroy();
 
 	bool processMessageQueue();
@@ -102,6 +108,7 @@ private:
 
 	void createWindow();
 	void createWin32Window();
+	MessageResult raiseOnStyleChange(WindowMessage const& message);
 	MessageResult raiseOnClose();
 	MessageResult raiseOnDestroy();
 	MessageResult raiseOnWndProc(UINT msg, WPARAM wParam, LPARAM lParam);
@@ -126,14 +133,13 @@ Window::MessageResult::operator bool() const { return handled; }
 Window::Window(WindowCreateInfo const& createInfo)
 {
 	_text = createInfo.text;
-	_style = layout::getDefaultStyle();
+	_style = createInfo.style == WindowStyle::None ? layout::getDefaultStyle() : createInfo.style;
 	auto [style, exstyle] = styleToNative(_style);
 
 	if(createInfo.windowSize) {
 		_clientSize = layout::getClientSizeFromWindowSize(createInfo.windowSize, style, exstyle);
 		_windowSize = createInfo.windowSize;
-	}
-	else {
+	} else {
 		_clientSize = createInfo.clientSize ? createInfo.clientSize : layout::getDefaultClientSize();
 		_windowSize = layout::getWindowSizeFromClientSize(_clientSize, style, exstyle);
 	}
@@ -174,6 +180,11 @@ Window::~Window()
 }
 
 bool Window::onClose()
+{
+	return eventUnhandled;
+}
+
+bool Window::onStyleChange()
 {
 	return eventUnhandled;
 }
@@ -261,6 +272,8 @@ bool Window::onWndProc(WindowMessage const& message)
 			//		return RaiseOnMouseMove(message);
 		case WM_DESTROY:
 			return raiseOnDestroy();
+		case WM_STYLECHANGING:
+			return raiseOnStyleChange(message);
 	}
 
 	return eventUnhandled;
@@ -316,16 +329,23 @@ void Window::createWin32Window()
 	SHOUJIN_ASSERT((L"_handle not created. If creating a Comctl32 control, set subclass_window to true.", created()));
 }
 
+Window::MessageResult Window::raiseOnStyleChange(WindowMessage const& message)
+{
+	STYLESTRUCT ss; 
+	auto result = onStyleChange();
+	return result | (onCloseEvent ? onCloseEvent(this) : eventUnhandled);
+}
+
 Window::MessageResult Window::raiseOnClose()
 {
 	auto result = onClose();
-	return result | (onCloseEvent ? onCloseEvent() : eventUnhandled);
+	return result | (onCloseEvent ? onCloseEvent(this) : eventUnhandled);
 }
 
 Window::MessageResult Window::raiseOnDestroy()
 {
 	onDestroy();
-	onDestroyEvent();
+	onDestroyEvent(this);
 
 	_handle = {};
 	//_window_taborder.release();
@@ -337,7 +357,7 @@ Window::MessageResult Window::raiseOnWndProc(UINT msg, WPARAM wParam, LPARAM lPa
 {
 	WindowMessage wmsg{msg, wParam, lParam};
 	auto result = onWndProc(wmsg);
-	return result | (onWndProcEvent ? onWndProcEvent(wmsg) : eventUnhandled);
+	return result | (onWndProcEvent ? onWndProcEvent(this, wmsg) : eventUnhandled);
 }
 
 bool Window::readMessage(MSG& msg)

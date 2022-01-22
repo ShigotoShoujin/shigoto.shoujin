@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\..\test\geometry\size_test.cpp" />
     <ClCompile Include="..\..\..\test\geometry\vector2d_test.cpp" />
     <ClCompile Include="..\..\..\test\grid_test.cpp" />
+    <ClCompile Include="..\..\..\test\gui2\window\window_handle_gui2_test.cpp" />
     <ClCompile Include="..\..\..\test\gui2\window\window_module_test.cpp" />
     <ClCompile Include="..\..\..\test\gui2\window\window_style_test.cpp" />
     <ClCompile Include="..\..\..\test\gui\bitmap\bitmap_test.cpp" />

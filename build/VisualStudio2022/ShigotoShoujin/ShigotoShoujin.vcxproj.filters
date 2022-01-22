@@ -43,11 +43,11 @@
     <Filter Include="src\gui2\window">
       <UniqueIdentifier>{070a9a6f-91ac-4bc9-863b-5a0d8f2a4094}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\gui2\win32api">
-      <UniqueIdentifier>{7a52e5af-4bee-4455-912e-4881f64cb4a6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\geometry">
       <UniqueIdentifier>{479cd9af-85ed-41cc-b638-729993c81398}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\win32api">
+      <UniqueIdentifier>{71d8af7c-c886-4bb0-81f6-1557d2da6dad}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -134,15 +134,6 @@
     <ClCompile Include="..\..\..\src\event.cppm">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.kernel32.cpp">
-      <Filter>src\gui2\win32api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.user32.cpp">
-      <Filter>src\gui2\win32api</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\gui2\win32api\win32api.cppm">
-      <Filter>src\gui2\win32api</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\geometry\geometry.cppm">
       <Filter>src\geometry</Filter>
     </ClCompile>
@@ -172,6 +163,21 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\string.cppm">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\gui2\window\window.handle.cpp">
+      <Filter>src\gui2\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\win32api\win32api.kernel32.cpp">
+      <Filter>src\win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\win32api\win32api.user32.cpp">
+      <Filter>src\win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\win32api\win32api.cppm">
+      <Filter>src\win32api</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\win32api\win32api.util.cpp">
+      <Filter>src\win32api</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
