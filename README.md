@@ -11,7 +11,7 @@ A collection of independent tools to nicely build fun win32 based applications.
 - Windows only, using native controls
 
 ## Color Control Demo
-- This demo was made as progress library milestone
+- This demo was made as library progress milestone
 - It was made before starting to use C++20 modules
 - A color can be chosen by a combination of
   - Clicking on the square color map to pick the saturation and lightness
