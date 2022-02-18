@@ -15,6 +15,15 @@ auto constexpr kHueBarHeight = 23;
 auto constexpr kHueBarCaretSize = 5;
 Size constexpr kDefaultClientSize{512, 512};
 
+// clang-format off
+shoujin::tstring_view kDescTest = TEXT(
+R"(A color can be chosen by
+  - Clicking on the square color map to pick the saturation and lightness
+  - Clicking on the horizontal color bar to choose the hue
+  - Changing any values on the right, be it RGB, HSL or HSV
+)");
+// clang-format on
+
 namespace shoujin::gui::usercontrol {
 
 namespace internal {
@@ -256,9 +265,12 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 
 	stream
 		<< layout::window_size(client_size() / 2) << layout::exstyle(WS_EX_CLIENTEDGE)
-		<< topleft << gradientMap
-		<< push << layout::window_size({client_size().x / 2, kHueBarHeight}) << below << hueBar
-		<< below << layout::window_size({client_size().x / 2, 100}) << preview << pop
+		<< topleft << gradientMap << push
+		<< layout::window_size({client_size().x / 2, kHueBarHeight}) << below << hueBar
+		<< layout::window_size(LabelControl::DefaultSize) << layout::exstyle(0)
+		<< below << TEXT("Preview") << create(this, label)
+		<< after << push << layout::window_size({client_size().x / 6, 23}) << preview << pop
+		<< below << layout::window_size({client_size().x / 2, 150}) << kDescTest << create(this, label) << pop
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
 
 		<< TEXT("Red") << create(this, label) << push << after << txtRgbR << pop << below
