@@ -21,12 +21,12 @@ A collection of independent tools to nicely build fun win32 based applications.
 
 ![File](doc/color_control_demo.png)
 
+## How to run
+- Get Visual Studio 2022 for the platform toolset version 143, or install the [Microsoft Visual C++ Redistributable](https://docs.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170) for [X64](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+- Set default project to ShigotoShoujinBoot or run the tests in ColorControlTest
+
 ## Next steps
 - Continue working on the conversion toward using C++20 modules in the dev branch
-
-## How to run
-- Need the platform toolset version 143, included with Visual Studio 2022
-- Set default project to ShigotoShoujinBoot or run the tests in ColorControlTest
 
 ## Contribute
 Everyone's welcome to open issues, submit pull requests or otherwise manifest their existence.  
