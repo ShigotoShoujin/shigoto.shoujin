@@ -3,5 +3,6 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="boot.cpp" />
+    <ClCompile Include="color_control_v1_demo.cpp" />
   </ItemGroup>
 </Project>

@@ -24,8 +24,10 @@ void twoWindows()
 	} while(more);
 }
 
+void ColorControlDemoV1();
 
 void boot()
 {
-	twoWindows();
+	ColorControlDemoV1();
+	//twoWindows();
 }

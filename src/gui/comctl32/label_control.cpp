@@ -24,7 +24,7 @@ LayoutParam LabelControl::BuildLayout(LayoutParam const& layout_param)
 	if(!layout_param.window_size && !layout_param.client_size)
 		layout.window_size = DefaultSize;
 
-	layout.style = WS_BORDER;
+	//layout.style = WS_BORDER;
 	layout.tabstop = false;
 
 	return layout;

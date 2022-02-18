@@ -13,7 +13,7 @@ using namespace shoujin::gui::layout;
 auto constexpr kGradientCaretSize = 9;
 auto constexpr kHueBarHeight = 23;
 auto constexpr kHueBarCaretSize = 5;
-Size constexpr kDefaultClientSize{768, 768};
+Size constexpr kDefaultClientSize{512, 512};
 
 namespace shoujin::gui::usercontrol {
 
@@ -255,18 +255,23 @@ ColorControl::ColorControl(LayoutParam const& layout_param) :
 	LayoutStream stream{this};
 
 	stream
-		<< layout::window_size(client_size() / 4) << layout::exstyle(WS_EX_CLIENTEDGE)
+		<< layout::window_size(client_size() / 2) << layout::exstyle(WS_EX_CLIENTEDGE)
 		<< topleft << gradientMap
-		<< push << layout::window_size({client_size().x / 4, kHueBarHeight}) << below << hueBar
-		<< below << layout::window_size({client_size().x / 4, 100}) << preview << pop
+		<< push << layout::window_size({client_size().x / 2, kHueBarHeight}) << below << hueBar
+		<< below << layout::window_size({client_size().x / 2, 100}) << preview << pop
 		<< layout::exstyle(0) << layout::window_size(LabelControl::DefaultSize) << unrelated << after
+
 		<< TEXT("Red") << create(this, label) << push << after << txtRgbR << pop << below
 		<< TEXT("Green") << create(this, label) << push << after << txtRgbG << pop << below
 		<< TEXT("Blue") << create(this, label) << push << after << txtRgbB << pop << below
 		<< TEXT("Hex") << create(this, label) << push << after << txtHex << pop << below
+
+		<< TEXT("HSL") << create(this, label) << below
 		<< TEXT("Hue") << create(this, label) << push << after << txtHslH << pop << below
 		<< TEXT("Saturation") << create(this, label) << push << after << txtHslS << pop << below
 		<< TEXT("Lightness") << create(this, label) << push << after << txtHslL << pop << below
+
+		<< TEXT("HSV") << create(this, label) << below
 		<< TEXT("Hue") << create(this, label) << push << after << txtHsvH << pop << below
 		<< TEXT("Saturation") << create(this, label) << push << after << txtHsvS << pop << below
 		<< TEXT("Value") << create(this, label) << push << after << txtHsvV << pop << below;
@@ -299,6 +304,7 @@ LayoutParam ColorControl::buildLayout(LayoutParam const& layout_param)
 		client_size = kDefaultClientSize;
 
 	LayoutParam layout = layout_param;
+	layout.text = TEXT("Color Control Demo");
 	layout.client_size = client_size;
 	layout.exstyle = WS_EX_CLIENTEDGE;
 

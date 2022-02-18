@@ -331,7 +331,7 @@ void Window::createWin32Window()
 
 Window::MessageResult Window::raiseOnStyleChange(WindowMessage const& message)
 {
-	STYLESTRUCT ss; 
+	//STYLESTRUCT ss; 
 	auto result = onStyleChange();
 	return result | (onCloseEvent ? onCloseEvent(this) : eventUnhandled);
 }
